@@ -1,7 +1,13 @@
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   profiles:
     include:
-      -h2
+      -dev
+      -jwt
+
 
 server:
   port: 8080
+
