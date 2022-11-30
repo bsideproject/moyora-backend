@@ -5,8 +5,11 @@ spring:
     password: password
     driverClassName: org.h2.Driver
   jpa:
+    hibernate:
+      ddl-auto: create-drop
     spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: false
+    show-sql: true
   h2:
     console:
       enabled: true

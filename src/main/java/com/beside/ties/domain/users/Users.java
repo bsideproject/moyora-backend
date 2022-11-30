@@ -39,7 +39,7 @@ public class Users extends BaseTimeEntity {
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "USERS_SEQ_GEN")
     @Column(name = "users_id")
     Long id;
 

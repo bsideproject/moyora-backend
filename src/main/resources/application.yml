@@ -1,7 +1,9 @@
 spring:
   profiles:
     include:
-      -h2
+      -dev
+      -jwt
+
 
 server:
   port: 8080
