@@ -23,6 +23,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests(auth -> {
                     auth.antMatchers("/").permitAll();
+                    auth.antMatchers("/login").permitAll();
                 })
                 .httpBasic(Customizer.withDefaults())
                 .build();
