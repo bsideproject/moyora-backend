@@ -43,28 +43,28 @@ public class Users extends BaseTimeEntity {
     @Id
     @GeneratedValue(generator = "USERS_SEQ_GEN")
     @Column(name = "users_id")
-    Long id;
+    private Long id;
 
     @Column(nullable = false, unique = true, length = 50)
-    String email;
+    private String email;
 
     @Column(length = 25)
-    String password;
+    private String password;
 
     @Column(length = 50)
-    String nickname;
+    private String nickname;
 
     @Column(name = "phone_num",length = 11)
-    String phoneNum;
+    private String phoneNum;
 
     @Column(nullable = false, unique = true,name = "phone_key")
-    String phoneKey;
+    private String phoneKey;
 
     @Column(nullable = false, length = 25)
-    String username;
+    private String username;
 
     @Column(nullable = false)
-    String profile;
+    private String profile;
 
     public static Users toUserFromKakao(
             KakaoUser kakaoUser
