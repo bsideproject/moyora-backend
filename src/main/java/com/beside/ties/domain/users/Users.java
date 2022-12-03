@@ -1,5 +1,7 @@
 package com.beside.ties.domain.users;
 
+import com.beside.ties.auth.kakao.KakaoAccount;
+import com.beside.ties.auth.kakao.KakaoUser;
 import com.beside.ties.common.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -22,7 +24,7 @@ public class Users extends BaseTimeEntity {
     @Builder
     public Users(
             String email,
-            String password,
+            String profile,
             String nickname,
             String username,
             String phoneNum,
@@ -30,12 +32,12 @@ public class Users extends BaseTimeEntity {
     )
     {
         this.email = email;
-        this.password = password;
+        this.password = null;
         this.nickname = nickname;
         this.phoneNum = phoneNum;
         this.phoneKey = phoneKey;
         this.username = username;
-        this.profile = "default";
+        this.profile = profile;
     }
 
     @Id
@@ -46,13 +48,13 @@ public class Users extends BaseTimeEntity {
     @Column(nullable = false, unique = true, length = 50)
     String email;
 
-    @Column(nullable = false, length = 25)
+    @Column(length = 25)
     String password;
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     String nickname;
 
-    @Column(nullable = false, unique = true,name = "phone_num",length = 11)
+    @Column(name = "phone_num",length = 11)
     String phoneNum;
 
     @Column(nullable = false, unique = true,name = "phone_key")
@@ -64,7 +66,29 @@ public class Users extends BaseTimeEntity {
     @Column(nullable = false)
     String profile;
 
-    void updatePassword(String password) {
-        this.password = password;
+    public static Users toUserFromKakao(
+            KakaoUser kakaoUser
+    ){
+        KakaoAccount account = kakaoUser.getKakaoAccount();
+        String phone = null;
+        String profile = "default";
+        String nickname = null;
+
+        if(account.getPhoneNumberNeedsAgreement())
+            phone = account.getPhoneNumber();
+        if(account.getProfileNicknameNeedsAgreement())
+            nickname = account.getNickname();
+        if(account.getProfileImageNeedsAgreement())
+            profile = account.getProfileImageUrl();
+
+        return Users.builder()
+                .email(account.getEmail())
+                .nickname(nickname)
+                .phoneKey(kakaoUser.getId())
+                .phoneNum(phone)
+                .username(account.getName())
+                .profile(profile)
+                .build();
     }
+
 }
