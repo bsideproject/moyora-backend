@@ -1,13 +1,21 @@
 package com.beside.ties.auth.kakao;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.val;
 
 @Data
 public class KakaoUser {
 
-    private String id;
+    @SerializedName("connected_at")
+    private final String connectedAt;
 
-    private String connected_at;
+    @SerializedName("id")
+    private final String id;
 
-    private KakaoAccount kakao_account;
+    @SerializedName("kakao_account")
+    private final KakaoAccount kakaoAccount;
+
+    @SerializedName("synched_at")
+    private final String synchedAt;
 }
