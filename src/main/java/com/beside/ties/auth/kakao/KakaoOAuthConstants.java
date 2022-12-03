@@ -1,5 +1,8 @@
 package com.beside.ties.auth.kakao;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class KakaoOAuthConstants {
 
     /** Encoded URL of Kakao's end-user authorization server. */
@@ -11,6 +14,4 @@ public class KakaoOAuthConstants {
     /** Encoded URL of Kakao's user-info server. */
     public static final String USER_INFO_URI = "https://kapi.kakao.com/v2/user/me";
 
-    public KakaoOAuthConstants() {
-    }
 }
