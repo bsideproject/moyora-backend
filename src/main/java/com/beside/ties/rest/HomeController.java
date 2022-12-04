@@ -21,10 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class HomeController {
 
-    @Autowired
     private final KakaoAPI kakaoAPI;
-
-    @Autowired
     private final UsersService usersService;
 
     @GetMapping
@@ -36,7 +33,7 @@ public class HomeController {
     @Operation(summary = "유저 권한 테스트")
     @PostMapping("/test")
     ResponseEntity<String> testAuth(
-            //@CurrentUser Users user
+            @CurrentUser Users user
     ){
         return ResponseEntity.ok().body("유저 권한 테스트 성공");
     }

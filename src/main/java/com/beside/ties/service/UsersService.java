@@ -11,8 +11,8 @@ import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,11 +31,13 @@ public class UsersService {
 
     Logger logger = LoggerFactory.getLogger(UsersService.class);
 
-    @Autowired
     private final UsersRepo usersRepo;
+
+    private final PasswordEncoder passwordEncoder;
 
     public Long register(KakaoUser kakaoUser){
         Users users = Users.toUserFromKakao(kakaoUser);
+        users.UpdatePassword(passwordEncoder.encode(users.getPw()));
         Users save = usersRepo.save(users);
 
         if(save == null) throw new IllegalArgumentException("유저 저장 실패");

@@ -26,7 +26,7 @@ public class UsersDetailService implements UserDetailsService {
 
         users = usersRepo.findUsersByPhoneKey(phoneKey).get();
 
-        return users;
+        return new CustomUserDetails(users);
 
     }
 }
