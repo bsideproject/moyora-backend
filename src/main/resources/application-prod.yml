@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   datasource:
     url: jdbc:postgresql://pg-ea5qm.vpc-pub-cdb-kr.ntruss.com:5432/tiesdb

@@ -2,12 +2,12 @@
 SERVICE_NAME=ties-main
 PATH_TO_JAR=./ties-0.0.1-SNAPSHOT.jar
 PID_PATH_NAME=/tmp/$SERVICE_NAME-pid # pid name
-RUN_MODE=sendbox
+RUN_MODE=prod
 case $1 in
     start)
         echo "Starting $SERVICE_NAME ..."
         if [ ! -f $PID_PATH_NAME ]; then
-            nohup java -jar $PATH_TO_JAR /tmp 2>> /dev/null >> /dev/null &
+            nohup java -jar -Dspring.profiles.active=$RUN_MODE $PATH_TO_JAR /tmp 2>> /dev/null >> /dev/null &
             echo $! > $PID_PATH_NAME
             echo "$SERVICE_NAME started ..."
         else
