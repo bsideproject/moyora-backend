@@ -9,7 +9,7 @@ name: Ties CI/CD with Gradle
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "daehee" ]
   pull_request:
     branches: [ "main" ]
 
