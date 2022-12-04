@@ -3,7 +3,7 @@ package com.beside.ties.auth.kakao;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
-import java.io.Serial;
+//import java.io.Serial;
 
 @Data
 public class KakaoAccount {
