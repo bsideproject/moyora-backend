@@ -11,8 +11,8 @@ public class KakaoUser {
      public static OAuthResponseDto toUserInfo(KakaoAccount account, KakaoToken kakaoToken){
         return new OAuthResponseDto(
                 account.getEmail(),
-                account.getProfileImageUrl(),
-                account.getNickname(),
+                account.getProfile().getProfileImageUrl(),
+                account.getProfile().getNickname(),
                 account.getName(),
                 kakaoToken
         );
@@ -22,8 +22,8 @@ public class KakaoUser {
     public static LoginResponseDto toUserInfo(KakaoAccount account){
         return new LoginResponseDto(
                 account.getEmail(),
-                account.getProfileImageUrl(),
-                account.getNickname(),
+                account.getProfile().getProfileImageUrl(),
+                account.getProfile().getNickname(),
                 account.getName()
         );
 

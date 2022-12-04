@@ -3,8 +3,6 @@ package com.beside.ties.auth.kakao;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
-import java.io.Serial;
-
 @Data
 public class KakaoAccount {
 
@@ -74,10 +72,7 @@ public class KakaoAccount {
     @SerializedName("profile_image_needs_agreement")
     private final Boolean profileImageNeedsAgreement;
 
-    @SerializedName("profile_image_url")
-    private final String profileImageUrl;
-
-    @SerializedName("nickname")
-    private final String nickname;
+    @SerializedName("profile")
+    private final KakaoProfile profile;
 
 }

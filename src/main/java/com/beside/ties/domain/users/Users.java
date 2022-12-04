@@ -7,8 +7,15 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SequenceGenerator(
@@ -19,7 +26,7 @@ import javax.persistence.*;
 )
 @Getter
 @Entity
-public class Users extends BaseTimeEntity {
+public class Users extends BaseTimeEntity implements UserDetails {
 
     @Builder
     public Users(
@@ -33,6 +40,7 @@ public class Users extends BaseTimeEntity {
     {
         this.email = email;
         this.password = null;
+        this.role = Role.USER;
         this.nickname = nickname;
         this.phoneNum = phoneNum;
         this.phoneKey = phoneKey;
@@ -60,11 +68,15 @@ public class Users extends BaseTimeEntity {
     @Column(nullable = false, unique = true,name = "phone_key")
     private String phoneKey;
 
-    @Column(nullable = false, length = 25)
+    @Column(length = 25)
     private String username;
 
     @Column(nullable = false)
     private String profile;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     public static Users toUserFromKakao(
             KakaoUser kakaoUser
@@ -73,22 +85,65 @@ public class Users extends BaseTimeEntity {
         String phone = null;
         String profile = "default";
         String nickname = null;
+        String email = String.valueOf(UUID.randomUUID()).substring(1,22);
 
-        if(account.getPhoneNumberNeedsAgreement())
-            phone = account.getPhoneNumber();
-        if(account.getProfileNicknameNeedsAgreement())
-            nickname = account.getNickname();
+        if(account.getPhoneNumberNeedsAgreement() != null)
+            if(account.getPhoneNumberNeedsAgreement())
+                phone = account.getPhoneNumber();
+        if(account.getProfileNicknameNeedsAgreement() != null)
+            if(account.getProfileNicknameNeedsAgreement())
+                nickname = account.getProfile().getNickname();
         if(account.getProfileImageNeedsAgreement())
-            profile = account.getProfileImageUrl();
+            if(account.getProfileImageNeedsAgreement())
+                profile = account.getProfile().getProfileImageUrl();
+        if(account.getEmail() != null)
+            email = account.getEmail();
 
         return Users.builder()
-                .email(account.getEmail())
+                .email(email)
                 .nickname(nickname)
                 .phoneKey(kakaoUser.getId())
                 .phoneNum(phone)
-                .username(account.getName())
+                .username(null)
                 .profile(profile)
                 .build();
     }
 
+    @Override
+    public String getPassword() {
+        return getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return getPhoneKey();
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_"+getRole().getName()));
+        return authorities;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

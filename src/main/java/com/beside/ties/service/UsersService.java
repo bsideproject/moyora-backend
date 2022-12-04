@@ -9,6 +9,8 @@ import com.beside.ties.dto.user.response.LoginResponseDto;
 import com.beside.ties.dto.user.response.OAuthResponseDto;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -27,25 +29,23 @@ import static com.beside.ties.auth.kakao.KakaoOAuthConstants.USER_INFO_URI;
 @Service
 public class UsersService {
 
+    Logger logger = LoggerFactory.getLogger(UsersService.class);
+
     @Autowired
     private final UsersRepo usersRepo;
 
-    public void findByEmail(String email){
-        Users users = usersRepo.findUsersByEmail(email).get();
-
-    }
-
     public Long register(KakaoUser kakaoUser){
-        Users user = Users.toUserFromKakao(kakaoUser);
-        Users save = usersRepo.save(user);
+        Users users = Users.toUserFromKakao(kakaoUser);
+        Users save = usersRepo.save(users);
 
         if(save == null) throw new IllegalArgumentException("유저 저장 실패");
+        logger.debug("유저 저장 성공");
 
         return save.getId();
 
     }
 
-    public OAuthResponseDto login(String token, KakaoToken kakaoToken){
+    public OAuthResponseDto loginWithAuthorizationCode(String token, KakaoToken kakaoToken){
         KakaoUser kakaoUser = getUserFromToken(token);
         OAuthResponseDto response = KakaoUser.toUserInfo(kakaoUser.getKakaoAccount(), kakaoToken);
         return response;
@@ -54,6 +54,9 @@ public class UsersService {
     public LoginResponseDto login(String token){
         KakaoUser kakaoUser = getUserFromToken(token);
         LoginResponseDto response = KakaoUser.toUserInfo(kakaoUser.getKakaoAccount());
+        Long userId = register(kakaoUser);
+        response.setUserId(userId);
+
         return response;
     }
 
