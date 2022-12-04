@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://pg-ea5qm.vpc-pub-cdb-kr.ntruss.com:5432/tiesdb
+    username: ties
+    password: ties135!#%
+    driverClassName: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    spring.jpa.database-platform: org.hibernate.dialect.PostgreSQLDialect
+    defer-datasource-initialization: false
+    show-sql: true
