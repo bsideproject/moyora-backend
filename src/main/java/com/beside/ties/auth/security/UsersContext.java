@@ -21,7 +21,7 @@ public class UsersContext extends User {
     }
 
     public UsersContext(Users users){
-        super(users.getPhoneKey(),users.getPassword(),parseRole(users));
+        super(users.getPhoneKey(),users.getPw(),parseRole(users));
         this.users = users;
     }
 }
