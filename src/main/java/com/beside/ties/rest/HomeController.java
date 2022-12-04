@@ -2,10 +2,10 @@ package com.beside.ties.rest;
 
 
 import com.beside.ties.auth.kakao.KakaoAPI;
-import com.beside.ties.auth.kakao.KakaoToken;
+import com.beside.ties.common.annotation.CurrentUser;
+import com.beside.ties.domain.users.Users;
 import com.beside.ties.dto.user.request.KakaoTokenRequest;
 import com.beside.ties.dto.user.response.LoginResponseDto;
-import com.beside.ties.dto.user.response.OAuthResponseDto;
 import com.beside.ties.service.UsersService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,20 +32,16 @@ public class HomeController {
         return "Hello, World!";
     }
 
-    @Operation(summary = "인가 코드를 받을 경우의 로그인")
-    @PostMapping("/oauth/token")
-    ResponseEntity<OAuthResponseDto> getToken(
-            @RequestParam("code") String code
+
+    @Operation(summary = "유저 권한 테스트")
+    @PostMapping("/test")
+    ResponseEntity<String> testAuth(
+            //@CurrentUser Users user
     ){
-        KakaoToken kakaoToken = kakaoAPI.getAccessToken(code);
-        String token = kakaoToken.getAccessToken();
-
-        OAuthResponseDto response = usersService.login(token, kakaoToken);
-
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body("유저 권한 테스트 성공");
     }
 
-    @Operation(summary = "카카오 엑세스 토큰을 바로 전달 받을 경우의 로그인")
+    @Operation(summary = "카카오 로그인")
     @PostMapping("/login")
     ResponseEntity<LoginResponseDto> kakaoLogin(
             @Validated @RequestBody KakaoTokenRequest request){

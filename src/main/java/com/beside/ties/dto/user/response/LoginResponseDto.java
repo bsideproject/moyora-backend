@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class LoginResponseDto {
 
+    private Long userId;
     public final String email;
     public final String profileImageUrl;
     public final String nickname;
