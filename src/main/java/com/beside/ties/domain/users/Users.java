@@ -39,7 +39,7 @@ public class Users extends BaseTimeEntity implements UserDetails {
     )
     {
         this.email = email;
-        this.password = null;
+        this.pw = "123";
         this.role = Role.USER;
         this.nickname = nickname;
         this.phoneNum = phoneNum;
@@ -56,8 +56,8 @@ public class Users extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false, unique = true, length = 50)
     private String email;
 
-    @Column(length = 25)
-    private String password;
+    @Column(length = 75)
+    private String pw;
 
     @Column(length = 50)
     private String nickname;
@@ -109,9 +109,13 @@ public class Users extends BaseTimeEntity implements UserDetails {
                 .build();
     }
 
+    public void UpdatePassword(String password){
+        this.pw = password;
+    }
+
     @Override
     public String getPassword() {
-        return getPassword();
+        return getPw();
     }
 
     @Override
