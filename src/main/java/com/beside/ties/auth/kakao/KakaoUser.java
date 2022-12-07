@@ -22,9 +22,10 @@ public class KakaoUser {
     public static LoginResponseDto toUserInfo(KakaoAccount account){
         return new LoginResponseDto(
                 account.getEmail(),
-                account.getProfile().getProfileImageUrl(),
-                account.getProfile().getNickname(),
-                account.getName()
+                null,
+                null,
+                account.getName(),
+                false
         );
 
     }
