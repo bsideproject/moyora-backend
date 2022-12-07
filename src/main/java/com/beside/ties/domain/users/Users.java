@@ -3,10 +3,7 @@ package com.beside.ties.domain.users;
 import com.beside.ties.auth.kakao.KakaoAccount;
 import com.beside.ties.auth.kakao.KakaoUser;
 import com.beside.ties.common.BaseTimeEntity;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,16 +48,16 @@ public class Users extends BaseTimeEntity implements UserDetails {
     @Id
     @GeneratedValue(generator = "USERS_SEQ_GEN")
     @Column(name = "users_id")
-    private Long id;
+    public Long id;
 
     @Column(nullable = false, unique = true, length = 50)
-    private String email;
+    public String email;
 
     @Column(length = 75)
     private String pw;
 
     @Column(length = 50)
-    private String nickname;
+    public String nickname;
 
     @Column(name = "phone_num",length = 11)
     private String phoneNum;
@@ -69,10 +66,10 @@ public class Users extends BaseTimeEntity implements UserDetails {
     private String phoneKey;
 
     @Column(length = 25)
-    private String username;
+    public String username;
 
     @Column(nullable = false)
-    private String profile;
+    public String profile;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -90,12 +87,7 @@ public class Users extends BaseTimeEntity implements UserDetails {
         if(account.getPhoneNumberNeedsAgreement() != null)
             if(account.getPhoneNumberNeedsAgreement())
                 phone = account.getPhoneNumber();
-        if(account.getProfileNicknameNeedsAgreement() != null)
-            if(account.getProfileNicknameNeedsAgreement())
-                nickname = account.getProfile().getNickname();
-        if(account.getProfileImageNeedsAgreement())
-            if(account.getProfileImageNeedsAgreement())
-                profile = account.getProfile().getProfileImageUrl();
+
         if(account.getEmail() != null)
             email = account.getEmail();
 

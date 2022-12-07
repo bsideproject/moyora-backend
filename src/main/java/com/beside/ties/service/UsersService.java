@@ -5,6 +5,7 @@ import com.beside.ties.auth.kakao.KakaoUser;
 import com.beside.ties.common.exception.custom.InvalidSocialTokenException;
 import com.beside.ties.domain.users.Users;
 import com.beside.ties.domain.users.UsersRepo;
+import com.beside.ties.domain.users.mapper.UsersMapper;
 import com.beside.ties.dto.user.response.LoginResponseDto;
 import com.beside.ties.dto.user.response.OAuthResponseDto;
 import com.google.gson.Gson;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Optional;
 
 import static com.beside.ties.auth.kakao.KakaoOAuthConstants.USER_INFO_URI;
 
@@ -32,6 +34,7 @@ public class UsersService {
     Logger logger = LoggerFactory.getLogger(UsersService.class);
 
     private final UsersRepo usersRepo;
+    private final UsersMapper usersMapper;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -56,8 +59,17 @@ public class UsersService {
     public LoginResponseDto login(String token){
         KakaoUser kakaoUser = getUserFromToken(token);
         LoginResponseDto response = KakaoUser.toUserInfo(kakaoUser.getKakaoAccount());
-        Long userId = register(kakaoUser);
-        response.setUserId(userId);
+
+        Optional<Users> optionalUsers = usersRepo.findUsersByPhoneKey(kakaoUser.getId());
+        if(optionalUsers.isPresent()){
+            Users users1 = optionalUsers.get();
+            response = usersMapper.toLoginResponseDto(users1);
+        }
+        else{
+            Long userId = register(kakaoUser);
+            response.userId = userId;
+            response.isFirst = true;
+        }
 
         return response;
     }
