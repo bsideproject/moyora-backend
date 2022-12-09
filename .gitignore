@@ -15,6 +15,7 @@
 # AWS User-specific
 .idea/**/aws.xml
 
+src/main/resources/application-secret.yml
 # Generated files
 .idea/**/contentModel.xml
 
