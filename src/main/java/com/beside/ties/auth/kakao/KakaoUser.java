@@ -1,7 +1,7 @@
 package com.beside.ties.auth.kakao;
 
-import com.beside.ties.dto.user.response.LoginResponseDto;
-import com.beside.ties.dto.user.response.OAuthResponseDto;
+import com.beside.ties.dto.account.response.LoginResponseDto;
+import com.beside.ties.dto.account.response.OAuthResponseDto;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 

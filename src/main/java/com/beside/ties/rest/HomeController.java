@@ -3,14 +3,13 @@ package com.beside.ties.rest;
 
 import com.beside.ties.auth.kakao.KakaoAPI;
 import com.beside.ties.common.annotation.CurrentUser;
-import com.beside.ties.domain.users.Users;
-import com.beside.ties.dto.user.request.KakaoTokenRequest;
-import com.beside.ties.dto.user.response.LoginResponseDto;
-import com.beside.ties.service.UsersService;
+import com.beside.ties.domain.account.Account;
+import com.beside.ties.dto.account.request.KakaoTokenRequest;
+import com.beside.ties.dto.account.response.LoginResponseDto;
+import com.beside.ties.service.AccountService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +17,12 @@ import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "기본 Api")
 @RequiredArgsConstructor
-@RestController("/api/v1")
+@RequestMapping("/api/v1")
+@RestController
 public class HomeController {
 
     private final KakaoAPI kakaoAPI;
-    private final UsersService usersService;
+    private final AccountService accountService;
 
     @GetMapping
     public String home() {
@@ -33,7 +33,7 @@ public class HomeController {
     @Operation(summary = "유저 권한 테스트")
     @PostMapping("/test")
     ResponseEntity<String> testAuth(
-            @CurrentUser Users user
+            @CurrentUser Account user
     ){
         return ResponseEntity.ok().body("유저 권한 테스트 성공");
     }
@@ -42,7 +42,7 @@ public class HomeController {
     @PostMapping("/login")
     ResponseEntity<LoginResponseDto> kakaoLogin(
             @Validated @RequestBody KakaoTokenRequest request){
-        LoginResponseDto response = usersService.login(request.getToken());
+        LoginResponseDto response = accountService.login(request.getToken());
 
         return ResponseEntity.ok().body(response);
     }

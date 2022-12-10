@@ -3,11 +3,11 @@ package com.beside.ties.service;
 import com.beside.ties.auth.kakao.KakaoToken;
 import com.beside.ties.auth.kakao.KakaoUser;
 import com.beside.ties.common.exception.custom.InvalidSocialTokenException;
-import com.beside.ties.domain.users.Users;
-import com.beside.ties.domain.users.UsersRepo;
-import com.beside.ties.domain.users.mapper.UsersMapper;
-import com.beside.ties.dto.user.response.LoginResponseDto;
-import com.beside.ties.dto.user.response.OAuthResponseDto;
+import com.beside.ties.domain.account.Account;
+import com.beside.ties.domain.account.AccountRepo;
+import com.beside.ties.domain.account.mapper.AccountMapper;
+import com.beside.ties.dto.account.response.LoginResponseDto;
+import com.beside.ties.dto.account.response.OAuthResponseDto;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -29,19 +29,19 @@ import static com.beside.ties.auth.kakao.KakaoOAuthConstants.USER_INFO_URI;
 @RequiredArgsConstructor
 @Transactional
 @Service
-public class UsersService {
+public class AccountService {
 
-    Logger logger = LoggerFactory.getLogger(UsersService.class);
+    Logger logger = LoggerFactory.getLogger(AccountService.class);
 
-    private final UsersRepo usersRepo;
-    private final UsersMapper usersMapper;
+    private final AccountRepo accountRepo;
+    private final AccountMapper accountMapper;
 
     private final PasswordEncoder passwordEncoder;
 
     public Long register(KakaoUser kakaoUser){
-        Users users = Users.toUserFromKakao(kakaoUser);
-        users.UpdatePassword(passwordEncoder.encode(users.getPw()));
-        Users save = usersRepo.save(users);
+        Account account = Account.toUserFromKakao(kakaoUser);
+        account.UpdatePassword(passwordEncoder.encode(account.getPw()));
+        Account save = accountRepo.save(account);
 
         if(save == null) throw new IllegalArgumentException("유저 저장 실패");
         logger.debug("유저 저장 성공");
@@ -60,10 +60,10 @@ public class UsersService {
         KakaoUser kakaoUser = getUserFromToken(token);
         LoginResponseDto response = KakaoUser.toUserInfo(kakaoUser.getKakaoAccount());
 
-        Optional<Users> optionalUsers = usersRepo.findUsersByPhoneKey(kakaoUser.getId());
-        if(optionalUsers.isPresent()){
-            Users users1 = optionalUsers.get();
-            response = usersMapper.toLoginResponseDto(users1);
+        Optional<Account> optionalAccount = accountRepo.findAccountByPhoneKey(kakaoUser.getId());
+        if(optionalAccount.isPresent()){
+            Account account1 = optionalAccount.get();
+            response = accountMapper.toLoginResponseDto(account1);
         }
         else{
             Long userId = register(kakaoUser);
