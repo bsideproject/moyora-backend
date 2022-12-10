@@ -1,4 +1,4 @@
-package com.beside.ties.dto.user.response;
+package com.beside.ties.dto.account.response;
 
 import com.beside.ties.auth.kakao.KakaoToken;
 import lombok.Data;

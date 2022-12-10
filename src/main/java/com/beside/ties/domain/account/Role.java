@@ -1,4 +1,4 @@
-package com.beside.ties.domain.users;
+package com.beside.ties.domain.account;
 
 
 import lombok.Getter;

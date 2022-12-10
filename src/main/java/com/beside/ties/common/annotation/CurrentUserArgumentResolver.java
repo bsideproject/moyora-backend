@@ -1,6 +1,6 @@
 package com.beside.ties.common.annotation;
 
-import com.beside.ties.domain.users.Users;
+import com.beside.ties.domain.account.Account;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -12,7 +12,7 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         boolean hasLoginAnnotation = parameter.hasParameterAnnotation(CurrentUser.class);
-        boolean hasMemberType = Users.class.isAssignableFrom(parameter.getParameterType());
+        boolean hasMemberType = Account.class.isAssignableFrom(parameter.getParameterType());
         return hasLoginAnnotation && hasMemberType;
     }
 
@@ -22,7 +22,7 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
 
         if(principal.equals("anonymousUser")) throw new IllegalArgumentException("로그인이 필요합니다.");
 
-        Users users = (Users) principal;
-        return users;
+        Account account = (Account) principal;
+        return account;
     }
 }
