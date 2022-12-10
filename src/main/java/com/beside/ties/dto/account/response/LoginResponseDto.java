@@ -1,11 +1,8 @@
-package com.beside.ties.dto.user.response;
+package com.beside.ties.dto.account.response;
 
-import com.beside.ties.auth.kakao.KakaoToken;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor

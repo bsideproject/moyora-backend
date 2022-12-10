@@ -1,4 +1,4 @@
-package com.beside.ties.domain.users;
+package com.beside.ties.domain.account;
 
 import com.beside.ties.auth.kakao.KakaoAccount;
 import com.beside.ties.auth.kakao.KakaoUser;
@@ -16,17 +16,17 @@ import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SequenceGenerator(
-        name = "USERS_SEQ_GEN",
-        sequenceName = "USERS_SEQ",
+        name = "ACCOUNT_SEQ_GEN",
+        sequenceName = "ACCOUNT_SEQ",
         initialValue = 10000,
         allocationSize = 50
 )
 @Getter
 @Entity
-public class Users extends BaseTimeEntity implements UserDetails {
+public class Account extends BaseTimeEntity implements UserDetails {
 
     @Builder
-    public Users(
+    public Account(
             String email,
             String profile,
             String nickname,
@@ -46,8 +46,8 @@ public class Users extends BaseTimeEntity implements UserDetails {
     }
 
     @Id
-    @GeneratedValue(generator = "USERS_SEQ_GEN")
-    @Column(name = "users_id")
+    @GeneratedValue(generator = "ACCOUNT_SEQ_GEN")
+    @Column(name = "account_id")
     public Long id;
 
     @Column(nullable = false, unique = true, length = 50)
@@ -75,7 +75,7 @@ public class Users extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
-    public static Users toUserFromKakao(
+    public static Account toUserFromKakao(
             KakaoUser kakaoUser
     ){
         KakaoAccount account = kakaoUser.getKakaoAccount();
@@ -91,7 +91,7 @@ public class Users extends BaseTimeEntity implements UserDetails {
         if(account.getEmail() != null)
             email = account.getEmail();
 
-        return Users.builder()
+        return Account.builder()
                 .email(email)
                 .nickname(nickname)
                 .phoneKey(kakaoUser.getId())

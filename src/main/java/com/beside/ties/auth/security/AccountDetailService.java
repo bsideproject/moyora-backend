@@ -1,11 +1,10 @@
 package com.beside.ties.auth.security;
 
 import com.beside.ties.common.annotation.CustomUserDetails;
-import com.beside.ties.domain.users.Users;
-import com.beside.ties.domain.users.UsersRepo;
+import com.beside.ties.domain.account.Account;
+import com.beside.ties.domain.account.AccountRepo;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,18 +14,18 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 @Service("userDetailsService")
-public class UsersDetailService implements UserDetailsService {
+public class AccountDetailService implements UserDetailsService {
 
-    private final UsersRepo usersRepo;
+    private final AccountRepo accountRepo;
     @Getter
-    private Users users;
+    private Account account;
 
     @Override
     public UserDetails loadUserByUsername(String phoneKey) throws UsernameNotFoundException {
 
-        users = usersRepo.findUsersByPhoneKey(phoneKey).get();
+        account = accountRepo.findAccountByPhoneKey(phoneKey).get();
 
-        return new CustomUserDetails(users);
+        return new CustomUserDetails(account);
 
     }
 }
