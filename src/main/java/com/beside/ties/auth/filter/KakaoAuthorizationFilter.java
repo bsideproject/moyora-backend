@@ -40,7 +40,7 @@ public class KakaoAuthorizationFilter extends OncePerRequestFilter {
     private final UsersService usersService;
 
     private final List<String> WHITE_LIST_EQUALS = Arrays.asList("/");
-    private final List<String> WHITE_LIST_STARTS = Arrays.asList("/login","/swagger","/v3","/h2-console");
+    private final List<String> WHITE_LIST_STARTS = Arrays.asList("api/v1/login","/swagger","/v3","/h2-console");
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
