@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "기본 Api")
 @RequiredArgsConstructor
-@RestController
+@RestController("/api/v1")
 public class HomeController {
 
     private final KakaoAPI kakaoAPI;
