@@ -1,4 +1,4 @@
-package com.beside.ties.domain.jobcategory;
+package com.beside.ties.domain.region;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,23 +12,21 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class JobCategory {
+public class Region {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "job_category_id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "region_id")
     Long id;
 
-    @Column(nullable = false,unique = true, length = 100)
+    @Column(length = 50, unique = true)
     String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent")
-    JobCategory parent;
+    Region parent;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
-    Set<JobCategory> children;
-
+    Set<Region> children;
 
 
 }

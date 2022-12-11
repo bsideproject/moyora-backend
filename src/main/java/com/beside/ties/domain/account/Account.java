@@ -3,16 +3,15 @@ package com.beside.ties.domain.account;
 import com.beside.ties.auth.kakao.KakaoAccount;
 import com.beside.ties.auth.kakao.KakaoUser;
 import com.beside.ties.common.BaseTimeEntity;
+import com.beside.ties.domain.jobcategory.JobCategory;
+import com.beside.ties.domain.userguestbook.UserGuestBook;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SequenceGenerator(
@@ -70,6 +69,17 @@ public class Account extends BaseTimeEntity implements UserDetails {
 
     @Column(nullable = false)
     public String profile;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.ALL)
+    Set<UserGuestBook> userGuestBooks;
+
+
+    @Column(name = "sns_account", length = 50)
+    String snsAccount;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_category_id")
+    JobCategory myJob;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
