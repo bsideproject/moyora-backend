@@ -60,7 +60,7 @@ public class AccountService {
         KakaoUser kakaoUser = getUserFromToken(token);
         LoginResponseDto response = KakaoUser.toUserInfo(kakaoUser.getKakaoAccount());
 
-        Optional<Account> optionalAccount = accountRepo.findAccountByPhoneKey(kakaoUser.getId());
+        Optional<Account> optionalAccount = accountRepo.findAccountByKakaoId(kakaoUser.getId());
         if(optionalAccount.isPresent()){
             Account account1 = optionalAccount.get();
             response = accountMapper.toLoginResponseDto(account1);

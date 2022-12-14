@@ -21,9 +21,9 @@ public class AccountDetailService implements UserDetailsService {
     private Account account;
 
     @Override
-    public UserDetails loadUserByUsername(String phoneKey) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String kakaoId) throws UsernameNotFoundException {
 
-        account = accountRepo.findAccountByPhoneKey(phoneKey).get();
+        account = accountRepo.findAccountByKakaoId(kakaoId).get();
 
         return new CustomUserDetails(account);
 

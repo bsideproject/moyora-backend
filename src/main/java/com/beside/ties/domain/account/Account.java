@@ -31,7 +31,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
             String nickname,
             String username,
             String phoneNum,
-            String phoneKey
+            String kakaoId
     )
     {
         this.email = email;
@@ -39,7 +39,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
         this.role = Role.USER;
         this.nickname = nickname;
         this.phoneNum = phoneNum;
-        this.phoneKey = phoneKey;
+        this.kakaoId = kakaoId;
         this.username = username;
         this.profile = profile;
     }
@@ -61,8 +61,8 @@ public class Account extends BaseTimeEntity implements UserDetails {
     @Column(name = "phone_num",length = 11)
     private String phoneNum;
 
-    @Column(nullable = false, unique = true,name = "phone_key")
-    private String phoneKey;
+    @Column(nullable = false, unique = true,name = "kakao_id")
+    private String kakaoId;
 
     @Column(length = 25)
     public String username;
@@ -104,7 +104,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
         return Account.builder()
                 .email(email)
                 .nickname(nickname)
-                .phoneKey(kakaoUser.getId())
+                .kakaoId(kakaoUser.getId())
                 .phoneNum(phone)
                 .username(null)
                 .profile(profile)
@@ -122,7 +122,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return getPhoneKey();
+        return getKakaoId();
     }
 
 
