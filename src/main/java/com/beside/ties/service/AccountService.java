@@ -60,7 +60,7 @@ public class AccountService {
         KakaoUser kakaoUser = getUserFromToken(token);
         LoginResponseDto response = KakaoUser.toUserInfo(kakaoUser.getKakaoAccount());
 
-        Optional<Account> optionalAccount = accountRepo.findAccountByPhoneKey(kakaoUser.getId());
+        Optional<Account> optionalAccount = accountRepo.findAccountByKakaoId(kakaoUser.getId());
         if(optionalAccount.isPresent()){
             Account account1 = optionalAccount.get();
             response = accountMapper.toLoginResponseDto(account1);
@@ -110,5 +110,13 @@ public class AccountService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Account loadUserByUsername(String email) {
+        Optional<Account> accountByEmail = accountRepo.findAccountByEmail(email);
+        if(accountByEmail.isEmpty()){
+            throw new IllegalArgumentException("유저 정보가 존재하지 않습니다.");
+        }
+        return accountByEmail.get();
     }
 }

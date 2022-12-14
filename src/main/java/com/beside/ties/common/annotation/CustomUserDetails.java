@@ -13,7 +13,7 @@ public class CustomUserDetails extends User {
     private Account account;
 
     public CustomUserDetails(Account account) {
-        super(account.getPhoneKey(), account.getPw(), List.of(new SimpleGrantedAuthority("ROLE_"+account.getRole())));
+        super(account.getKakaoId(), account.getPw(), List.of(new SimpleGrantedAuthority("ROLE_"+account.getRole())));
         this.account = account;
     }
 
