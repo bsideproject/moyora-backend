@@ -1,6 +1,7 @@
 package com.beside.ties.config;
 
 import com.beside.ties.auth.filter.KakaoAuthorizationFilter;
+import com.beside.ties.auth.security.AuthFilterContainer;
 import com.beside.ties.domain.account.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +19,7 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final KakaoAuthorizationFilter kakaoAuthorizationFilter;
+    private final AuthFilterContainer authFilterContainer;
 
 
 
@@ -40,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .headers().addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
                 .and()
-                .addFilterBefore(kakaoAuthorizationFilter,
+                .addFilterBefore(authFilterContainer.getFilter(),
                         UsernamePasswordAuthenticationFilter.class);
     }
 

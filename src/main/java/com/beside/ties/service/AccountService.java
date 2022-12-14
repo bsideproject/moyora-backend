@@ -111,4 +111,12 @@ public class AccountService {
             throw new RuntimeException(e);
         }
     }
+
+    public Account loadUserByUsername(String email) {
+        Optional<Account> accountByEmail = accountRepo.findAccountByEmail(email);
+        if(accountByEmail.isEmpty()){
+            throw new IllegalArgumentException("유저 정보가 존재하지 않습니다.");
+        }
+        return accountByEmail.get();
+    }
 }
