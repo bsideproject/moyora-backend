@@ -8,5 +8,5 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
 
     Optional<Account> findAccountByEmail(String email);
 
-    Optional<Account> findAccountByPhoneKey(String phoneKey);
+    Optional<Account> findAccountByKakaoId(String kakaoId);
 }

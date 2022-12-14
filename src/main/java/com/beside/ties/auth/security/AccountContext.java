@@ -21,7 +21,7 @@ public class AccountContext extends User {
     }
 
     public AccountContext(Account account){
-        super(account.getPhoneKey(),account.getPw(),parseRole(account));
+        super(account.getKakaoId(),account.getPw(),parseRole(account));
         this.account = account;
     }
 }
