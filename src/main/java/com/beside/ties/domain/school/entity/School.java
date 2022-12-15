@@ -24,4 +24,7 @@ public class School {
     private String establishmentDate;
 
     private String address;
+
+    @Column(name = "school_code", unique = true)
+    private String schoolCode;
 }
