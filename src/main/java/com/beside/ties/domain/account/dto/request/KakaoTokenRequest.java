@@ -16,6 +16,7 @@ public class KakaoTokenRequest{
     @NotBlank
     @ApiModelProperty(
             value = "카카오 Access Token",
+            example = "fdsfhuifhweiofj3290",
             required = true
     )
     private String token;
