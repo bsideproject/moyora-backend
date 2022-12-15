@@ -1,7 +1,7 @@
 package com.beside.ties.domain.account.mapper;
 
-import com.beside.ties.domain.account.Account;
-import com.beside.ties.dto.account.response.LoginResponseDto;
+import com.beside.ties.domain.account.entity.Account;
+import com.beside.ties.domain.account.dto.response.LoginResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -17,6 +17,6 @@ public interface AccountMapper {
             @Mapping(target = "isFirst", ignore = true),
             @Mapping(target = "profileImageUrl", source = "profile")
     })
-    LoginResponseDto toLoginResponseDto(Account account);
+    LoginResponse toLoginResponseDto(Account account);
 
 }
