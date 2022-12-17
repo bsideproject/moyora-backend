@@ -1,6 +1,10 @@
 package com.beside.ties.domain.account.service;
 
 import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
+import com.beside.ties.domain.jobcategory.entity.JobCategory;
+import com.beside.ties.domain.jobcategory.service.JobCategoryService;
+import com.beside.ties.domain.school.entity.School;
+import com.beside.ties.domain.school.service.SchoolService;
 import com.beside.ties.global.auth.kakao.KakaoToken;
 import com.beside.ties.global.auth.kakao.KakaoUser;
 import com.beside.ties.global.common.exception.custom.InvalidSocialTokenException;
@@ -36,8 +40,9 @@ public class AccountService {
 
     private final AccountRepo accountRepo;
     private final AccountMapper accountMapper;
-
     private final PasswordEncoder passwordEncoder;
+    private final SchoolService schoolService;
+    private final JobCategoryService jobCategoryService;
 
     public Long register(KakaoUser kakaoUser){
         Account account = Account.toUserFromKakao(kakaoUser);
@@ -121,7 +126,27 @@ public class AccountService {
         return accountByEmail.get();
     }
 
-    public void updateAccount(AccountUpdateRequest request) {
+    public void updateAccount(AccountUpdateRequest request, Account account) {
 
+        // 학교 존재 여부 확인
+        Optional<School> optionalSchool = schoolService.checkSchoolCode(request.getSchoolCode());
+        // 없으면 학교 등록
+        if(optionalSchool.isEmpty()){
+            School school = School.builder()
+                    .address(request.getAddress())
+                    .establishmentDate(request.getEstablishmentDate())
+                    .schoolCode(request.getSchoolCode())
+                    .schoolName(request.getSchoolName())
+                    .build();
+
+            Long schoolId = schoolService.save(school);
+            logger.info("id" + schoolId + " school 등록 완료");
+        }
+
+        // 직업 조회
+        JobCategory jobCategory = jobCategoryService.findJobCategoryByName(request.getJob());
+
+        // 회원 정보 업데이트
+        account.secondaryInput(request, optionalSchool.get(), jobCategory);
     }
 }
