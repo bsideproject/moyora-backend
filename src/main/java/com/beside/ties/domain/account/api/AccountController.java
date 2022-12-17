@@ -1,7 +1,9 @@
-package com.beside.ties.domain.account.controller;
+package com.beside.ties.domain.account.api;
 
 import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
+import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.account.service.AccountService;
+import com.beside.ties.global.common.annotation.CurrentUser;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +20,12 @@ public class AccountController {
     private final AccountService accountService;
 
 
-    @Operation(summary = "프로필 정보 수정")
+    @Operation(summary = "회원가입 2단계 프로필 정보 등록")
     @PostMapping("/profile")
     public void updateProfile(
-            @RequestBody AccountUpdateRequest request
+            @RequestBody AccountUpdateRequest request,
+            @CurrentUser Account account
     ){
-        accountService.updateAccount(request);
+        accountService.updateAccount(request, account);
     }
 }

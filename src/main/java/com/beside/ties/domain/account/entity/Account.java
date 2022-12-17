@@ -1,5 +1,7 @@
 package com.beside.ties.domain.account.entity;
 
+import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
+import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.global.auth.kakao.KakaoAccount;
 import com.beside.ties.global.auth.kakao.KakaoUser;
 import com.beside.ties.global.common.BaseTimeEntity;
@@ -7,6 +9,7 @@ import com.beside.ties.domain.account.Role;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.userguestbook.entity.UserGuestBook;
 import lombok.*;
+import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -53,6 +56,9 @@ public class Account extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false, unique = true, length = 50)
     public String email;
 
+    @Column(name = "graduation_year")
+    int graduationYear;
+
     @Column(length = 75)
     private String pw;
 
@@ -74,6 +80,10 @@ public class Account extends BaseTimeEntity implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.ALL)
     Set<UserGuestBook> userGuestBooks;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "school_id")
+    School school;
+
 
     @Column(name = "sns_account", length = 50)
     String snsAccount;
@@ -85,6 +95,8 @@ public class Account extends BaseTimeEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+
 
     public static Account toUserFromKakao(
             KakaoUser kakaoUser
@@ -110,6 +122,14 @@ public class Account extends BaseTimeEntity implements UserDetails {
                 .username(null)
                 .profile(profile)
                 .build();
+    }
+
+    public void secondaryInput(AccountUpdateRequest request, School school, JobCategory job){
+        this.myJob = job;
+        this.school = school;
+        this.username = request.getName();
+        this.nickname = request.getNickname();
+        this.graduationYear = request.getGraduationYear();
     }
 
     public void UpdatePassword(String password){

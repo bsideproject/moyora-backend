@@ -38,7 +38,7 @@ public class AccountUpdateRequest {
             required = true
         )
         @JsonProperty("graduation_year")
-        String graduationYear;
+        int graduationYear;
 
         @ApiModelProperty(
             value = "job",
