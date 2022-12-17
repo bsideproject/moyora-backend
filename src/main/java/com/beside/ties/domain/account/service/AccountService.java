@@ -1,5 +1,6 @@
 package com.beside.ties.domain.account.service;
 
+import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
 import com.beside.ties.global.auth.kakao.KakaoToken;
 import com.beside.ties.global.auth.kakao.KakaoUser;
 import com.beside.ties.global.common.exception.custom.InvalidSocialTokenException;
@@ -118,5 +119,9 @@ public class AccountService {
             throw new IllegalArgumentException("유저 정보가 존재하지 않습니다.");
         }
         return accountByEmail.get();
+    }
+
+    public void updateAccount(AccountUpdateRequest request) {
+
     }
 }
