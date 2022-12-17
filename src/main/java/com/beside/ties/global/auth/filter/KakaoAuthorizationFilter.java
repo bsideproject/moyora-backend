@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.beside.ties.global.auth.filter.WhiteList.*;
+
 @RequiredArgsConstructor
 @Component
 public class KakaoAuthorizationFilter extends OncePerRequestFilter {
@@ -29,8 +31,6 @@ public class KakaoAuthorizationFilter extends OncePerRequestFilter {
 
     private final AccountService accountService;
 
-    private final List<String> WHITE_LIST_EQUALS = Arrays.asList("/");
-    private final List<String> WHITE_LIST_STARTS = Arrays.asList("/api/v1/login","/swagger","/v3","/h2-console");
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -58,16 +58,5 @@ public class KakaoAuthorizationFilter extends OncePerRequestFilter {
 
     }
 
-    private boolean checkWhiteList(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        boolean result = false;
 
-        if(WHITE_LIST_EQUALS.contains(request.getServletPath()))
-            result = true;
-
-        for(int i=0; i<WHITE_LIST_STARTS.size(); i++){
-            if(request.getServletPath().startsWith(WHITE_LIST_STARTS.get(i)))
-                result = true;
-        }
-        return result;
-    }
 }
