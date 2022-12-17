@@ -1,6 +1,7 @@
 package com.beside.ties.domain.account.service;
 
 import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
+import com.beside.ties.domain.account.dto.request.LocalSignUpRequest;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.jobcategory.service.JobCategoryService;
 import com.beside.ties.domain.school.entity.School;
@@ -54,6 +55,21 @@ public class AccountService {
 
         return save.getId();
 
+    }
+
+    public Long localSignUp(LocalSignUpRequest request){
+        Account account = Account.builder()
+                .email(request.getEmail())
+                .phoneNum(request.getPhoneNum())
+                .profile(request.getProfile())
+                .username(request.getUsername())
+                .kakaoId("sfoiusdjfioswf")
+                .nickname(request.getNickname()).build();
+
+        Account save = accountRepo.save(account);
+        logger.debug("id "+save.getId()+"로 계정이 저장되었습니다.");
+
+        return save.id;
     }
 
     public OAuthResponse loginWithAuthorizationCode(String token, KakaoToken kakaoToken){
