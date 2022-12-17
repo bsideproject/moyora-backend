@@ -9,8 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WhiteList {
-    public static final List<String> WHITE_LIST_EQUALS = Arrays.asList("/");
-    public static final List<String> WHITE_LIST_STARTS = Arrays.asList("/api/v1/login","/swagger","/v3","/h2-console");
+    public static final List<String> WHITE_LIST_EQUALS = Arrays.asList("/","");
+    public static final List<String> WHITE_LIST_STARTS = Arrays.asList("/api/v1/login","/swagger","/v3","/h2-console","/local/login");
 
 
     public static boolean checkWhiteList(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
