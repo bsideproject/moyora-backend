@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 @RestController
-public class AccountController {
+public class AccountApi {
 
     private final AccountService accountService;
 
@@ -35,11 +35,11 @@ public class AccountController {
 
 
     @Operation(summary = "회원가입 2단계 프로필 정보 등록")
-    @PostMapping("/profile")
+    @PostMapping("/secondarySignUp")
     public void updateProfile(
             @RequestBody AccountUpdateRequest request,
             @CurrentUser Account account
     ){
-        accountService.updateAccount(request, account);
+        accountService.secondarySignUp(request, account);
     }
 }

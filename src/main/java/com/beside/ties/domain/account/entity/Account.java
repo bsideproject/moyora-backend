@@ -9,7 +9,6 @@ import com.beside.ties.domain.account.Role;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.userguestbook.entity.UserGuestBook;
 import lombok.*;
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -77,6 +76,12 @@ public class Account extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false)
     public String profile;
 
+    @Column(length = 40)
+    String state;
+
+    @Column(length = 40)
+    String city;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.ALL)
     Set<UserGuestBook> userGuestBooks;
 
@@ -134,6 +139,11 @@ public class Account extends BaseTimeEntity implements UserDetails {
 
     public void UpdatePassword(String password){
         this.pw = password;
+    }
+
+    public void updateRegion(String state, String city){
+        this.state = state;
+        this.city = city;
     }
 
     @Override

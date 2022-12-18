@@ -24,4 +24,9 @@ public class JobCategoryService {
 
         return optionalJobCategory.get();
     }
+
+    public Long save(JobCategory jobCategory){
+        JobCategory save = jobCategoryRepo.save(jobCategory);
+        return save.getId();
+    }
 }
