@@ -16,18 +16,22 @@ public class JobCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "job_category_id")
-    Long id;
+    private Long id;
 
     @Column(nullable = false,unique = true, length = 100)
-    String name;
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent")
-    JobCategory parent;
+    private JobCategory parent;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
-    Set<JobCategory> children;
+    private Set<JobCategory> children;
 
-
+    public JobCategory(
+           String name
+    ){
+        this.name = name;
+    }
 
 }
