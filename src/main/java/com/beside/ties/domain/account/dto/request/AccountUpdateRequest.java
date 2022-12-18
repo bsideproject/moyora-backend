@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @ApiModel
@@ -54,7 +55,7 @@ public class AccountUpdateRequest {
             required = true
         )
         @JsonProperty("parent_region")
-        String parentRegion;
+        String State;
 
         @ApiModelProperty(
             value = "child_region",
@@ -62,7 +63,7 @@ public class AccountUpdateRequest {
             required = true
         )
         @JsonProperty("child_region")
-        String childRegion;
+        String city;
 
         @ApiModelProperty(
             value = "school_name",

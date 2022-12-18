@@ -142,7 +142,7 @@ public class AccountService {
         return accountByEmail.get();
     }
 
-    public void updateAccount(AccountUpdateRequest request, Account account) {
+    public void secondarySignUp(AccountUpdateRequest request, Account account) {
 
         // 학교 존재 여부 확인
         Optional<School> optionalSchool = schoolService.checkSchoolCode(request.getSchoolCode());
@@ -161,6 +161,9 @@ public class AccountService {
 
         // 직업 조회
         JobCategory jobCategory = jobCategoryService.findJobCategoryByName(request.getJob());
+
+        // 지역 업데이트
+        account.updateRegion(request.getState(), request.getCity());
 
         // 회원 정보 업데이트
         account.secondaryInput(request, optionalSchool.get(), jobCategory);
