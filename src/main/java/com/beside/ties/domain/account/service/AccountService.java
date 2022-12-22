@@ -8,6 +8,10 @@ import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.school.service.SchoolService;
 import com.beside.ties.global.auth.kakao.KakaoToken;
 import com.beside.ties.global.auth.kakao.KakaoUser;
+import com.beside.ties.global.auth.security.jwt.JwtDto;
+import com.beside.ties.global.auth.security.jwt.JwtType;
+import com.beside.ties.global.auth.security.jwt.JwtUtil;
+import com.beside.ties.global.common.RequestUtil;
 import com.beside.ties.global.common.exception.custom.InvalidSocialTokenException;
 import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.account.repo.AccountRepo;
@@ -19,10 +23,12 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,9 +47,33 @@ public class AccountService {
 
     private final AccountRepo accountRepo;
     private final AccountMapper accountMapper;
+
+    private final JwtUtil jwtUtil;
+
     private final PasswordEncoder passwordEncoder;
     private final SchoolService schoolService;
     private final JobCategoryService jobCategoryService;
+
+    public JwtDto kakaoSignIn(HttpServletRequest request){
+        String token = RequestUtil.getAuthorizationToken(request.getHeader("Authorization"));
+        Account account = null;
+        KakaoUser kakaoUser = getUserFromToken(token);
+        boolean isFirst = false;
+
+        // kakakoUser 정보를 통해서 유저가 등록된 유저일 경우 토큰을 반환 아닐 경우 회원가입을 진행한다.
+        try {
+            account = accountRepo.findAccountByKakaoId(kakaoUser.getId()).get();
+        } catch (UsernameNotFoundException e) {
+            isFirst = true;
+            register(kakaoUser);
+            account = accountRepo.findAccountByKakaoId(kakaoUser.getId()).get();
+        }
+
+        String accessToken = jwtUtil.createJwt(account.getUsername(), JwtType.ACCESS_TOKEN);
+        String refreshToken = jwtUtil.createJwt(account.getUsername(), JwtType.REFRESH_TOKEN);
+        return new JwtDto(accessToken, refreshToken, isFirst);
+
+    }
 
     public Long register(KakaoUser kakaoUser){
         Account account = Account.toUserFromKakao(kakaoUser);

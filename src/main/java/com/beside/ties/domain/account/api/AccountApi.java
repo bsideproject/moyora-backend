@@ -4,16 +4,16 @@ import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
 import com.beside.ties.domain.account.dto.request.LocalSignUpRequest;
 import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.account.service.AccountService;
+import com.beside.ties.global.auth.security.jwt.JwtDto;
 import com.beside.ties.global.common.annotation.CurrentUser;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @Api(tags = "유저 API")
@@ -32,10 +32,16 @@ public class AccountApi {
         Long id = accountService.localSignUp(request);
         return ResponseEntity.status(HttpStatus.OK).body("id "+id+"로 계정이 저장되었습니다.");
     }
+    @Operation(summary = "카카오 로그인")
+    @GetMapping("/kakao/signin")
+    public ResponseEntity<JwtDto> kakaoSignIn(HttpServletRequest request){
+        JwtDto jwtDto = accountService.kakaoSignIn(request);
+        return ResponseEntity.ok().body(jwtDto);
+    }
 
 
     @Operation(summary = "회원가입 2단계 프로필 정보 등록")
-    @PostMapping("/secondarySignUp")
+    @PostMapping("/secondarysignup")
     public void updateProfile(
             @RequestBody AccountUpdateRequest request,
             @CurrentUser Account account
