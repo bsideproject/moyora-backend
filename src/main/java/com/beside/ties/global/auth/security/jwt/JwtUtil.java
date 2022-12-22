@@ -28,9 +28,9 @@ public class JwtUtil {
     private String secret;
 
 
-    String createJwt(String email, JwtType jwtType) {
+    public String createJwt(String kakaoId, JwtType jwtType) {
 
-        log.info(jwtType+" 토큰 생성, email: " + email);
+        log.info(jwtType+" 토큰 생성, kakaoId: " + kakaoId);
         Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
 
         Long tokenExpiredTime;
@@ -45,13 +45,13 @@ public class JwtUtil {
                 .withSubject(jwtType.name())
                 .withIssuer(issuer)
                 .withExpiresAt(new Date(System.currentTimeMillis() + tokenExpiredTime))
-                .withClaim("email", email)
+                .withClaim("kakaoId", kakaoId)
                 .sign(algorithm);
 
         return token;
     }
 
-    JwtType getSubject(String token) {
+    public JwtType getSubject(String token) {
         String result = validationToken(token).getSubject();
         log.info("토큰 " + token);
         log.info("토큰 subject [sub: "+result+"] ]");
@@ -63,7 +63,7 @@ public class JwtUtil {
         }
     }
 
-    String getClaim(String token, String claim) {
+    public String getClaim(String token, String claim) {
         String result = validationToken(token)
                 .getClaim(claim)
                 .asString();

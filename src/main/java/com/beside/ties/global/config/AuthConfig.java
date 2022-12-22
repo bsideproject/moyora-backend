@@ -1,5 +1,6 @@
 package com.beside.ties.global.config;
 
+import com.beside.ties.global.auth.filter.JwtAuthorizationFilter;
 import com.beside.ties.global.auth.filter.KakaoAuthorizationFilter;
 import com.beside.ties.global.auth.filter.MockJwtFilter;
 import com.beside.ties.global.auth.security.AuthFilterContainer;
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.Profile;
 @RequiredArgsConstructor
 public class AuthConfig {
 
-    private final KakaoAuthorizationFilter kakaoAuthorizationFilter;
+    private final JwtAuthorizationFilter jwtAuthorizationFilter;
     private final MockJwtFilter mockJwtFilter;
     private final static Logger log = LoggerFactory.getLogger(AuthConfig.class);
 
@@ -24,16 +25,16 @@ public class AuthConfig {
     public AuthFilterContainer mockAuthFilter() {
         log.info("Initializing local Filter");
         AuthFilterContainer authFilterContainer = new AuthFilterContainer();
-        authFilterContainer.setAuthFilter(kakaoAuthorizationFilter);
+        authFilterContainer.setAuthFilter(mockJwtFilter);
         return authFilterContainer;
     }
 
     @Bean
     @Profile({"prod","default"})
-    public AuthFilterContainer firebaseAuthFilter() {
-        log.info("Initializing kakao Filter");
+    public AuthFilterContainer JWTAuthFilter() {
+        log.info("Initializing JWT Filter");
         AuthFilterContainer authFilterContainer = new AuthFilterContainer();
-        authFilterContainer.setAuthFilter(mockJwtFilter);
+        authFilterContainer.setAuthFilter(jwtAuthorizationFilter);
         return authFilterContainer;
     }
 }
