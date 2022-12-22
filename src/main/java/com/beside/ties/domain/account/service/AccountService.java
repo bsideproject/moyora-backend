@@ -59,15 +59,13 @@ public class AccountService {
         Account account = null;
         KakaoUser kakaoUser = getUserFromToken(token);
         boolean isFirst = false;
-
+        Optional<Account> optionalAccount = accountRepo.findAccountByKakaoId(kakaoUser.getId());
         // kakakoUser 정보를 통해서 유저가 등록된 유저일 경우 토큰을 반환 아닐 경우 회원가입을 진행한다.
-        try {
-            account = accountRepo.findAccountByKakaoId(kakaoUser.getId()).get();
-        } catch (UsernameNotFoundException e) {
+        if (optionalAccount.isEmpty()) {
             isFirst = true;
             register(kakaoUser);
-            account = accountRepo.findAccountByKakaoId(kakaoUser.getId()).get();
         }
+        account = accountRepo.findAccountByKakaoId(kakaoUser.getId()).get();
 
         String accessToken = jwtUtil.createJwt(account.getUsername(), JwtType.ACCESS_TOKEN);
         String refreshToken = jwtUtil.createJwt(account.getUsername(), JwtType.REFRESH_TOKEN);
