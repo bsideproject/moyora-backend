@@ -36,6 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/v1/login").permitAll()
                 .antMatchers("/api/v1/user/local/login").permitAll()
+                .antMatchers("/api/v1/user/kakao/signin").permitAll()
                 .antMatchers("/api/v1/user/secondarysignup").hasRole(Role.USER.getName())
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/v1/region/state").permitAll()
