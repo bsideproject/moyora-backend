@@ -1,7 +1,7 @@
 package com.beside.ties.domain.school.service;
 
 import com.beside.ties.domain.school.entity.School;
-import com.beside.ties.domain.userguestbook.repo.SchoolRepo;
+import com.beside.ties.domain.school.repo.SchoolRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

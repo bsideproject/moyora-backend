@@ -21,13 +21,6 @@ public class JobCategory {
     @Column(nullable = false,unique = true, length = 100)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent")
-    private JobCategory parent;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
-    private Set<JobCategory> children;
-
     public JobCategory(
            String name
     ){
