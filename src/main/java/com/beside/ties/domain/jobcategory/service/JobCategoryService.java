@@ -1,12 +1,15 @@
 package com.beside.ties.domain.jobcategory.service;
 
+import com.beside.ties.domain.jobcategory.dto.JobResponseDto;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.jobcategory.repo.JobCategoryRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -28,5 +31,15 @@ public class JobCategoryService {
     public Long save(JobCategory jobCategory){
         JobCategory save = jobCategoryRepo.save(jobCategory);
         return save.getId();
+    }
+
+    public Long saveByName(String name){
+        JobCategory save = jobCategoryRepo.save(new JobCategory(name));
+        return save.getId();
+    }
+
+    public List<JobResponseDto> findAll(){
+        List<JobResponseDto> collect = jobCategoryRepo.findAll().stream().map(JobResponseDto::new).collect(Collectors.toList());
+        return collect;
     }
 }
