@@ -25,4 +25,10 @@ public class UserGuestBook extends BaseTimeEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userGuestBook")
     List<ArticleToUser> articlesToUser;
+
+    public UserGuestBook(Account account){
+        this.account = account;
+    }
+
+
 }

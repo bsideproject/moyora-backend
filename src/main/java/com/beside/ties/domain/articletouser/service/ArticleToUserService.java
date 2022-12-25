@@ -2,7 +2,8 @@ package com.beside.ties.domain.articletouser.service;
 
 import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.account.repo.AccountRepo;
-import com.beside.ties.domain.articletouser.dto.request.ArticleToUserRequestDto;
+import com.beside.ties.domain.articletouser.dto.request.ArticleToUserRegisterRequestDto;
+import com.beside.ties.domain.articletouser.dto.request.ArticleToUserUpdateRequestDto;
 import com.beside.ties.domain.articletouser.dto.response.ArticleToUserResponseDto;
 import com.beside.ties.domain.articletouser.entity.ArticleToUser;
 import com.beside.ties.domain.articletouser.repo.ArticleToUserRepo;
@@ -36,15 +37,15 @@ public class ArticleToUserService {
 
 
     // 방명록 남기기
-    public String writeArticle(String content, Account account, Long guestBookId){
-        Optional<UserGuestBook> guestBookOptional = userGuestBookRepo.findById(guestBookId);
+    public String writeArticle(ArticleToUserRegisterRequestDto requestDto, Account account){
+        Optional<UserGuestBook> guestBookOptional = userGuestBookRepo.findById(requestDto.getUserGuestBookId());
         if(guestBookOptional.isEmpty()){
             throw new IllegalStateException("해당 아이디의 게스트북이 존재하지 않습니다.");
         }
 
-        ArticleToUser save = articleToUserRepo.save(new ArticleToUser(account, guestBookOptional.get(), content));
+        ArticleToUser save = articleToUserRepo.save(new ArticleToUser(account, guestBookOptional.get(), requestDto.getContent()));
 
-        return "ID : "+save.getId()+"방명록 저장이 완료되었습니다.";
+        return "ID : "+save.getId()+" 방명록 저장이 완료되었습니다.";
     }
 
 
@@ -56,7 +57,7 @@ public class ArticleToUserService {
 
 
     // 방명록 수정하기
-    public String updateArticle(ArticleToUserRequestDto requestDto, Account account){
+    public String updateArticle(ArticleToUserUpdateRequestDto requestDto, Account account){
         ArticleToUser articleToUser = getArticleToUser(requestDto.getArticleId(), account);
         articleToUser.updateContent(requestDto.getContent());
         return "업데이트가 완료되었습니다.";
