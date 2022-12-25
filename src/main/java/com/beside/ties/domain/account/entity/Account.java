@@ -82,8 +82,8 @@ public class Account extends BaseTimeEntity implements UserDetails {
     @Column(length = 40)
     String city;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.ALL)
-    Set<UserGuestBook> userGuestBooks;
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.ALL)
+    UserGuestBook userGuestBooks;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "school_id")
