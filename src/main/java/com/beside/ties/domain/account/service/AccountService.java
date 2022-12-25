@@ -6,6 +6,8 @@ import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.jobcategory.service.JobCategoryService;
 import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.school.service.SchoolService;
+import com.beside.ties.domain.userguestbook.entity.UserGuestBook;
+import com.beside.ties.domain.userguestbook.repo.UserGuestBookRepo;
 import com.beside.ties.global.auth.kakao.KakaoToken;
 import com.beside.ties.global.auth.kakao.KakaoUser;
 import com.beside.ties.global.auth.security.jwt.JwtDto;
@@ -23,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +54,7 @@ public class AccountService {
     private final PasswordEncoder passwordEncoder;
     private final SchoolService schoolService;
     private final JobCategoryService jobCategoryService;
+    private final UserGuestBookRepo userGuestBookRepo;
 
     public JwtDto kakaoSignIn(HttpServletRequest request){
         String token = RequestUtil.getAuthorizationToken(request.getHeader("Authorization"));
@@ -75,7 +77,7 @@ public class AccountService {
 
     public Long register(KakaoUser kakaoUser){
         Account account = Account.toUserFromKakao(kakaoUser);
-        account.UpdatePassword(passwordEncoder.encode(account.getPw()));
+        account.updatePassword(passwordEncoder.encode(account.getPw()));
         Account save = accountRepo.save(account);
 
         if(save == null) throw new IllegalArgumentException("유저 저장 실패");
@@ -186,6 +188,10 @@ public class AccountService {
             Long schoolId = schoolService.save(school);
             logger.info("id" + schoolId + " school 등록 완료");
         }
+
+        // 유저 방명록 생성
+        UserGuestBook userGuestBook = new UserGuestBook(account);
+        logger.info("유저 방명록 생성이 ID"+userGuestBook.getId()+" 로 생성되었습니다.");
 
         // 직업 조회
         JobCategory jobCategory = jobCategoryService.findJobCategoryByName(request.getJob());
