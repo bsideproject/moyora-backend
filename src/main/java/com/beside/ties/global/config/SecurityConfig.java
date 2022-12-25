@@ -36,8 +36,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/v1/login").permitAll()
                 .antMatchers("/api/v1/user/local/login").permitAll()
-                .antMatchers(HttpMethod.POST,"api/v1/job/category").hasRole(Role.USER.getName())
-                .antMatchers(HttpMethod.GET,"api/v1/job/category").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/v1/job/category").hasRole(Role.USER.getName())
+                .antMatchers(HttpMethod.GET,"/api/v1/job/category").permitAll()
+
+                .antMatchers(HttpMethod.DELETE,"/api/v1/user/article").hasRole(Role.USER.getName())
+                .antMatchers(HttpMethod.POST,"/api/v1/user/article").hasRole(Role.USER.getName())
+                .antMatchers(HttpMethod.GET,"/api/v1/user/article").permitAll()
 
                 .antMatchers("/api/v1/user/kakao/signin").permitAll()
                 .antMatchers("/api/v1/user/secondarysignup").hasRole(Role.USER.getName())
