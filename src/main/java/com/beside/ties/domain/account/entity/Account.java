@@ -47,6 +47,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
         this.profile = profile;
     }
 
+
     @Id
     @GeneratedValue(generator = "ACCOUNT_SEQ_GEN")
     @Column(name = "account_id")
@@ -137,7 +138,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
         this.graduationYear = request.getGraduationYear();
     }
 
-    public void UpdatePassword(String password){
+    public void updatePassword(String password){
         this.pw = password;
     }
 
