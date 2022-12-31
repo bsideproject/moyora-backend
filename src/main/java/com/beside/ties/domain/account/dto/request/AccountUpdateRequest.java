@@ -4,21 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @ApiModel
 public class AccountUpdateRequest {
-
-        @ApiModelProperty(
-                value = "user_id",
-                example = "10003",
-                required = true
-        )
-        Long userId;
 
         @ApiModelProperty(
             value = "nickname",
@@ -65,27 +59,6 @@ public class AccountUpdateRequest {
         @JsonProperty("child_region")
         String city;
 
-        @ApiModelProperty(
-            value = "school_name",
-            example = "떙떙초등학교",
-            required = true
-        )
-        String schoolName;
-
-        @ApiModelProperty(
-                value = "establishment_date",
-                example = "2022.10.12",
-                required = true
-        )
-        @JsonProperty("establishment_date")
-        String establishmentDate;
-
-        @ApiModelProperty(
-            value = "address",
-            example = "학교 주소",
-            required = true
-        )
-        String address;
         @ApiModelProperty(
             value = "school_code",
             example = "학교 코드xaaa34",
