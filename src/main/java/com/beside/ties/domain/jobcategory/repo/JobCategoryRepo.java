@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface JobCategoryRepo extends JpaRepository<JobCategory, Long> {
     Optional<JobCategory> findJobCategoryByName(String name);
+
+
 }

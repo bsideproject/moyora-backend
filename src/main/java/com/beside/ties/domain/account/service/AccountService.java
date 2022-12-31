@@ -178,15 +178,7 @@ public class AccountService {
         Optional<School> optionalSchool = schoolService.checkSchoolCode(request.getSchoolCode());
         // 없으면 학교 등록
         if(optionalSchool.isEmpty()){
-            School school = School.builder()
-                    .address(request.getAddress())
-                    .establishmentDate(request.getEstablishmentDate())
-                    .schoolCode(request.getSchoolCode())
-                    .schoolName(request.getSchoolName())
-                    .build();
-
-            Long schoolId = schoolService.save(school);
-            logger.info("id" + schoolId + " school 등록 완료");
+            throw new IllegalArgumentException("등록되어있지 않은 학교입니다. 관리자 문의 부탁드립니다.");
         }
 
         // 유저 방명록 생성

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 
@@ -21,10 +22,22 @@ public class JobCategory {
     @Column(nullable = false,unique = true, length = 100)
     private String name;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private JobCategory parent;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
+    private List<JobCategory> children;
+
     public JobCategory(
            String name
     ){
         this.name = name;
     }
+
+    public void setParent(JobCategory parent){
+        this.parent = parent;
+    }
+
 
 }
