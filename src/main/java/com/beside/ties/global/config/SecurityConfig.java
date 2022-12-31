@@ -4,6 +4,7 @@ import com.beside.ties.global.auth.security.AuthFilterContainer;
 import com.beside.ties.domain.account.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -11,6 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
+
+import java.lang.reflect.Method;
 
 
 @RequiredArgsConstructor
@@ -32,7 +35,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/v1/login").permitAll()
+                .antMatchers("/api/v1/user/local/login").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/v1/job/category").hasRole(Role.USER.getName())
+                .antMatchers(HttpMethod.GET,"/api/v1/job/category").permitAll()
+
+                .antMatchers(HttpMethod.DELETE,"/api/v1/user/article").hasRole(Role.USER.getName())
+                .antMatchers(HttpMethod.POST,"/api/v1/user/article").hasRole(Role.USER.getName())
+                .antMatchers(HttpMethod.GET,"/api/v1/user/article").permitAll()
+
+                .antMatchers("/api/v1/user/kakao/signin").permitAll()
+                .antMatchers("/api/v1/user/secondarysignup").hasRole(Role.USER.getName())
                 .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/region/state").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/region/city").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/region/state").hasRole(Role.USER.getName())
+                .antMatchers(HttpMethod.POST, "/api/v1/region/city").hasRole(Role.USER.getName())
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/api/v1/test").hasRole(Role.USER.getName())

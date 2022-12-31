@@ -4,7 +4,6 @@ spring:
       matching-strategy: ant_path_matcher
   profiles:
     include:
-      - dev
       - secret
 
 server:

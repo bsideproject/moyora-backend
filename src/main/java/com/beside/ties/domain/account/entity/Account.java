@@ -1,5 +1,7 @@
 package com.beside.ties.domain.account.entity;
 
+import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
+import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.global.auth.kakao.KakaoAccount;
 import com.beside.ties.global.auth.kakao.KakaoUser;
 import com.beside.ties.global.common.BaseTimeEntity;
@@ -45,6 +47,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
         this.profile = profile;
     }
 
+
     @Id
     @GeneratedValue(generator = "ACCOUNT_SEQ_GEN")
     @Column(name = "account_id")
@@ -52,6 +55,9 @@ public class Account extends BaseTimeEntity implements UserDetails {
 
     @Column(nullable = false, unique = true, length = 50)
     public String email;
+
+    @Column(name = "graduation_year")
+    int graduationYear;
 
     @Column(length = 75)
     private String pw;
@@ -71,8 +77,18 @@ public class Account extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false)
     public String profile;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.ALL)
-    Set<UserGuestBook> userGuestBooks;
+    @Column(length = 40)
+    String state;
+
+    @Column(length = 40)
+    String city;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.ALL)
+    UserGuestBook userGuestBooks;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "school_id")
+    School school;
 
 
     @Column(name = "sns_account", length = 50)
@@ -85,6 +101,8 @@ public class Account extends BaseTimeEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+
 
     public static Account toUserFromKakao(
             KakaoUser kakaoUser
@@ -112,8 +130,21 @@ public class Account extends BaseTimeEntity implements UserDetails {
                 .build();
     }
 
-    public void UpdatePassword(String password){
+    public void secondaryInput(AccountUpdateRequest request, School school, JobCategory job){
+        this.myJob = job;
+        this.school = school;
+        this.username = request.getName();
+        this.nickname = request.getNickname();
+        this.graduationYear = request.getGraduationYear();
+    }
+
+    public void updatePassword(String password){
         this.pw = password;
+    }
+
+    public void updateRegion(String state, String city){
+        this.state = state;
+        this.city = city;
     }
 
     @Override

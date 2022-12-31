@@ -1,11 +1,11 @@
 package com.beside.ties.domain.school.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.security.Identity;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,4 +24,20 @@ public class School {
     private String establishmentDate;
 
     private String address;
+
+    @Column(name = "school_code", unique = true)
+    private String schoolCode;
+
+    @Builder
+    public School(
+            String schoolName,
+            String establishmentDate,
+            String address,
+            String schoolCode
+    ){
+        this.schoolName = schoolName;
+        this.establishmentDate = establishmentDate;
+        this.address = address;
+        this.schoolCode = schoolCode;
+    }
 }

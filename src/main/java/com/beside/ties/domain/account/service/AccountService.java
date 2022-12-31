@@ -1,7 +1,19 @@
 package com.beside.ties.domain.account.service;
 
+import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
+import com.beside.ties.domain.account.dto.request.LocalSignUpRequest;
+import com.beside.ties.domain.jobcategory.entity.JobCategory;
+import com.beside.ties.domain.jobcategory.service.JobCategoryService;
+import com.beside.ties.domain.school.entity.School;
+import com.beside.ties.domain.school.service.SchoolService;
+import com.beside.ties.domain.userguestbook.entity.UserGuestBook;
+import com.beside.ties.domain.userguestbook.repo.UserGuestBookRepo;
 import com.beside.ties.global.auth.kakao.KakaoToken;
 import com.beside.ties.global.auth.kakao.KakaoUser;
+import com.beside.ties.global.auth.security.jwt.JwtDto;
+import com.beside.ties.global.auth.security.jwt.JwtType;
+import com.beside.ties.global.auth.security.jwt.JwtUtil;
+import com.beside.ties.global.common.RequestUtil;
 import com.beside.ties.global.common.exception.custom.InvalidSocialTokenException;
 import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.account.repo.AccountRepo;
@@ -17,6 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,11 +49,35 @@ public class AccountService {
     private final AccountRepo accountRepo;
     private final AccountMapper accountMapper;
 
+    private final JwtUtil jwtUtil;
+
     private final PasswordEncoder passwordEncoder;
+    private final SchoolService schoolService;
+    private final JobCategoryService jobCategoryService;
+    private final UserGuestBookRepo userGuestBookRepo;
+
+    public JwtDto kakaoSignIn(HttpServletRequest request){
+        String token = RequestUtil.getAuthorizationToken(request.getHeader("Authorization"));
+        Account account = null;
+        KakaoUser kakaoUser = getUserFromToken(token);
+        boolean isFirst = false;
+        Optional<Account> optionalAccount = accountRepo.findAccountByKakaoId(kakaoUser.getId());
+        // kakakoUser 정보를 통해서 유저가 등록된 유저일 경우 토큰을 반환 아닐 경우 회원가입을 진행한다.
+        if (optionalAccount.isEmpty()) {
+            isFirst = true;
+            register(kakaoUser);
+        }
+        account = accountRepo.findAccountByKakaoId(kakaoUser.getId()).get();
+
+        String accessToken = jwtUtil.createJwt(account.getUsername(), JwtType.ACCESS_TOKEN);
+        String refreshToken = jwtUtil.createJwt(account.getUsername(), JwtType.REFRESH_TOKEN);
+        return new JwtDto(accessToken, refreshToken, isFirst);
+
+    }
 
     public Long register(KakaoUser kakaoUser){
         Account account = Account.toUserFromKakao(kakaoUser);
-        account.UpdatePassword(passwordEncoder.encode(account.getPw()));
+        account.updatePassword(passwordEncoder.encode(account.getPw()));
         Account save = accountRepo.save(account);
 
         if(save == null) throw new IllegalArgumentException("유저 저장 실패");
@@ -48,6 +85,21 @@ public class AccountService {
 
         return save.getId();
 
+    }
+
+    public Long localSignUp(LocalSignUpRequest request){
+        Account account = Account.builder()
+                .email(request.getEmail())
+                .phoneNum(request.getPhoneNum())
+                .profile(request.getProfile())
+                .username(request.getUsername())
+                .kakaoId("sfoiusdjfioswf")
+                .nickname(request.getNickname()).build();
+
+        Account save = accountRepo.save(account);
+        logger.debug("id "+save.getId()+"로 계정이 저장되었습니다.");
+
+        return save.id;
     }
 
     public OAuthResponse loginWithAuthorizationCode(String token, KakaoToken kakaoToken){
@@ -118,5 +170,28 @@ public class AccountService {
             throw new IllegalArgumentException("유저 정보가 존재하지 않습니다.");
         }
         return accountByEmail.get();
+    }
+
+    public void secondarySignUp(AccountUpdateRequest request, Account account) {
+
+        // 학교 존재 여부 확인
+        Optional<School> optionalSchool = schoolService.checkSchoolCode(request.getSchoolCode());
+        // 없으면 학교 등록
+        if(optionalSchool.isEmpty()){
+            throw new IllegalArgumentException("등록되어있지 않은 학교입니다. 관리자 문의 부탁드립니다.");
+        }
+
+        // 유저 방명록 생성
+        UserGuestBook userGuestBook = new UserGuestBook(account);
+        logger.info("유저 방명록 생성이 ID"+userGuestBook.getId()+" 로 생성되었습니다.");
+
+        // 직업 조회
+        JobCategory jobCategory = jobCategoryService.findJobCategoryByName(request.getJob());
+
+        // 지역 업데이트
+        account.updateRegion(request.getState(), request.getCity());
+
+        // 회원 정보 업데이트
+        account.secondaryInput(request, optionalSchool.get(), jobCategory);
     }
 }
