@@ -38,14 +38,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests((authorizeRequests) ->
                         authorizeRequests
                                 .antMatchers("/").permitAll()
-                                .antMatchers("/api/v1/login").permitAll()
                                 .antMatchers("/api/v1/user/local/login").permitAll()
                                 .antMatchers(HttpMethod.POST,"/api/v1/job/category").hasRole(Role.USER.getName())
                                 .antMatchers(HttpMethod.GET,"/api/v1/job/category").permitAll()
                                 .antMatchers(HttpMethod.DELETE,"/api/v1/user/article").hasRole(Role.USER.getName())
                                 .antMatchers(HttpMethod.POST,"/api/v1/user/article").hasRole(Role.USER.getName())
                                 .antMatchers(HttpMethod.GET,"/api/v1/user/article").permitAll()
-                                .antMatchers("/api/v1/user/kakao/signin").permitAll()
+                                .antMatchers("/api/v1/user/signin").permitAll()
                                 .antMatchers("/api/v1/user/secondarysignup").hasRole(Role.USER.getName())
                                 .antMatchers("/swagger-ui/**").permitAll()
                                 .antMatchers(HttpMethod.GET,"/api/v1/region/state").permitAll()
@@ -54,7 +53,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 .antMatchers(HttpMethod.POST, "/api/v1/region/city").hasRole(Role.USER.getName())
                                 .antMatchers("/swagger-resources/**").permitAll()
                                 .antMatchers("/h2-console/**").permitAll()
-                                .antMatchers("/api/v1/test").hasRole(Role.USER.getName())
                                 .anyRequest().authenticated()
 
                 )
