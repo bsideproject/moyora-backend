@@ -33,7 +33,7 @@ public class AccountApi {
         return ResponseEntity.status(HttpStatus.OK).body("id "+id+"로 계정이 저장되었습니다.");
     }
     @Operation(summary = "카카오 로그인")
-    @GetMapping("/kakao/signin")
+    @PostMapping("/signin")
     public ResponseEntity<JwtDto> kakaoSignIn(HttpServletRequest request){
         JwtDto jwtDto = accountService.kakaoSignIn(request);
         return ResponseEntity.ok().body(jwtDto);
