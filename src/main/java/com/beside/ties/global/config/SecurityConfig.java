@@ -3,8 +3,11 @@ package com.beside.ties.global.config;
 import com.beside.ties.global.auth.security.AuthFilterContainer;
 import com.beside.ties.domain.account.Role;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,33 +35,38 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/api/v1/login").permitAll()
-                .antMatchers("/api/v1/user/local/login").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/v1/job/category").hasRole(Role.USER.getName())
-                .antMatchers(HttpMethod.GET,"/api/v1/job/category").permitAll()
+                .authorizeRequests((authorizeRequests) ->
+                        authorizeRequests
+                                .antMatchers("/").permitAll()
+                                .antMatchers("/api/v1/login").permitAll()
+                                .antMatchers("/api/v1/user/local/login").permitAll()
+                                .antMatchers(HttpMethod.POST,"/api/v1/job/category").hasRole(Role.USER.getName())
+                                .antMatchers(HttpMethod.GET,"/api/v1/job/category").permitAll()
+                                .antMatchers(HttpMethod.DELETE,"/api/v1/user/article").hasRole(Role.USER.getName())
+                                .antMatchers(HttpMethod.POST,"/api/v1/user/article").hasRole(Role.USER.getName())
+                                .antMatchers(HttpMethod.GET,"/api/v1/user/article").permitAll()
+                                .antMatchers("/api/v1/user/kakao/signin").permitAll()
+                                .antMatchers("/api/v1/user/secondarysignup").hasRole(Role.USER.getName())
+                                .antMatchers("/swagger-ui/**").permitAll()
+                                .antMatchers(HttpMethod.GET,"/api/v1/region/state").permitAll()
+                                .antMatchers(HttpMethod.GET, "/api/v1/region/city").permitAll()
+                                .antMatchers(HttpMethod.POST, "/api/v1/region/state").hasRole(Role.USER.getName())
+                                .antMatchers(HttpMethod.POST, "/api/v1/region/city").hasRole(Role.USER.getName())
+                                .antMatchers("/swagger-resources/**").permitAll()
+                                .antMatchers("/h2-console/**").permitAll()
+                                .antMatchers("/api/v1/test").hasRole(Role.USER.getName())
+                                .anyRequest().authenticated()
 
-                .antMatchers(HttpMethod.DELETE,"/api/v1/user/article").hasRole(Role.USER.getName())
-                .antMatchers(HttpMethod.POST,"/api/v1/user/article").hasRole(Role.USER.getName())
-                .antMatchers(HttpMethod.GET,"/api/v1/user/article").permitAll()
-
-                .antMatchers("/api/v1/user/kakao/signin").permitAll()
-                .antMatchers("/api/v1/user/secondarysignup").hasRole(Role.USER.getName())
-                .antMatchers("/swagger-ui/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/v1/region/state").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v1/region/city").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v1/region/state").hasRole(Role.USER.getName())
-                .antMatchers(HttpMethod.POST, "/api/v1/region/city").hasRole(Role.USER.getName())
-                .antMatchers("/swagger-resources/**").permitAll()
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/api/v1/test").hasRole(Role.USER.getName())
-                .anyRequest().authenticated()
-                .and()
+                )
                 .headers().addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
                 .and()
                 .addFilterBefore(authFilterContainer.getFilter(),
                         UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Override

@@ -24,7 +24,6 @@ import java.util.List;
 import static com.beside.ties.global.auth.filter.WhiteList.*;
 
 @RequiredArgsConstructor
-@Component
 public class KakaoAuthorizationFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
