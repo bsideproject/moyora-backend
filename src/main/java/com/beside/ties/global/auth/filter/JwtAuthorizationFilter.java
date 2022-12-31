@@ -26,14 +26,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
-    private final ObjectMapper objectMapper;
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        if(checkWhiteList(request, response, filterChain) == false) {
-            String token = RequestUtil.getAuthorizationToken(request.getHeader("Authorization"));
+        String token = RequestUtil.getAuthorizationToken(request.getHeader("Authorization"));
+        if(token != null) {
             validateToken(token);
         }
 

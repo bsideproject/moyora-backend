@@ -41,19 +41,21 @@ public class MockJwtFilter extends OncePerRequestFilter {
                 response.getWriter().write("{\"code\":\"INVALID_TOKEN\", \"message\":\"" + e.getMessage() + "\"}");
                 return;
             }
+            if(header != null) {
 
-            // User를 가져와 SecurityContext에 저장한다.
-            try {
-                Account user = accountService.loadUserByUsername(header);//user? id 를 통해 회원 엔티티 조회
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        user, null, user.getAuthorities());//인증 객체 생성
-                SecurityContextHolder.getContext().setAuthentication(authentication);//securityContextHolder 에 인증 객체 저장
-            } catch (UsernameNotFoundException e) {
-                // ErrorMessage 응답 전송
-                response.setStatus(HttpStatus.SC_NOT_FOUND);
-                response.setContentType("application/json");
-                response.getWriter().write("{\"code\":\"USER_NOT_FOUND\"}");
-                return;
+                // User를 가져와 SecurityContext에 저장한다.
+                try {
+                    Account user = accountService.loadUserByUsername(header);//user? id 를 통해 회원 엔티티 조회
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            user, null, user.getAuthorities());//인증 객체 생성
+                    SecurityContextHolder.getContext().setAuthentication(authentication);//securityContextHolder 에 인증 객체 저장
+                } catch (UsernameNotFoundException e) {
+                    // ErrorMessage 응답 전송
+                    response.setStatus(HttpStatus.SC_NOT_FOUND);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"code\":\"USER_NOT_FOUND\"}");
+                    return;
+                }
             }
         }
 
