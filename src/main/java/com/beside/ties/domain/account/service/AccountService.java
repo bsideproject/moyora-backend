@@ -1,14 +1,18 @@
 package com.beside.ties.domain.account.service;
 
+import com.beside.ties.domain.account.dto.request.AccountSecondarySignUpRequest;
 import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
 import com.beside.ties.domain.account.dto.request.LocalSignUpRequest;
+import com.beside.ties.domain.account.dto.response.AccountInfoResponse;
+import com.beside.ties.domain.account.mapper.AccountMapper;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
+import com.beside.ties.domain.jobcategory.repo.JobCategoryRepo;
 import com.beside.ties.domain.jobcategory.service.JobCategoryService;
+import com.beside.ties.domain.region.entity.Region;
+import com.beside.ties.domain.region.repo.RegionRepo;
 import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.school.service.SchoolService;
 import com.beside.ties.domain.userguestbook.entity.UserGuestBook;
-import com.beside.ties.domain.userguestbook.repo.UserGuestBookRepo;
-import com.beside.ties.global.auth.kakao.KakaoToken;
 import com.beside.ties.global.auth.kakao.KakaoUser;
 import com.beside.ties.global.auth.security.jwt.JwtDto;
 import com.beside.ties.global.auth.security.jwt.JwtType;
@@ -17,9 +21,6 @@ import com.beside.ties.global.common.RequestUtil;
 import com.beside.ties.global.common.exception.custom.InvalidSocialTokenException;
 import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.account.repo.AccountRepo;
-import com.beside.ties.domain.account.mapper.AccountMapper;
-import com.beside.ties.domain.account.dto.response.LoginResponse;
-import com.beside.ties.domain.account.dto.response.OAuthResponse;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -45,16 +46,15 @@ import static com.beside.ties.global.auth.kakao.KakaoOAuthConstants.USER_INFO_UR
 public class AccountService {
 
     Logger logger = LoggerFactory.getLogger(AccountService.class);
-
     private final AccountRepo accountRepo;
-    private final AccountMapper accountMapper;
-
     private final JwtUtil jwtUtil;
-
     private final PasswordEncoder passwordEncoder;
     private final SchoolService schoolService;
     private final JobCategoryService jobCategoryService;
-    private final UserGuestBookRepo userGuestBookRepo;
+    private final RegionRepo regionRepo;
+    private final JobCategoryRepo jobCategoryRepo;
+
+    private final AccountMapper accountMapper;
 
     public JwtDto kakaoSignIn(HttpServletRequest request){
         String token = RequestUtil.getAuthorizationToken(request.getHeader("Authorization"));
@@ -100,30 +100,6 @@ public class AccountService {
         logger.debug("id "+save.getId()+"로 계정이 저장되었습니다.");
 
         return save.id;
-    }
-
-    public OAuthResponse loginWithAuthorizationCode(String token, KakaoToken kakaoToken){
-        KakaoUser kakaoUser = getUserFromToken(token);
-        OAuthResponse response = KakaoUser.toUserInfo(kakaoUser.getKakaoAccount(), kakaoToken);
-        return response;
-    }
-
-    public LoginResponse login(String token){
-        KakaoUser kakaoUser = getUserFromToken(token);
-        LoginResponse response = KakaoUser.toUserInfo(kakaoUser.getKakaoAccount());
-
-        Optional<Account> optionalAccount = accountRepo.findAccountByKakaoId(kakaoUser.getId());
-        if(optionalAccount.isPresent()){
-            Account account1 = optionalAccount.get();
-            response = accountMapper.toLoginResponseDto(account1);
-        }
-        else{
-            Long userId = register(kakaoUser);
-            response.userId = userId;
-            response.isFirst = true;
-        }
-
-        return response;
     }
 
     public KakaoUser getUserFromToken(String token) {
@@ -172,7 +148,7 @@ public class AccountService {
         return accountByEmail.get();
     }
 
-    public void secondarySignUp(AccountUpdateRequest request, Account account) {
+    public String secondarySignUp(AccountSecondarySignUpRequest request, Account account) {
 
         // 학교 존재 여부 확인
         Optional<School> optionalSchool = schoolService.checkSchoolCode(request.getSchoolCode());
@@ -189,9 +165,32 @@ public class AccountService {
         JobCategory jobCategory = jobCategoryService.findJobCategoryByName(request.getJob());
 
         // 지역 업데이트
-        account.updateRegion(request.getState(), request.getCity());
+        Optional<Region> regionOptional = regionRepo.findRegionByName(request.getCity());
+        if(regionOptional.isEmpty()) throw new IllegalArgumentException("존재하지 않는 지역입니다.");
 
         // 회원 정보 업데이트
-        account.secondaryInput(request, optionalSchool.get(), jobCategory);
+        account.secondaryInput(request, optionalSchool.get(), jobCategory,regionOptional.get());
+
+        return "회원가입이 완료되었습니다.";
+    }
+
+    public String updateUserInfo(AccountUpdateRequest request, Account account){
+        Optional<Account> accountOptional = accountRepo.findAccountByKakaoId(account.getKakaoId());
+        if(accountOptional.isEmpty()) throw new IllegalArgumentException("등록되지 않은 유저입니다.");
+        Account account1 = accountOptional.get();
+
+        Optional<Region> regionOptional = regionRepo.findRegionByName(request.getCity());
+        if(regionOptional.isEmpty()) throw new IllegalArgumentException("존재하지 않는 지역입니다.");
+
+        Optional<JobCategory> optionalJobCategory = jobCategoryRepo.findJobCategoryByName(request.getJob());
+        if(optionalJobCategory.isEmpty()) throw new IllegalArgumentException("존재하지 않는 직업입니다.");
+
+        account1.updateAll(request,optionalJobCategory.get(), regionOptional.get());
+
+        return "유저 정보가 업데이트 되었습니다.";
+    }
+
+    public AccountInfoResponse findByAccount(Account account) {
+        return accountMapper.toAccountInfoResponse(account);
     }
 }

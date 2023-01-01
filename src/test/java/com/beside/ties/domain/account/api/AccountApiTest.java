@@ -1,7 +1,7 @@
 package com.beside.ties.domain.account.api;
 
 import com.beside.ties.domain.BaseMvcTest;
-import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
+import com.beside.ties.domain.account.dto.request.AccountSecondarySignUpRequest;
 import com.beside.ties.domain.account.dto.request.LocalSignUpRequest;
 import com.beside.ties.domain.account.service.AccountService;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
@@ -14,19 +14,12 @@ import com.beside.ties.domain.school.repo.SchoolRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import javax.servlet.Filter;
@@ -132,7 +125,7 @@ class AccountApiTest extends BaseMvcTest {
     @Test
     void secondarySignUp() throws Exception {
         Long id = addAccount();
-        AccountUpdateRequest requestDto = AccountUpdateRequest.builder()
+        AccountSecondarySignUpRequest requestDto = AccountSecondarySignUpRequest.builder()
                 .city("강남구")
                 .job("백엔드 개발자")
                 .graduationYear(2002)
