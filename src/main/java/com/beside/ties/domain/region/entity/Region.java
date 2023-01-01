@@ -33,11 +33,11 @@ public class Region {
     Long id;
 
     @Column(length = 50, unique = true)
-    String name;
+    public String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent")
-    Region parent;
+    public Region parent;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     Set<Region> children;

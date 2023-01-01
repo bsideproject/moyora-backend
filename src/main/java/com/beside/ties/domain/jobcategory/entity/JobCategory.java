@@ -20,7 +20,7 @@ public class JobCategory {
     private Long id;
 
     @Column(nullable = false,unique = true, length = 100)
-    private String name;
+    public String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
@@ -33,6 +33,14 @@ public class JobCategory {
            String name
     ){
         this.name = name;
+    }
+
+    public JobCategory(
+            String name,
+            JobCategory jobCategory
+    ){
+        this.name = name;
+        this.parent = jobCategory;
     }
 
     public void setParent(JobCategory parent){
