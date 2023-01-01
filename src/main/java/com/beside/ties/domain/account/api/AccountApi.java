@@ -1,7 +1,9 @@
 package com.beside.ties.domain.account.api;
 
+import com.beside.ties.domain.account.dto.request.AccountSecondarySignUpRequest;
 import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
 import com.beside.ties.domain.account.dto.request.LocalSignUpRequest;
+import com.beside.ties.domain.account.dto.response.AccountInfoResponse;
 import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.account.service.AccountService;
 import com.beside.ties.global.auth.security.jwt.JwtDto;
@@ -24,8 +26,8 @@ public class AccountApi {
 
     private final AccountService accountService;
 
-    @Operation(summary = "로컬 테스트용 회원가입 1단계")
-    @PostMapping("/local/login")
+    @Operation(summary = "로컬 테스트용 회원가입")
+    @PostMapping("/local/signup")
     public ResponseEntity<String> localSignUp(
             @RequestBody LocalSignUpRequest request
             ){
@@ -40,12 +42,32 @@ public class AccountApi {
     }
 
 
-    @Operation(summary = "회원가입 2단계 프로필 정보 등록")
-    @PostMapping("/secondarysignup")
-    public void updateProfile(
-            @RequestBody AccountUpdateRequest request,
+    @Operation(summary = "회원가입")
+    @PostMapping("/signup")
+    public ResponseEntity<String> updateProfile(
+            @RequestBody AccountSecondarySignUpRequest request,
             @CurrentUser Account account
     ){
-        accountService.secondarySignUp(request, account);
+        String message = accountService.secondarySignUp(request, account);
+        return ResponseEntity.ok().body(message);
+    }
+
+    @Operation(summary = "유저 정보 수정")
+    @PutMapping
+    public ResponseEntity<String> updateUserInfo(
+            @CurrentUser Account account,
+            @RequestBody AccountUpdateRequest request
+    ){
+        String message = accountService.updateUserInfo(request, account);
+        return ResponseEntity.ok().body(message);
+    }
+
+    @Operation(summary = "유저 정보 조회")
+    @GetMapping
+    public ResponseEntity<AccountInfoResponse> getUserInfo(
+            @CurrentUser Account account
+    ){
+        AccountInfoResponse response = accountService.findByAccount(account);
+        return ResponseEntity.ok().body(response);
     }
 }
