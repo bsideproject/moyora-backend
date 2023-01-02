@@ -1,6 +1,8 @@
 package com.beside.ties.domain.account.entity;
 
+import com.beside.ties.domain.account.dto.request.AccountSecondarySignUpRequest;
 import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
+import com.beside.ties.domain.region.entity.Region;
 import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.global.auth.kakao.KakaoAccount;
 import com.beside.ties.global.auth.kakao.KakaoUser;
@@ -47,6 +49,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
         this.profile = profile;
     }
 
+
     @Id
     @GeneratedValue(generator = "ACCOUNT_SEQ_GEN")
     @Column(name = "account_id")
@@ -65,7 +68,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
     public String nickname;
 
     @Column(name = "phone_num",length = 11)
-    private String phoneNum;
+    public String phoneNum;
 
     @Column(nullable = false, unique = true,name = "kakao_id")
     private String kakaoId;
@@ -76,26 +79,35 @@ public class Account extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false)
     public String profile;
 
-    @Column(length = 40)
-    String state;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
+    public MBTI mbti = null;
 
-    @Column(length = 40)
-    String city;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "region_id")
+    public Region region;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.ALL)
-    Set<UserGuestBook> userGuestBooks;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.ALL)
+    UserGuestBook userGuestBooks;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "school_id")
-    School school;
+    public School school;
 
 
-    @Column(name = "sns_account", length = 50)
-    String snsAccount;
+    @Column(name = "sns1", length = 50)
+    public String sns1;
+
+    @Column(name = "sns2", length = 50)
+    public String sns2;
+
+    @Column(name = "sns3", length = 50)
+    public String sns3;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_category_id")
-    JobCategory myJob;
+    public JobCategory myJob;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -129,21 +141,27 @@ public class Account extends BaseTimeEntity implements UserDetails {
                 .build();
     }
 
-    public void secondaryInput(AccountUpdateRequest request, School school, JobCategory job){
+    public void secondaryInput(AccountSecondarySignUpRequest request, School school, JobCategory job, Region region){
         this.myJob = job;
         this.school = school;
         this.username = request.getName();
         this.nickname = request.getNickname();
         this.graduationYear = request.getGraduationYear();
+        this.region = region;
     }
 
-    public void UpdatePassword(String password){
+    public void updateAll(AccountUpdateRequest request, JobCategory job, Region region){
+        this.nickname = request.getNickname();
+        this.mbti = request.getMbti();
+        this.sns1 = request.getSns1();
+        this.sns2 = request.getSns2();
+        this.sns3 = request.getSns3();
+        this.myJob = job;
+        this.region = region;
+    }
+
+    public void updatePassword(String password){
         this.pw = password;
-    }
-
-    public void updateRegion(String state, String city){
-        this.state = state;
-        this.city = city;
     }
 
     @Override

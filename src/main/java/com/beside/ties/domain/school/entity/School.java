@@ -18,7 +18,7 @@ public class School {
     private Long id = null;
 
     @Column(name = "school_name")
-    private String schoolName;
+    public String schoolName;
 
     @Column(name = "establish_date")
     private String establishmentDate;
