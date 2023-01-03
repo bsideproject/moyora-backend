@@ -28,4 +28,10 @@ public class SchoolGuestBook extends BaseTimeEntity {
     private Account account;
 
     private String content;
+
+    public SchoolGuestBook(School school, Account account, String content) {
+        this.school = school;
+        this.account = account;
+        this.content = content;
+    }
 }
