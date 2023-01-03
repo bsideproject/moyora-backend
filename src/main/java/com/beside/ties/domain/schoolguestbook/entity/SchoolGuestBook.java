@@ -23,7 +23,7 @@ public class SchoolGuestBook extends BaseTimeEntity {
     @JoinColumn(name = "school_id")
     private School school;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
 
