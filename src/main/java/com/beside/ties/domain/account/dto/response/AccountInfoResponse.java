@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 @Getter
 @ApiModel
 public class AccountInfoResponse {
@@ -21,6 +23,13 @@ public class AccountInfoResponse {
             example = "별명"
     )
     public String username;
+
+    @ApiModelProperty(
+            value = "nickname",
+            example = "짠돌이",
+            required = false
+    )
+    public String nickname;
 
     @JsonProperty("school_name")
     @ApiModelProperty(
@@ -56,13 +65,6 @@ public class AccountInfoResponse {
     public String job;
 
     @ApiModelProperty(
-            value = "nickname",
-            example = "짠돌이",
-            required = false
-    )
-    public String nickname;
-
-    @ApiModelProperty(
             value = "mbti",
             example = "INFP",
             required = false
@@ -70,24 +72,33 @@ public class AccountInfoResponse {
     public MBTI mbti;
 
     @ApiModelProperty(
-            value = "sns1",
-            example = "youtubelink",
-            required = false
-    )
-    public String sns1;
-
-    @ApiModelProperty(
-            value = "sns2",
-            example = "facebook",
-            required = false
-    )
-    public String sns2;
-
-    @ApiModelProperty(
-            value = "sns3",
+            value = "instagram",
             example = "instagram",
             required = false
     )
-    public String sns3;
+    public String instagram;
+
+    @ApiModelProperty(
+            value = "youtube",
+            example = "youtube",
+            required = false
+    )
+    public String youtube;
+
+    @ApiModelProperty(
+            value = "facebook",
+            example = "facebook",
+            required = false
+    )
+    public String facebook;
+
+    @ApiModelProperty(
+            value = "birthDate",
+            example = "1996.07.25",
+            required = false
+    )
+    public LocalDate birthDate;
+
+
 
 }

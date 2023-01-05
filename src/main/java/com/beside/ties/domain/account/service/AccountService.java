@@ -1,8 +1,6 @@
 package com.beside.ties.domain.account.service;
 
-import com.beside.ties.domain.account.dto.request.AccountSecondarySignUpRequest;
-import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
-import com.beside.ties.domain.account.dto.request.LocalSignUpRequest;
+import com.beside.ties.domain.account.dto.request.*;
 import com.beside.ties.domain.account.dto.response.AccountInfoResponse;
 import com.beside.ties.domain.account.mapper.AccountMapper;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
@@ -11,6 +9,7 @@ import com.beside.ties.domain.jobcategory.service.JobCategoryService;
 import com.beside.ties.domain.region.entity.Region;
 import com.beside.ties.domain.region.repo.RegionRepo;
 import com.beside.ties.domain.school.entity.School;
+import com.beside.ties.domain.school.repo.SchoolRepo;
 import com.beside.ties.domain.school.service.SchoolService;
 import com.beside.ties.domain.userguestbook.entity.UserGuestBook;
 import com.beside.ties.global.auth.kakao.KakaoUser;
@@ -53,8 +52,8 @@ public class AccountService {
     private final JobCategoryService jobCategoryService;
     private final RegionRepo regionRepo;
     private final JobCategoryRepo jobCategoryRepo;
-
     private final AccountMapper accountMapper;
+    private final SchoolRepo schoolRepo;
 
     public JwtDto kakaoSignIn(HttpServletRequest request){
         String token = RequestUtil.getAuthorizationToken(request.getHeader("Authorization"));
@@ -175,9 +174,7 @@ public class AccountService {
     }
 
     public String updateUserInfo(AccountUpdateRequest request, Account account){
-        Optional<Account> accountOptional = accountRepo.findAccountByKakaoId(account.getKakaoId());
-        if(accountOptional.isEmpty()) throw new IllegalArgumentException("등록되지 않은 유저입니다.");
-        Account account1 = accountOptional.get();
+        Account account1 = accountRepo.findAccountByKakaoId(account.getKakaoId()).get();
 
         Optional<Region> regionOptional = regionRepo.findRegionByName(request.getCity());
         if(regionOptional.isEmpty()) throw new IllegalArgumentException("존재하지 않는 지역입니다.");
@@ -185,12 +182,31 @@ public class AccountService {
         Optional<JobCategory> optionalJobCategory = jobCategoryRepo.findJobCategoryByName(request.getJob());
         if(optionalJobCategory.isEmpty()) throw new IllegalArgumentException("존재하지 않는 직업입니다.");
 
-        account1.updateAll(request,optionalJobCategory.get(), regionOptional.get());
+        account1.updateProfile(request,optionalJobCategory.get(), regionOptional.get());
 
-        return "유저 정보가 업데이트 되었습니다.";
+        return "유저 프로필 정보가 업데이트 되었습니다.";
     }
 
     public AccountInfoResponse findByAccount(Account account) {
         return accountMapper.toAccountInfoResponse(account);
+    }
+
+    public String updateNameAndNickName(AccountUpdateNameRequest request, Account account) {
+        Account account1 = accountRepo.findById(account.id).get();
+        account1.updateNameAndNickName(request);
+        return "이름 및 닉네임이 업데이트 되었습니다.";
+    }
+
+    public String updateSchool(Account account, AccountUpdateSchoolRequest request) {
+
+        Account account1 = accountRepo.findById(account.id).get();
+        Optional<School> optionalSchool = schoolRepo.findSchoolBySchoolCode(request.getSchoolCode());
+        if(optionalSchool.isEmpty()){
+            throw new IllegalArgumentException("존재하지 않는 학교입니다.");
+        }
+
+        account1.updateSchool(request, optionalSchool.get());
+
+        return "학교 정보가 업데이트 되었습니다.";
     }
 }

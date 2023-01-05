@@ -5,9 +5,18 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 @Getter
 @ApiModel
 public class AccountUpdateRequest {
+
+    @ApiModelProperty(
+            value = "state",
+            example = "도",
+            required = true
+    )
+    String state;
 
     @ApiModelProperty(
             value = "region",
@@ -24,11 +33,11 @@ public class AccountUpdateRequest {
     String job;
 
     @ApiModelProperty(
-            value = "nickname",
-            example = "짠돌이",
-            required = false
+            value = "birthday",
+            example = "생일",
+            required = true
     )
-    String nickname;
+    String birthdate;
 
     @ApiModelProperty(
             value = "mbti",
@@ -37,21 +46,21 @@ public class AccountUpdateRequest {
     )
     MBTI mbti;
     @ApiModelProperty(
-            value = "sns1",
-            example = "youtubelink",
+            value = "facebook",
+            example = "facebook_link",
             required = false
     )
-    String sns1;
+    String facebook;
     @ApiModelProperty(
-            value = "sns2",
-            example = "facebook",
+            value = "youtube",
+            example = "youtube_link",
             required = false
     )
-    String sns2;
+    String youtube;
     @ApiModelProperty(
-            value = "sns3",
-            example = "instagram",
+            value = "instagram",
+            example = "instagram_link",
             required = false
     )
-    String sns3;
+    String instagram;
 }

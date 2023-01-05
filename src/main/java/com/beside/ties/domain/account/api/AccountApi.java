@@ -1,8 +1,6 @@
 package com.beside.ties.domain.account.api;
 
-import com.beside.ties.domain.account.dto.request.AccountSecondarySignUpRequest;
-import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
-import com.beside.ties.domain.account.dto.request.LocalSignUpRequest;
+import com.beside.ties.domain.account.dto.request.*;
 import com.beside.ties.domain.account.dto.response.AccountInfoResponse;
 import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.account.service.AccountService;
@@ -52,8 +50,8 @@ public class AccountApi {
         return ResponseEntity.ok().body(message);
     }
 
-    @Operation(summary = "유저 정보 수정")
-    @PutMapping
+    @Operation(summary = "프로필 정보 수정")
+    @PutMapping("/profile")
     public ResponseEntity<String> updateUserInfo(
             @CurrentUser Account account,
             @RequestBody AccountUpdateRequest request
@@ -61,6 +59,27 @@ public class AccountApi {
         String message = accountService.updateUserInfo(request, account);
         return ResponseEntity.ok().body(message);
     }
+
+    @Operation(summary = "이름 및 닉네임 수정")
+    @PutMapping("/name")
+    public ResponseEntity<String> updateNameAndNickname(
+            @CurrentUser Account account,
+            @RequestBody AccountUpdateNameRequest request
+    ){
+        String message = accountService.updateNameAndNickName(request, account);
+        return ResponseEntity.ok().body(message);
+    }
+
+    @Operation(summary = "학교 정보 수정")
+    @PutMapping("/school")
+    public ResponseEntity<String> updateSchool(
+            @CurrentUser Account account,
+            @RequestBody AccountUpdateSchoolRequest request
+    ){
+        String message = accountService.updateSchool(account, request);
+        return ResponseEntity.ok().body(message);
+    }
+
 
     @Operation(summary = "유저 정보 조회")
     @GetMapping
