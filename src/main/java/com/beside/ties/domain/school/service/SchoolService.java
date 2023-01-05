@@ -29,13 +29,11 @@ public class SchoolService {
         return save.getId();
     }
 
-    public List<SchoolDto> findAllSchool() {
-        return schoolRepo.findAll().stream()
-                .map(SchoolDto::new)
-                .collect(Collectors.toList());
+    public List<School> findAllSchool() {
+        return schoolRepo.findAll();
     }
 
-    public SchoolDto findSchoolById(Long id) {
-        return new SchoolDto(schoolRepo.findSchoolById(id));
+    public School findSchoolById(Long id) {
+        return schoolRepo.findSchoolById(id);
     }
 }

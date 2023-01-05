@@ -2,6 +2,7 @@ package com.beside.ties.domain.schoolguestbook.entity;
 
 import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.school.entity.School;
+import com.beside.ties.domain.schoolguestbook.dto.SchoolGuestBookDto;
 import com.beside.ties.global.common.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class SchoolGuestBook extends BaseTimeEntity {
     @JoinColumn(name = "school_id")
     private School school;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
 
@@ -33,5 +34,20 @@ public class SchoolGuestBook extends BaseTimeEntity {
         this.school = school;
         this.account = account;
         this.content = content;
+    }
+
+    public void update(String content) {
+        this.content = content;
+    }
+
+    public static SchoolGuestBookDto toSchoolGuestBookDto(SchoolGuestBook schoolGuestBook) {
+        return new SchoolGuestBookDto(
+                schoolGuestBook.getId(),
+                schoolGuestBook.getSchool().getId(),
+                schoolGuestBook.getAccount().getId(),
+                schoolGuestBook.getContent(),
+                schoolGuestBook.getCreatedDate(),
+                schoolGuestBook.getModifiedDate()
+        );
     }
 }

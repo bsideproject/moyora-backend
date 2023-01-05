@@ -20,4 +20,12 @@ public class SchoolDto {
         this.address = school.getAddress();
         this.schoolCode = school.getSchoolCode();
     }
+
+    public static School toSchool(SchoolDto schoolDto) {
+        return new School(
+                schoolDto.getSchoolName(),
+                schoolDto.getEstablishmentDate(),
+                schoolDto.getAddress(),
+                schoolDto.getSchoolCode());
+    }
 }
