@@ -8,7 +8,7 @@ import lombok.Data;
 @ApiModel
 public class SchoolDto {
     private Long id;
-    public String schoolName;
+    private String schoolName;
     private String establishmentDate;
     private String address;
     private String schoolCode;

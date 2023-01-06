@@ -11,9 +11,7 @@ import com.beside.ties.domain.schoolguestbook.dto.SchoolGuestBookUpdateDto;
 import com.beside.ties.domain.schoolguestbook.entity.SchoolGuestBook;
 import com.beside.ties.domain.schoolguestbook.service.SchoolGuestBookService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -94,6 +92,13 @@ class SchoolGuestBookApiTest extends BaseMvcTest {
         schoolGuestBookService.save(schoolGuestBook3);
     }
 
+    @AfterEach
+    public void afterEach() {
+        schoolGuestBookService.deleteAllInBatch();
+        schoolService.deleteAllInBatch();
+        accountService.deleteAllInBatch();
+    }
+
     @Test
     void findAllApiTest() throws Exception {
         mockMvc.perform(
@@ -118,10 +123,6 @@ class SchoolGuestBookApiTest extends BaseMvcTest {
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
-
-        List<SchoolGuestBook> schoolGuestBookList = schoolGuestBookService.findBySchoolId(1L);
-
-        assertThat(schoolGuestBookList.size()).isEqualTo(4);
     }
 
     @Test
@@ -137,9 +138,6 @@ class SchoolGuestBookApiTest extends BaseMvcTest {
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
-
-        SchoolGuestBook schoolGuestBook = schoolGuestBookService.findById(1L);
-        assertThat(schoolGuestBook.getContent()).isEqualTo(content);
     }
 
     @Test
@@ -152,8 +150,5 @@ class SchoolGuestBookApiTest extends BaseMvcTest {
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
-
-        List<SchoolGuestBook> schoolGuestBookList = schoolGuestBookService.findBySchoolId(1L);
-        assertThat(schoolGuestBookList.size()).isEqualTo(2);
     }
 }

@@ -45,4 +45,8 @@ public class SchoolGuestBookService {
         schoolGuestBookRepo.deleteById(id);
     }
 
+    public void deleteAllInBatch() {
+        schoolGuestBookRepo.deleteAllInBatch();
+    }
+
 }

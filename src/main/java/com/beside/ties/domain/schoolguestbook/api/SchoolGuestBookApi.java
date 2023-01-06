@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Api(tags = "지역 API")
+@Api(tags = "학교 방명록 API")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/schoolGuestBook")
 @RestController

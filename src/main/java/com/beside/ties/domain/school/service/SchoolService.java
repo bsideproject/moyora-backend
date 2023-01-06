@@ -36,4 +36,8 @@ public class SchoolService {
     public School findSchoolById(Long id) {
         return schoolRepo.findSchoolById(id);
     }
+
+    public void deleteAllInBatch() {
+        schoolRepo.deleteAllInBatch();
+    }
 }

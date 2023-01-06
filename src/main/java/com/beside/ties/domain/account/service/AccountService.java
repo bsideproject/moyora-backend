@@ -193,4 +193,8 @@ public class AccountService {
     public AccountInfoResponse findByAccount(Account account) {
         return accountMapper.toAccountInfoResponse(account);
     }
+
+    public void deleteAllInBatch() {
+        accountRepo.deleteAllInBatch();
+    }
 }

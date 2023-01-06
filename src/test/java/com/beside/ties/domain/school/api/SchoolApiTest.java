@@ -2,6 +2,7 @@ package com.beside.ties.domain.school.api;
 
 import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.school.service.SchoolService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,6 +49,11 @@ class SchoolApiTest {
         schoolService.save(school1);
         schoolService.save(school2);
 
+    }
+
+    @AfterEach
+    public void afterEach() {
+        schoolService.deleteAllInBatch();
     }
 
     @DisplayName("전체 학교 가져오기")

@@ -2,6 +2,7 @@ spring:
   datasource:
     url: jdbc:h2:mem:mydb
     username: sa
+    password:
     driverClassName: org.h2.Driver
   jpa:
     hibernate:
@@ -9,6 +10,9 @@ spring:
     spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: false
     show-sql: true
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
   h2:
     console:
       enabled: true
