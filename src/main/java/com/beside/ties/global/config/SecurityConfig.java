@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests((authorizeRequests) ->
                         authorizeRequests
                                 .antMatchers("/").permitAll()
-                                .antMatchers("/api/v1/user/local/login").permitAll()
+                                .antMatchers("/api/v1/user/local/signup").permitAll()
                                 .antMatchers(HttpMethod.POST,"/api/v1/job/category").hasRole(Role.USER.getName())
                                 .antMatchers(HttpMethod.POST,"/api/v1/user").hasRole(Role.USER.getName())
                                 .antMatchers(HttpMethod.GET,"/api/v1/job/category").permitAll()
@@ -46,7 +46,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 .antMatchers(HttpMethod.POST,"/api/v1/user/article").hasRole(Role.USER.getName())
                                 .antMatchers(HttpMethod.GET,"/api/v1/user/article").permitAll()
                                 .antMatchers("/api/v1/user/signin").permitAll()
-                                .antMatchers("/api/v1/user/secondarysignup").hasRole(Role.USER.getName())
+                                .antMatchers("/api/v1/user/signup").hasRole(Role.USER.getName())
+                                .antMatchers(HttpMethod.PUT, "/api/v1/user/**").hasRole(Role.USER.getName())
+                                .antMatchers("/api/v1/user/myinfo").hasRole(Role.USER.getName())
+                                .antMatchers("/api/v1/user/school").hasRole(Role.USER.getName())
+                                .antMatchers("/api/v1/user/name").hasRole(Role.USER.getName())
                                 .antMatchers("/swagger-ui/**").permitAll()
                                 .antMatchers(HttpMethod.GET,"/api/v1/region/state").permitAll()
                                 .antMatchers(HttpMethod.GET, "/api/v1/region/city").permitAll()

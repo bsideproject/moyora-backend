@@ -99,6 +99,12 @@ public class AccountInfoResponse {
     )
     public LocalDate birthDate;
 
-
+    @JsonProperty("private_setting")
+    @ApiModelProperty(
+            value = "private_setting",
+            example = "true",
+            required = false
+    )
+    public Boolean privateSetting;
 
 }
