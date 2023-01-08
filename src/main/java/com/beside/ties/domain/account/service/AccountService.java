@@ -2,6 +2,8 @@ package com.beside.ties.domain.account.service;
 
 import com.beside.ties.domain.account.dto.request.*;
 import com.beside.ties.domain.account.dto.response.AccountInfoResponse;
+import com.beside.ties.domain.account.dto.response.ClassmateDetailResponse;
+import com.beside.ties.domain.account.dto.response.ClassmateResponse;
 import com.beside.ties.domain.account.mapper.AccountMapper;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.jobcategory.repo.JobCategoryRepo;
@@ -37,8 +39,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.beside.ties.global.auth.kakao.KakaoOAuthConstants.USER_INFO_URI;
 
@@ -220,5 +224,52 @@ public class AccountService {
         account1.updateSchool(request, optionalSchool.get());
 
         return "학교 정보가 업데이트 되었습니다.";
+    }
+
+    public List<ClassmateResponse> findClassMateList(Account account) {
+        return accountRepo.findAllBySchool(account.school).stream().map(ClassmateResponse::toDto).collect(Collectors.toList());
+    }
+
+    public ClassmateDetailResponse findSchoolmateDetail(Long schoolmateId) {
+        Optional<Account> accountOptional = accountRepo.findById(schoolmateId);
+        if(accountOptional.isEmpty()){
+            throw new IllegalArgumentException("존재하지 않는 유저입니다.");
+        }
+
+        Account account = accountOptional.get();
+
+        if(account.privateSetting){
+            return ClassmateDetailResponse.builder()
+                    .birthDate(account.getBirthDate())
+                    .facebook(account.getFacebook())
+                    .instagram(account.getInstagram())
+                    .youtube(account.getYoutube())
+                    .mbti(account.getMbti())
+                    .nickname(account.getNickname())
+                    .username(account.getUsername())
+                    .schoolName(account.getSchool().getSchoolName())
+                    .city(null)
+                    .state(null)
+                    .job(null)
+                    .jobCategory(null)
+                    .build();
+
+        }else{
+            return ClassmateDetailResponse.builder()
+                    .birthDate(account.getBirthDate())
+                    .facebook(account.getFacebook())
+                    .instagram(account.getInstagram())
+                    .youtube(account.getYoutube())
+                    .mbti(account.getMbti())
+                    .nickname(account.getNickname())
+                    .username(account.getUsername())
+                    .schoolName(account.getSchool().getSchoolName())
+                    .city(account.getRegion().getName())
+                    .state(account.getRegion().getParent().getName())
+                    .job(account.getMyJob().getName())
+                    .jobCategory(account.getMyJob().getParent().getName())
+                    .build();
+        }
+
     }
 }

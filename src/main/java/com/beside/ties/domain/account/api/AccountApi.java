@@ -2,6 +2,8 @@ package com.beside.ties.domain.account.api;
 
 import com.beside.ties.domain.account.dto.request.*;
 import com.beside.ties.domain.account.dto.response.AccountInfoResponse;
+import com.beside.ties.domain.account.dto.response.ClassmateDetailResponse;
+import com.beside.ties.domain.account.dto.response.ClassmateResponse;
 import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.account.service.AccountService;
 import com.beside.ties.global.auth.security.jwt.JwtDto;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 
 @Api(tags = "유저 API")
@@ -34,13 +37,13 @@ public class AccountApi {
         Long id = accountService.localSignUp(request);
         return ResponseEntity.status(HttpStatus.OK).body("id "+id+"로 계정이 저장되었습니다.");
     }
+
     @Operation(summary = "카카오 로그인")
     @PostMapping("/signin")
     public ResponseEntity<JwtDto> kakaoSignIn(HttpServletRequest request){
         JwtDto jwtDto = accountService.kakaoSignIn(request);
         return ResponseEntity.ok().body(jwtDto);
     }
-
 
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
@@ -82,9 +85,25 @@ public class AccountApi {
         return ResponseEntity.ok().body(message);
     }
 
+    @Operation(summary = "동창 목록 조회")
+    @GetMapping("/classmates")
+    public List<ClassmateResponse> getSchoolmateList(
+            @CurrentUser Account account
+    ){
+        return accountService.findClassMateList(account);
+    }
+
+    @Operation(summary = "동창 단건 조회")
+    @GetMapping("/classmate/detail")
+    public ResponseEntity<ClassmateDetailResponse> getSchoolmateDetail(
+            @RequestParam("schoolmate_id") Long schoolmateId
+    ){
+        ClassmateDetailResponse response = accountService.findSchoolmateDetail(schoolmateId);
+        return ResponseEntity.ok().body(response);
+    }
 
     @Operation(summary = "이미지 수정")
-    @PostMapping("/image")
+    @PutMapping("/image")
     public ResponseEntity<String> updateImage(
             @CurrentUser Account account,
             @RequestPart("file") MultipartFile multipartFile
