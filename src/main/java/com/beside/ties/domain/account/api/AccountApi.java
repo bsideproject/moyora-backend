@@ -12,8 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 
 @Api(tags = "유저 API")
@@ -81,8 +83,19 @@ public class AccountApi {
     }
 
 
-    @Operation(summary = "유저 정보 조회")
-    @GetMapping
+    @Operation(summary = "이미지 수정")
+    @PostMapping("/image")
+    public ResponseEntity<String> updateImage(
+            @CurrentUser Account account,
+            @RequestPart("file") MultipartFile multipartFile
+    ) throws IOException {
+        String message =
+                accountService.uploadImage(multipartFile, account);
+        return ResponseEntity.ok().body(message);
+    }
+
+    @Operation(summary = "나의 정보 조회")
+    @GetMapping("/myinfo")
     public ResponseEntity<AccountInfoResponse> getUserInfo(
             @CurrentUser Account account
     ){
