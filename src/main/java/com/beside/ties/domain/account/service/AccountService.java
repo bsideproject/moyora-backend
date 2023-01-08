@@ -16,6 +16,7 @@ import com.beside.ties.global.auth.kakao.KakaoUser;
 import com.beside.ties.global.auth.security.jwt.JwtDto;
 import com.beside.ties.global.auth.security.jwt.JwtType;
 import com.beside.ties.global.auth.security.jwt.JwtUtil;
+import com.beside.ties.global.common.NaverUploader;
 import com.beside.ties.global.common.RequestUtil;
 import com.beside.ties.global.common.exception.custom.InvalidSocialTokenException;
 import com.beside.ties.domain.account.entity.Account;
@@ -28,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -36,6 +38,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.beside.ties.global.auth.kakao.KakaoOAuthConstants.USER_INFO_URI;
 
@@ -54,6 +57,15 @@ public class AccountService {
     private final JobCategoryRepo jobCategoryRepo;
     private final AccountMapper accountMapper;
     private final SchoolRepo schoolRepo;
+    private final NaverUploader naverUploader;
+
+    public String uploadImage(MultipartFile multipartFile, Account account) throws IOException {
+        String substring = String.valueOf(UUID.randomUUID()).substring(1, 22);
+        String uploadImage = naverUploader.upload(multipartFile, substring);
+        Account account1 = accountRepo.findById(account.id).get();
+        account1.updateImage(uploadImage);
+        return "프로필 이미지 변경이 완료되었습니다.";
+    }
 
     public JwtDto kakaoSignIn(HttpServletRequest request){
         String token = RequestUtil.getAuthorizationToken(request.getHeader("Authorization"));

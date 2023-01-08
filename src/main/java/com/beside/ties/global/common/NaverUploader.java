@@ -43,7 +43,7 @@ public class NaverUploader {
     }
 
 
-    String upload(MultipartFile multipartFile, String filename) throws IOException {
+    public String upload(MultipartFile multipartFile, String filename) throws IOException {
         if(multipartFile.isEmpty()){
             throw new IllegalArgumentException("파일이 존재하지 않습니다.");
         }
