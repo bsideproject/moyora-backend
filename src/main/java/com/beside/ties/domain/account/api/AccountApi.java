@@ -85,6 +85,17 @@ public class AccountApi {
         return ResponseEntity.ok().body(message);
     }
 
+    @Operation(summary = "이미지 수정")
+    @PutMapping("/image")
+    public ResponseEntity<String> updateImage(
+            @CurrentUser Account account,
+            @RequestPart("file") MultipartFile multipartFile
+    ) throws IOException {
+        String message =
+                accountService.uploadImage(multipartFile, account);
+        return ResponseEntity.ok().body(message);
+    }
+
     @Operation(summary = "동창 목록 조회")
     @GetMapping("/classmates")
     public List<ClassmateResponse> getSchoolmateList(
@@ -102,16 +113,6 @@ public class AccountApi {
         return ResponseEntity.ok().body(response);
     }
 
-    @Operation(summary = "이미지 수정")
-    @PutMapping("/image")
-    public ResponseEntity<String> updateImage(
-            @CurrentUser Account account,
-            @RequestPart("file") MultipartFile multipartFile
-    ) throws IOException {
-        String message =
-                accountService.uploadImage(multipartFile, account);
-        return ResponseEntity.ok().body(message);
-    }
 
     @Operation(summary = "나의 정보 조회")
     @GetMapping("/myinfo")
