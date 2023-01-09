@@ -21,7 +21,7 @@ public class AuthConfig {
 
 
     @Bean
-    @Profile({"test"})
+    @Profile({"test","h2"})
     public AuthFilterContainer mockAuthFilter() {
         log.info("Initializing local Filter");
         AuthFilterContainer authFilterContainer = new AuthFilterContainer();

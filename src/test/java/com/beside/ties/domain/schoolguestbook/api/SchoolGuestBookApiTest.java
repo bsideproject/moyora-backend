@@ -30,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("학교 방명록 api 로직 테스트")
-@ActiveProfiles("test")
 @SpringBootTest
 class SchoolGuestBookApiTest extends BaseMvcTest {
 
@@ -57,9 +56,13 @@ class SchoolGuestBookApiTest extends BaseMvcTest {
     @Autowired
     private AccountService accountService;
 
+    private School searchSchool;
+
+    private SchoolGuestBook searchSchoolGuestBook;
+
     @BeforeEach
     public void beforeEach() {
-
+        System.out.println("----------------------------before Each----------------------------");
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .addFilter(springSecurityFilterChain)
                 .build();
@@ -83,13 +86,17 @@ class SchoolGuestBookApiTest extends BaseMvcTest {
         schoolService.save(school1);
         schoolService.save(school2);
 
-        SchoolGuestBook schoolGuestBook1 = new SchoolGuestBook(school, account, "우리학교 짱1");
-        SchoolGuestBook schoolGuestBook2 = new SchoolGuestBook(school, account, "우리학교 짱2");
-        SchoolGuestBook schoolGuestBook3 = new SchoolGuestBook(school, account, "우리학교 짱3");
+        searchSchool = schoolService.findBySchoolName("테스트학교");
+
+        SchoolGuestBook schoolGuestBook1 = new SchoolGuestBook(searchSchool, account, "우리학교 짱1");
+        SchoolGuestBook schoolGuestBook2 = new SchoolGuestBook(searchSchool, account, "우리학교 짱2");
+        SchoolGuestBook schoolGuestBook3 = new SchoolGuestBook(searchSchool, account, "우리학교 짱3");
 
         schoolGuestBookService.save(schoolGuestBook1);
         schoolGuestBookService.save(schoolGuestBook2);
         schoolGuestBookService.save(schoolGuestBook3);
+
+        searchSchoolGuestBook = schoolGuestBookService.findBySchoolId(searchSchool.getId()).get(0);
     }
 
     @AfterEach
@@ -113,7 +120,7 @@ class SchoolGuestBookApiTest extends BaseMvcTest {
     void saveApiTest() throws Exception {
         String content = "우리학교 짱4";
 
-        SchoolGuestBookAddDto schoolGuestBookAddDto = new SchoolGuestBookAddDto(1L, content);
+        SchoolGuestBookAddDto schoolGuestBookAddDto = new SchoolGuestBookAddDto(searchSchool.getId(), content);
 
         mockMvc.perform(
                         post("/api/v1/schoolGuestBook/")
@@ -127,8 +134,9 @@ class SchoolGuestBookApiTest extends BaseMvcTest {
 
     @Test
     void updateApiTest() throws Exception {
+        List<SchoolGuestBook> schoolGuestBookList = schoolGuestBookService.findBySchoolId(searchSchool.getId());
         String content = "우리학교 짱10";
-        SchoolGuestBookUpdateDto guestBookUpdateDto = new SchoolGuestBookUpdateDto(1L, content);
+        SchoolGuestBookUpdateDto guestBookUpdateDto = new SchoolGuestBookUpdateDto(searchSchoolGuestBook.getId(), content);
 
         mockMvc.perform(
                         put("/api/v1/schoolGuestBook/")
@@ -142,7 +150,6 @@ class SchoolGuestBookApiTest extends BaseMvcTest {
 
     @Test
     void deleteApiTest() throws Exception {
-
         mockMvc.perform(
                         delete("/api/v1/schoolGuestBook/1")
                                 .contentType(MediaType.APPLICATION_JSON)

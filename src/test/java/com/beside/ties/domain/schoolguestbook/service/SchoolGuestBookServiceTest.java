@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -40,6 +41,10 @@ class SchoolGuestBookServiceTest {
     @Autowired
     private AccountService accountService;
 
+    private School searchSchool;
+
+    private SchoolGuestBook searchSchoolGuestBook;
+
     @BeforeEach
     public void beforeEach() {
         LocalSignUpRequest request = new LocalSignUpRequest(
@@ -61,13 +66,17 @@ class SchoolGuestBookServiceTest {
         schoolService.save(school1);
         schoolService.save(school2);
 
-        SchoolGuestBook schoolGuestBook1 = new SchoolGuestBook(school, account, "우리학교 짱1");
-        SchoolGuestBook schoolGuestBook2 = new SchoolGuestBook(school, account, "우리학교 짱2");
-        SchoolGuestBook schoolGuestBook3 = new SchoolGuestBook(school, account, "우리학교 짱3");
+        searchSchool = schoolService.findBySchoolName("테스트학교");
+
+        SchoolGuestBook schoolGuestBook1 = new SchoolGuestBook(searchSchool, account, "우리학교 짱1");
+        SchoolGuestBook schoolGuestBook2 = new SchoolGuestBook(searchSchool, account, "우리학교 짱2");
+        SchoolGuestBook schoolGuestBook3 = new SchoolGuestBook(searchSchool, account, "우리학교 짱3");
 
         schoolGuestBookService.save(schoolGuestBook1);
         schoolGuestBookService.save(schoolGuestBook2);
         schoolGuestBookService.save(schoolGuestBook3);
+
+        searchSchoolGuestBook = schoolGuestBookService.findBySchoolId(searchSchool.getId()).get(0);
     }
 
     @AfterEach
@@ -82,7 +91,7 @@ class SchoolGuestBookServiceTest {
         Account account = accountService.loadUserByUsername(email);
         assertThat(account.getEmail()).isEqualTo(email);
 
-        List<SchoolGuestBook> schoolGuestBookList = schoolGuestBookService.findBySchoolId(1L);
+        List<SchoolGuestBook> schoolGuestBookList = schoolGuestBookService.findBySchoolId(searchSchool.getId());
         assertThat(schoolGuestBookList.size()).isEqualTo(3);
     }
 
@@ -105,7 +114,7 @@ class SchoolGuestBookServiceTest {
 
         schoolGuestBookService.save(schoolGuestBook);
 
-        List<SchoolGuestBook> schoolGuestBookList = schoolGuestBookService.findBySchoolId(1L);
+        List<SchoolGuestBook> schoolGuestBookList = schoolGuestBookService.findBySchoolId(searchSchool.getId());
 
         assertThat(schoolGuestBookList.size()).isEqualTo(4);
     }
@@ -113,20 +122,20 @@ class SchoolGuestBookServiceTest {
     @Test
     void updateTest() {
         String content = "우리학교 짱10";
-        SchoolGuestBookUpdateDto guestBookUpdateDto = new SchoolGuestBookUpdateDto(1L, content);
+        SchoolGuestBookUpdateDto guestBookUpdateDto = new SchoolGuestBookUpdateDto(searchSchoolGuestBook.getId(), content);
 
         schoolGuestBookService.update(guestBookUpdateDto);
 
-        SchoolGuestBook schoolGuestBook = schoolGuestBookService.findById(1L);
+        SchoolGuestBook schoolGuestBook = schoolGuestBookService.findById(searchSchoolGuestBook.getId());
         assertThat(schoolGuestBook.getContent()).isEqualTo(content);
 
     }
 
     @Test
     void deleteTest() {
-        schoolGuestBookService.delete(1L);
+        schoolGuestBookService.delete(searchSchoolGuestBook.getId());
 
-        List<SchoolGuestBook> schoolGuestBookList = schoolGuestBookService.findBySchoolId(1L);
+        List<SchoolGuestBook> schoolGuestBookList = schoolGuestBookService.findBySchoolId(searchSchool.getId());
         assertThat(schoolGuestBookList.size()).isEqualTo(2);
     }
 }

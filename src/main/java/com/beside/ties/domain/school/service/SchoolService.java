@@ -40,4 +40,9 @@ public class SchoolService {
     public void deleteAllInBatch() {
         schoolRepo.deleteAllInBatch();
     }
+
+    public School findBySchoolName(String schoolName) {
+        return schoolRepo.findBySchoolName(schoolName);
+    }
+
 }
