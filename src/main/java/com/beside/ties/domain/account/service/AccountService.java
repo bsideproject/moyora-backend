@@ -272,4 +272,8 @@ public class AccountService {
         }
 
     }
+
+    public void deleteAllInBatch() {
+        accountRepo.deleteAllInBatch();
+    }
 }
