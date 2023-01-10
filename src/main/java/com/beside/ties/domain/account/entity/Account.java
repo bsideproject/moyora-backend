@@ -1,7 +1,9 @@
 package com.beside.ties.domain.account.entity;
 
+import com.beside.ties.domain.account.dto.request.AccountUpdateNameRequest;
 import com.beside.ties.domain.account.dto.request.AccountSecondarySignUpRequest;
 import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
+import com.beside.ties.domain.account.dto.request.AccountUpdateSchoolRequest;
 import com.beside.ties.domain.region.entity.Region;
 import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.global.auth.kakao.KakaoAccount;
@@ -16,6 +18,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -70,6 +74,9 @@ public class Account extends BaseTimeEntity implements UserDetails {
     @Column(name = "phone_num",length = 11)
     public String phoneNum;
 
+    @Column(length = 11)
+    public LocalDate birthDate;
+
     @Column(nullable = false, unique = true,name = "kakao_id")
     private String kakaoId;
 
@@ -96,14 +103,14 @@ public class Account extends BaseTimeEntity implements UserDetails {
     public School school;
 
 
-    @Column(name = "sns1", length = 50)
-    public String sns1;
+    @Column(name = "instagram", length = 50)
+    public String instagram;
 
-    @Column(name = "sns2", length = 50)
-    public String sns2;
+    @Column(name = "facebook", length = 50)
+    public String facebook;
 
-    @Column(name = "sns3", length = 50)
-    public String sns3;
+    @Column(name = "youtube", length = 50)
+    public String youtube;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_category_id")
@@ -112,6 +119,9 @@ public class Account extends BaseTimeEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @Column(name = "private_setting", nullable = false)
+    public Boolean privateSetting = false;
 
 
 
@@ -150,14 +160,29 @@ public class Account extends BaseTimeEntity implements UserDetails {
         this.region = region;
     }
 
-    public void updateAll(AccountUpdateRequest request, JobCategory job, Region region){
-        this.nickname = request.getNickname();
+    public void updateProfile(AccountUpdateRequest request, JobCategory job, Region region){
         this.mbti = request.getMbti();
-        this.sns1 = request.getSns1();
-        this.sns2 = request.getSns2();
-        this.sns3 = request.getSns3();
+        this.instagram = request.getInstagram();
+        this.youtube = request.getYoutube();
+        this.facebook = request.getFacebook();
         this.myJob = job;
         this.region = region;
+        this.birthDate = LocalDate.parse(request.getBirthdate(), DateTimeFormatter.ISO_DATE);
+        this.privateSetting = request.getPrivateSetting();
+    }
+
+    public void updateImage(String image){
+        this.profile = image;
+    }
+
+    public void updateNameAndNickName(AccountUpdateNameRequest request){
+        this.nickname = request.getNickname();
+        this.username = request.getName();
+    }
+
+    public void updateSchool(AccountUpdateSchoolRequest request, School school){
+        this.graduationYear = request.getGraduationYear();
+        this.school = school;
     }
 
     public void updatePassword(String password){

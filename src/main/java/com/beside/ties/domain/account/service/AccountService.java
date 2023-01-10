@@ -1,9 +1,9 @@
 package com.beside.ties.domain.account.service;
 
-import com.beside.ties.domain.account.dto.request.AccountSecondarySignUpRequest;
-import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
-import com.beside.ties.domain.account.dto.request.LocalSignUpRequest;
+import com.beside.ties.domain.account.dto.request.*;
 import com.beside.ties.domain.account.dto.response.AccountInfoResponse;
+import com.beside.ties.domain.account.dto.response.ClassmateDetailResponse;
+import com.beside.ties.domain.account.dto.response.ClassmateResponse;
 import com.beside.ties.domain.account.mapper.AccountMapper;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.jobcategory.repo.JobCategoryRepo;
@@ -11,12 +11,14 @@ import com.beside.ties.domain.jobcategory.service.JobCategoryService;
 import com.beside.ties.domain.region.entity.Region;
 import com.beside.ties.domain.region.repo.RegionRepo;
 import com.beside.ties.domain.school.entity.School;
+import com.beside.ties.domain.school.repo.SchoolRepo;
 import com.beside.ties.domain.school.service.SchoolService;
 import com.beside.ties.domain.userguestbook.entity.UserGuestBook;
 import com.beside.ties.global.auth.kakao.KakaoUser;
 import com.beside.ties.global.auth.security.jwt.JwtDto;
 import com.beside.ties.global.auth.security.jwt.JwtType;
 import com.beside.ties.global.auth.security.jwt.JwtUtil;
+import com.beside.ties.global.common.NaverUploader;
 import com.beside.ties.global.common.RequestUtil;
 import com.beside.ties.global.common.exception.custom.InvalidSocialTokenException;
 import com.beside.ties.domain.account.entity.Account;
@@ -29,6 +31,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -36,7 +39,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.beside.ties.global.auth.kakao.KakaoOAuthConstants.USER_INFO_URI;
 
@@ -53,8 +59,17 @@ public class AccountService {
     private final JobCategoryService jobCategoryService;
     private final RegionRepo regionRepo;
     private final JobCategoryRepo jobCategoryRepo;
-
     private final AccountMapper accountMapper;
+    private final SchoolRepo schoolRepo;
+    private final NaverUploader naverUploader;
+
+    public String uploadImage(MultipartFile multipartFile, Account account) throws IOException {
+        String substring = String.valueOf(UUID.randomUUID()).substring(1, 22);
+        String uploadImage = naverUploader.upload(multipartFile, substring);
+        Account account1 = accountRepo.findById(account.id).get();
+        account1.updateImage(uploadImage);
+        return "프로필 이미지 변경이 완료되었습니다.";
+    }
 
     public JwtDto kakaoSignIn(HttpServletRequest request){
         String token = RequestUtil.getAuthorizationToken(request.getHeader("Authorization"));
@@ -175,9 +190,7 @@ public class AccountService {
     }
 
     public String updateUserInfo(AccountUpdateRequest request, Account account){
-        Optional<Account> accountOptional = accountRepo.findAccountByKakaoId(account.getKakaoId());
-        if(accountOptional.isEmpty()) throw new IllegalArgumentException("등록되지 않은 유저입니다.");
-        Account account1 = accountOptional.get();
+        Account account1 = accountRepo.findAccountByKakaoId(account.getKakaoId()).get();
 
         Optional<Region> regionOptional = regionRepo.findRegionByName(request.getCity());
         if(regionOptional.isEmpty()) throw new IllegalArgumentException("존재하지 않는 지역입니다.");
@@ -185,13 +198,79 @@ public class AccountService {
         Optional<JobCategory> optionalJobCategory = jobCategoryRepo.findJobCategoryByName(request.getJob());
         if(optionalJobCategory.isEmpty()) throw new IllegalArgumentException("존재하지 않는 직업입니다.");
 
-        account1.updateAll(request,optionalJobCategory.get(), regionOptional.get());
+        account1.updateProfile(request,optionalJobCategory.get(), regionOptional.get());
 
-        return "유저 정보가 업데이트 되었습니다.";
+        return "유저 프로필 정보가 업데이트 되었습니다.";
     }
 
     public AccountInfoResponse findByAccount(Account account) {
         return accountMapper.toAccountInfoResponse(account);
+    }
+
+    public String updateNameAndNickName(AccountUpdateNameRequest request, Account account) {
+        Account account1 = accountRepo.findById(account.id).get();
+        account1.updateNameAndNickName(request);
+        return "이름 및 닉네임이 업데이트 되었습니다.";
+    }
+
+    public String updateSchool(Account account, AccountUpdateSchoolRequest request) {
+
+        Account account1 = accountRepo.findById(account.id).get();
+        Optional<School> optionalSchool = schoolRepo.findSchoolBySchoolCode(request.getSchoolCode());
+        if(optionalSchool.isEmpty()){
+            throw new IllegalArgumentException("존재하지 않는 학교입니다.");
+        }
+
+        account1.updateSchool(request, optionalSchool.get());
+
+        return "학교 정보가 업데이트 되었습니다.";
+    }
+
+    public List<ClassmateResponse> findClassMateList(Account account) {
+        return accountRepo.findAllBySchool(account.school).stream().map(ClassmateResponse::toDto).collect(Collectors.toList());
+    }
+
+    public ClassmateDetailResponse findSchoolmateDetail(Long schoolmateId) {
+        Optional<Account> accountOptional = accountRepo.findById(schoolmateId);
+        if(accountOptional.isEmpty()){
+            throw new IllegalArgumentException("존재하지 않는 유저입니다.");
+        }
+
+        Account account = accountOptional.get();
+
+        if(account.privateSetting){
+            return ClassmateDetailResponse.builder()
+                    .birthDate(account.getBirthDate())
+                    .facebook(account.getFacebook())
+                    .instagram(account.getInstagram())
+                    .youtube(account.getYoutube())
+                    .mbti(account.getMbti())
+                    .nickname(account.getNickname())
+                    .username(account.getUsername())
+                    .schoolName(account.getSchool().getSchoolName())
+                    .city(null)
+                    .state(null)
+                    .job(null)
+                    .jobCategory(null)
+                    .build();
+
+        }else{
+            return ClassmateDetailResponse.builder()
+                    .birthDate(account.getBirthDate())
+                    .facebook(account.getFacebook())
+                    .instagram(account.getInstagram())
+                    .youtube(account.getYoutube())
+                    .mbti(account.getMbti())
+                    .nickname(account.getNickname())
+                    .username(account.getUsername())
+                    .schoolName(account.getSchool().getSchoolName())
+                    .city(account.getRegion().getName())
+                    .state(account.getRegion().getParent().getName())
+                    .job(account.getMyJob().getName())
+                    .jobCategory(account.getMyJob().getParent().getName())
+                    .build();
+        }
+
     }
 
     public void deleteAllInBatch() {

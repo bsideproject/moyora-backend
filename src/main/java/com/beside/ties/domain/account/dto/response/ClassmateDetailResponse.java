@@ -2,15 +2,17 @@ package com.beside.ties.domain.account.dto.response;
 
 import com.beside.ties.domain.account.entity.MBTI;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
+@Builder
+@AllArgsConstructor
 @Getter
-@ApiModel
-public class AccountInfoResponse {
+public class ClassmateDetailResponse {
 
     @ApiModelProperty(
             value = "profile",
@@ -38,12 +40,6 @@ public class AccountInfoResponse {
     )
     public String schoolName;
 
-    @JsonProperty("phone")
-    @ApiModelProperty(
-            value = "휴대전화",
-            example = "01012345678"
-    )
-    public String phone;
 
     @ApiModelProperty(
             value = "state",
@@ -63,6 +59,14 @@ public class AccountInfoResponse {
             required = true
     )
     public String job;
+
+    @JsonProperty("job_category")
+    @ApiModelProperty(
+            value = "job_category",
+            example = "IT 직군",
+            required = true
+    )
+    public String jobCategory;
 
     @ApiModelProperty(
             value = "mbti",
@@ -99,12 +103,5 @@ public class AccountInfoResponse {
     )
     public LocalDate birthDate;
 
-    @JsonProperty("private_setting")
-    @ApiModelProperty(
-            value = "private_setting",
-            example = "true",
-            required = false
-    )
-    public Boolean privateSetting;
 
 }

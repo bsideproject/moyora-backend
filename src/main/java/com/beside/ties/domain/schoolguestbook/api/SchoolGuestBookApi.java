@@ -1,6 +1,6 @@
 package com.beside.ties.domain.schoolguestbook.api;
 
-import com.beside.ties.domain.ResponseVo;
+import com.beside.ties.domain.common.vo.ResponseVo;
 import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.school.service.SchoolService;
