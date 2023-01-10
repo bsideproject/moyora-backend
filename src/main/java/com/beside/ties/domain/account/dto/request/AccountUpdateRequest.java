@@ -1,13 +1,23 @@
 package com.beside.ties.domain.account.dto.request;
 
 import com.beside.ties.domain.account.entity.MBTI;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 @Getter
 @ApiModel
 public class AccountUpdateRequest {
+
+    @ApiModelProperty(
+            value = "state",
+            example = "도",
+            required = true
+    )
+    String state;
 
     @ApiModelProperty(
             value = "region",
@@ -23,12 +33,22 @@ public class AccountUpdateRequest {
     )
     String job;
 
+
+    @JsonProperty("private_setting")
     @ApiModelProperty(
-            value = "nickname",
-            example = "짠돌이",
-            required = false
+            value = "필수정보 비공개 세팅",
+            example = "true",
+            required = true
     )
-    String nickname;
+    Boolean privateSetting;
+
+
+    @ApiModelProperty(
+            value = "birthday",
+            example = "생일",
+            required = true
+    )
+    String birthdate;
 
     @ApiModelProperty(
             value = "mbti",
@@ -37,21 +57,21 @@ public class AccountUpdateRequest {
     )
     MBTI mbti;
     @ApiModelProperty(
-            value = "sns1",
-            example = "youtubelink",
+            value = "facebook",
+            example = "facebook_link",
             required = false
     )
-    String sns1;
+    String facebook;
     @ApiModelProperty(
-            value = "sns2",
-            example = "facebook",
+            value = "youtube",
+            example = "youtube_link",
             required = false
     )
-    String sns2;
+    String youtube;
     @ApiModelProperty(
-            value = "sns3",
-            example = "instagram",
+            value = "instagram",
+            example = "instagram_link",
             required = false
     )
-    String sns3;
+    String instagram;
 }

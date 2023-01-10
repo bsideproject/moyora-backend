@@ -110,7 +110,7 @@ class AccountApiTest extends BaseMvcTest {
         );
 
         mockMvc.perform(
-                post("/api/v1/user/local/login")
+                post("/api/v1/user/local/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(localSignUpRequest))
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -137,7 +137,7 @@ class AccountApiTest extends BaseMvcTest {
 
 
         mockMvc.perform(
-                        post("/api/v1/user/secondarysignup")
+                        post("/api/v1/user/signup")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(requestDto))
                                 .characterEncoding(StandardCharsets.UTF_8)
@@ -166,8 +166,7 @@ class AccountApiTest extends BaseMvcTest {
                 phoneNum
         );
 
-        Long id = accountService.localSignUp(request);
-        return id;
+        return accountService.localSignUp(request);
     }
 
 
