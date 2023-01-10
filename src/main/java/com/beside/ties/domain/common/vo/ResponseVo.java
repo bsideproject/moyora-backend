@@ -1,4 +1,4 @@
-package com.beside.ties.domain;
+package com.beside.ties.domain.common.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

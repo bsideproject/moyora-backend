@@ -27,4 +27,14 @@ public class SchoolRegion {
 
     @Column(name = "count")
     private Long count;
+
+    public SchoolRegion(Region region, School school, Long count) {
+        this.region = region;
+        this.school = school;
+        this.count = count;
+    }
+
+    public static SchoolRegion createSchoolRegion(Region region, School school, Long count) {
+        return new SchoolRegion(region, school, count);
+    }
 }
