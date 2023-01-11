@@ -6,12 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SchoolRegionRepo extends JpaRepository<SchoolRegion, Long> {
 
     List<SchoolRegion> findTop4BySchool_IdOrderByCountDesc(Long schoolId);
 
-    SchoolRegion findBySchool_IdAndRegion_Id(Long schoolId, Long regionId);
+    Optional<SchoolRegion> findBySchool_IdAndRegion_Id(Long schoolId, Long regionId);
 
     @Query("select sg from SchoolRegion sg " +
             "left join fetch sg.region sgg " +

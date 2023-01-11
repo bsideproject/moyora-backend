@@ -10,6 +10,7 @@ import com.beside.ties.domain.school.service.SchoolService;
 import com.beside.ties.domain.schoolguestbook.entity.SchoolGuestBook;
 import com.beside.ties.domain.schoolregion.entity.SchoolRegion;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -92,6 +93,13 @@ class SchoolRegionServiceTest {
         schoolRegionService.save(schoolRegion5);
     }
 
+    @AfterEach
+    public void afterEach() {
+        schoolRegionService.deleteAllInBatch();
+        schoolService.deleteAllInBatch();
+        regionRepo.deleteAllInBatch();
+    }
+
     @DisplayName("학교 별 지역 count 총합 조회")
     @Test
     void totalCountBySchoolId() {
@@ -127,11 +135,11 @@ class SchoolRegionServiceTest {
         Long totalCount = schoolRegionService.totalCountBySchoolId(searchSchool.getId());
         List<StatisticsDto> statisticsList = schoolRegionService.convertStatisticsDto(schoolRegions, totalCount);
 
-        assertThat(statisticsList.get(0).getTitle()).isEqualTo("거제시");
-        assertThat(statisticsList.get(1).getTitle()).isEqualTo("사천시");
-        assertThat(statisticsList.get(2).getTitle()).isEqualTo("양산시");
-        assertThat(statisticsList.get(3).getTitle()).isEqualTo("창원시");
-        assertThat(statisticsList.get(4).getTitle()).isEqualTo("밀양시");
+        assertThat(statisticsList.get(0).getTitle()).isEqualTo("경상남도 거제시");
+        assertThat(statisticsList.get(1).getTitle()).isEqualTo("경상남도 사천시");
+        assertThat(statisticsList.get(2).getTitle()).isEqualTo("경상남도 양산시");
+        assertThat(statisticsList.get(3).getTitle()).isEqualTo("경상남도 창원시");
+        assertThat(statisticsList.get(4).getTitle()).isEqualTo("경상남도 밀양시");
     }
 
     @DisplayName("학교 별 top5 퍼센트")

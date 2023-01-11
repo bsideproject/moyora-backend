@@ -1,7 +1,9 @@
 package com.beside.ties.domain.schooljob.entity;
 
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
+import com.beside.ties.domain.region.entity.Region;
 import com.beside.ties.domain.school.entity.School;
+import com.beside.ties.domain.schoolregion.entity.SchoolRegion;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,4 +30,18 @@ public class SchoolJob {
 
     @Column(name = "count")
     private Long count;
+
+    public SchoolJob(JobCategory jobCategory, School school, Long count) {
+        this.jobCategory = jobCategory;
+        this.school = school;
+        this.count = count;
+    }
+
+    public void plusOneCount() {
+        this.count = this.count + 1L;
+    }
+
+    public static SchoolJob createSchoolJob(JobCategory jobCategory, School school, Long count) {
+        return new SchoolJob(jobCategory, school, count);
+    }
 }

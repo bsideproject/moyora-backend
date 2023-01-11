@@ -34,7 +34,8 @@ public class SchoolRegionService {
     }
 
     public SchoolRegion findBySchoolIdAndRegionId(Long schoolId, Long regionId) {
-        return schoolRegionRepo.findBySchool_IdAndRegion_Id(schoolId, regionId);
+        return schoolRegionRepo.findBySchool_IdAndRegion_Id(schoolId, regionId)
+                .orElseThrow(() -> new IllegalArgumentException("SchoolRegion doesn't exist"));
     }
 
     public void countPlusOneUpdate(SchoolRegion schoolRegion) {
@@ -43,7 +44,10 @@ public class SchoolRegionService {
 
     public List<StatisticsDto> convertStatisticsDto(List<SchoolRegion> schoolRegions, Long totalCount) {
         return schoolRegions.stream()
-                .map(item -> new StatisticsDto(item.getRegion().getParent().getName() + " " + item.getRegion().getName(), percentCalculate(item.getCount(), totalCount)))
+                .map(item ->
+                        new StatisticsDto(
+                                item.getRegion().getParent().getName() + " " + item.getRegion().getName(),
+                                percentCalculate(item.getCount(), totalCount)))
                 .collect(Collectors.toList());
     }
 
@@ -59,5 +63,9 @@ public class SchoolRegionService {
 
     private Long percentCalculate(Long count, Long totalCount) {
         return (long)Math.floor((double) count / (double) totalCount * 100.0);
+    }
+
+    public void deleteAllInBatch() {
+        schoolRegionRepo.deleteAllInBatch();
     }
 }
