@@ -11,6 +11,8 @@ public interface SchoolRegionRepo extends JpaRepository<SchoolRegion, Long> {
 
     List<SchoolRegion> findTop4BySchool_IdOrderByCountDesc(Long schoolId);
 
+    SchoolRegion findBySchool_IdAndRegion_Id(Long schoolId, Long regionId);
+
     @Query("select sg from SchoolRegion sg " +
             "left join fetch sg.region sgg " +
             "left join fetch sgg.parent " +

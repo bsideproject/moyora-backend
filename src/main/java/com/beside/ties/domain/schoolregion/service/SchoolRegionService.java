@@ -33,6 +33,10 @@ public class SchoolRegionService {
         return savedSchoolRegion.getId();
     }
 
+    public SchoolRegion findBySchoolIdAndRegionId(Long schoolId, Long regionId) {
+        return schoolRegionRepo.findBySchool_IdAndRegion_Id(schoolId, regionId);
+    }
+
     public List<StatisticsDto> convertStatisticsDto(List<SchoolRegion> schoolRegions, Long totalCount) {
         return schoolRegions.stream()
                 .map(item -> new StatisticsDto(item.getRegion().getParent().getName() + " " + item.getRegion().getName(), percentCalculate(item.getCount(), totalCount)))

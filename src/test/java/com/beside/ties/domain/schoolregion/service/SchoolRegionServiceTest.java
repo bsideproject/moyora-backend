@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,6 +39,7 @@ class SchoolRegionServiceTest {
 
     private School searchSchool;
 
+    private Region searchRegion;
 
     @BeforeEach
     public void beforeEach() {
@@ -71,6 +73,9 @@ class SchoolRegionServiceTest {
         regionRepo.save(regionChild3);
         regionRepo.save(regionChild4);
         regionRepo.save(regionChild5);
+        Optional<Region> regionByName = regionRepo.findRegionByName(child1);
+
+        searchRegion = regionByName.get();
 
         List<Region> regions = regionRepo.findRegionsByParent(regionParent);
 
@@ -138,5 +143,13 @@ class SchoolRegionServiceTest {
         for (Long aLong : longs) {
             System.out.println("aLong = " + aLong);
         }
+    }
+
+    @DisplayName("학교지역 학교id 와 지역id로 조회")
+    @Test
+    void findBySchool_IdAndRegion_Id() {
+        SchoolRegion schoolRegion = schoolRegionService.findBySchoolIdAndRegionId(searchSchool.getId(), searchRegion.getId());
+
+        assertThat(schoolRegion.getCount()).isEqualTo(5L);
     }
 }
