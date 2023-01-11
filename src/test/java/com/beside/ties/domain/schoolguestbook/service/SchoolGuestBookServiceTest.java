@@ -14,8 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -124,7 +122,7 @@ class SchoolGuestBookServiceTest {
         String content = "우리학교 짱10";
         SchoolGuestBookUpdateDto guestBookUpdateDto = new SchoolGuestBookUpdateDto(searchSchoolGuestBook.getId(), content);
 
-        schoolGuestBookService.update(guestBookUpdateDto);
+        schoolGuestBookService.contentUpdate(guestBookUpdateDto);
 
         SchoolGuestBook schoolGuestBook = schoolGuestBookService.findById(searchSchoolGuestBook.getId());
         assertThat(schoolGuestBook.getContent()).isEqualTo(content);

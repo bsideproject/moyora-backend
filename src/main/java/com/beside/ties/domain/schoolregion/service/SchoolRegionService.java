@@ -37,6 +37,10 @@ public class SchoolRegionService {
         return schoolRegionRepo.findBySchool_IdAndRegion_Id(schoolId, regionId);
     }
 
+    public void countPlusOneUpdate(SchoolRegion schoolRegion) {
+        schoolRegion.plusOneCount();
+    }
+
     public List<StatisticsDto> convertStatisticsDto(List<SchoolRegion> schoolRegions, Long totalCount) {
         return schoolRegions.stream()
                 .map(item -> new StatisticsDto(item.getRegion().getParent().getName() + " " + item.getRegion().getName(), percentCalculate(item.getCount(), totalCount)))

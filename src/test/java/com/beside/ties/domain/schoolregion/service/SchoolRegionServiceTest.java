@@ -152,4 +152,13 @@ class SchoolRegionServiceTest {
 
         assertThat(schoolRegion.getCount()).isEqualTo(5L);
     }
+
+    @DisplayName("count 1 증가")
+    @Test
+    void countPlusOneUpdate() {
+        SchoolRegion schoolRegion = schoolRegionService.findBySchoolIdAndRegionId(searchSchool.getId(), searchRegion.getId());
+        schoolRegionService.countPlusOneUpdate(schoolRegion);
+
+        assertThat(schoolRegion.getCount()).isEqualTo(6L);
+    }
 }
