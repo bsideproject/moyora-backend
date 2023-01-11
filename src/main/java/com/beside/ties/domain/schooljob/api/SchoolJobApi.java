@@ -1,8 +1,11 @@
-package com.beside.ties.domain.schoolregion.api;
+package com.beside.ties.domain.schooljob.api;
 
 import com.beside.ties.domain.common.dto.StatisticsDto;
 import com.beside.ties.domain.common.vo.ResponseVo;
 import com.beside.ties.domain.common.vo.StatisticsVo;
+import com.beside.ties.domain.school.service.SchoolService;
+import com.beside.ties.domain.schooljob.entity.SchoolJob;
+import com.beside.ties.domain.schooljob.service.SchoolJobService;
 import com.beside.ties.domain.schoolregion.entity.SchoolRegion;
 import com.beside.ties.domain.schoolregion.service.SchoolRegionService;
 import io.swagger.annotations.Api;
@@ -16,24 +19,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api(tags = "학교 지역 통계 API")
+@Api(tags = "학교 직업 통계 API")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/schoolRegion")
+@RequestMapping("/api/v1/schoolJob")
 @RestController
-public class SchoolRegionApi {
+public class SchoolJobApi {
 
-    private final SchoolRegionService schoolRegionService;
+    private final SchoolJobService schoolJobService;
 
-    @Operation(summary = "학교 지역 통계")
+    @Operation(summary = "학교 직업 통계")
     @GetMapping("/{schoolId}")
     public ResponseEntity<?> schoolRegionStatistics(@PathVariable Long schoolId) {
 
-        Long totalCount = schoolRegionService.totalCountBySchoolId(schoolId);
-        List<SchoolRegion> schoolRegionTop4 = schoolRegionService.countTop4BySchoolId(schoolId);
-        List<SchoolRegion> schoolRegions = schoolRegionService.findAllBySchoolId(schoolId);
+        Long totalCount = schoolJobService.totalCountBySchoolId(schoolId);
+        List<SchoolJob> schoolJobTop4 = schoolJobService.countTop4BySchoolId(schoolId);
+        List<SchoolJob> schoolJobs = schoolJobService.findAllBySchoolId(schoolId);
 
-        List<Long> top5PercentList = schoolRegionService.convertTop5Percent(schoolRegionTop4, totalCount);
-        List<StatisticsDto> statisticsList = schoolRegionService.convertStatisticsDto(schoolRegions, totalCount);
+        List<Long> top5PercentList = schoolJobService.convertTop5Percent(schoolJobTop4, totalCount);
+        List<StatisticsDto> statisticsList = schoolJobService.convertStatisticsDto(schoolJobs, totalCount);
 
         return ResponseEntity.ok().body(
                 new ResponseVo(

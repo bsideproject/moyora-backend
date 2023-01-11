@@ -34,6 +34,10 @@ public class SchoolRegion {
         this.count = count;
     }
 
+    public void plusOneCount() {
+        this.count = this.count + 1L;
+    }
+
     public static SchoolRegion createSchoolRegion(Region region, School school, Long count) {
         return new SchoolRegion(region, school, count);
     }

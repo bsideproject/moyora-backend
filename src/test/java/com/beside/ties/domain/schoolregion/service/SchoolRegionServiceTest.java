@@ -10,6 +10,7 @@ import com.beside.ties.domain.school.service.SchoolService;
 import com.beside.ties.domain.schoolguestbook.entity.SchoolGuestBook;
 import com.beside.ties.domain.schoolregion.entity.SchoolRegion;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,6 +40,7 @@ class SchoolRegionServiceTest {
 
     private School searchSchool;
 
+    private Region searchRegion;
 
     @BeforeEach
     public void beforeEach() {
@@ -71,6 +74,9 @@ class SchoolRegionServiceTest {
         regionRepo.save(regionChild3);
         regionRepo.save(regionChild4);
         regionRepo.save(regionChild5);
+        Optional<Region> regionByName = regionRepo.findRegionByName(child1);
+
+        searchRegion = regionByName.get();
 
         List<Region> regions = regionRepo.findRegionsByParent(regionParent);
 
@@ -85,6 +91,13 @@ class SchoolRegionServiceTest {
         schoolRegionService.save(schoolRegion3);
         schoolRegionService.save(schoolRegion4);
         schoolRegionService.save(schoolRegion5);
+    }
+
+    @AfterEach
+    public void afterEach() {
+        schoolRegionService.deleteAllInBatch();
+        schoolService.deleteAllInBatch();
+        regionRepo.deleteAllInBatch();
     }
 
     @DisplayName("학교 별 지역 count 총합 조회")
@@ -122,11 +135,11 @@ class SchoolRegionServiceTest {
         Long totalCount = schoolRegionService.totalCountBySchoolId(searchSchool.getId());
         List<StatisticsDto> statisticsList = schoolRegionService.convertStatisticsDto(schoolRegions, totalCount);
 
-        assertThat(statisticsList.get(0).getTitle()).isEqualTo("거제시");
-        assertThat(statisticsList.get(1).getTitle()).isEqualTo("사천시");
-        assertThat(statisticsList.get(2).getTitle()).isEqualTo("양산시");
-        assertThat(statisticsList.get(3).getTitle()).isEqualTo("창원시");
-        assertThat(statisticsList.get(4).getTitle()).isEqualTo("밀양시");
+        assertThat(statisticsList.get(0).getTitle()).isEqualTo("경상남도 거제시");
+        assertThat(statisticsList.get(1).getTitle()).isEqualTo("경상남도 사천시");
+        assertThat(statisticsList.get(2).getTitle()).isEqualTo("경상남도 양산시");
+        assertThat(statisticsList.get(3).getTitle()).isEqualTo("경상남도 창원시");
+        assertThat(statisticsList.get(4).getTitle()).isEqualTo("경상남도 밀양시");
     }
 
     @DisplayName("학교 별 top5 퍼센트")
@@ -138,5 +151,22 @@ class SchoolRegionServiceTest {
         for (Long aLong : longs) {
             System.out.println("aLong = " + aLong);
         }
+    }
+
+    @DisplayName("학교지역 학교id 와 지역id로 조회")
+    @Test
+    void findBySchool_IdAndRegion_Id() {
+        SchoolRegion schoolRegion = schoolRegionService.findBySchoolIdAndRegionId(searchSchool.getId(), searchRegion.getId());
+
+        assertThat(schoolRegion.getCount()).isEqualTo(5L);
+    }
+
+    @DisplayName("count 1 증가")
+    @Test
+    void countPlusOneUpdate() {
+        SchoolRegion schoolRegion = schoolRegionService.findBySchoolIdAndRegionId(searchSchool.getId(), searchRegion.getId());
+        schoolRegionService.countPlusOneUpdate(schoolRegion);
+
+        assertThat(schoolRegion.getCount()).isEqualTo(6L);
     }
 }
