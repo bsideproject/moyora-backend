@@ -11,7 +11,11 @@ public interface SchoolRegionRepo extends JpaRepository<SchoolRegion, Long> {
 
     List<SchoolRegion> findTop4BySchool_IdOrderByCountDesc(Long schoolId);
 
-    @Query("select sg from SchoolRegion sg join fetch sg.region where sg.school.id = :schoolId order by sg.count desc")
+    @Query("select sg from SchoolRegion sg " +
+            "left join fetch sg.region sgg " +
+            "left join fetch sgg.parent " +
+            "where sg.school.id = :schoolId " +
+            "order by sg.count desc")
     List<SchoolRegion> findAllBySchool_Id(@Param("schoolId") Long schoolId);
 
     @Query("select sum(sg.count) from SchoolRegion sg where sg.school.id = :schoolId")

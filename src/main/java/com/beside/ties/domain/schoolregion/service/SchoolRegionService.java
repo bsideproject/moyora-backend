@@ -35,7 +35,7 @@ public class SchoolRegionService {
 
     public List<StatisticsDto> convertStatisticsDto(List<SchoolRegion> schoolRegions, Long totalCount) {
         return schoolRegions.stream()
-                .map(item -> new StatisticsDto(item.getRegion().getName(), percentCalculate(item.getCount(), totalCount)))
+                .map(item -> new StatisticsDto(item.getRegion().getParent().getName() + " " + item.getRegion().getName(), percentCalculate(item.getCount(), totalCount)))
                 .collect(Collectors.toList());
     }
 

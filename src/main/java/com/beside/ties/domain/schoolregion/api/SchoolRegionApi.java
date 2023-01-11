@@ -24,7 +24,7 @@ public class SchoolRegionApi {
 
     private final SchoolRegionService schoolRegionService;
 
-    @Operation(summary = "학교 직업 통계")
+    @Operation(summary = "학교 지역 통계")
     @GetMapping("/{schoolId}")
     public ResponseEntity<?> schoolRegionStatistics(@PathVariable Long schoolId) {
 
