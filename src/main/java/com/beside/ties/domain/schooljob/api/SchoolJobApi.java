@@ -29,7 +29,7 @@ public class SchoolJobApi {
 
     @Operation(summary = "학교 직업 통계")
     @GetMapping("/{schoolId}")
-    public ResponseEntity<?> schoolRegionStatistics(@PathVariable Long schoolId) {
+    public ResponseEntity<?> schoolJobStatistics(@PathVariable Long schoolId) {
 
         Long totalCount = schoolJobService.totalCountBySchoolId(schoolId);
         List<SchoolJob> schoolJobTop4 = schoolJobService.countTop4BySchoolId(schoolId);

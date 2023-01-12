@@ -28,4 +28,19 @@ public class SchoolMbti {
 
     @Column(name = "count")
     private Long count;
+
+    public SchoolMbti(Mbti mbti, School school, Long count) {
+        this.mbti = mbti;
+        this.school = school;
+        this.count = count;
+    }
+
+    public void plusOneCount() {
+        this.count = this.count + 1L;
+    }
+
+    public static SchoolMbti createSchoolMbti(Mbti mbti, School school, Long count) {
+        return new SchoolMbti(mbti, school, count);
+    }
 }
+
