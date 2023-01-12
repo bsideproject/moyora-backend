@@ -18,4 +18,8 @@ public class Mbti {
 
     @Column(name = "name")
     private String name;
+
+    public Mbti(String name) {
+        this.name = name;
+    }
 }
