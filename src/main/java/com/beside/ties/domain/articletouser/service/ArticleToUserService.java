@@ -36,27 +36,24 @@ public class ArticleToUserService {
     }
 
 
-    // 방명록 남기기
     public String writeArticle(ArticleToUserRegisterRequestDto requestDto, Account account){
         Optional<UserGuestBook> guestBookOptional = userGuestBookRepo.findById(requestDto.getUserGuestBookId());
         if(guestBookOptional.isEmpty()){
             throw new IllegalStateException("해당 아이디의 게스트북이 존재하지 않습니다.");
         }
 
-        ArticleToUser save = articleToUserRepo.save(new ArticleToUser(account, guestBookOptional.get(), requestDto.getContent()));
+        ArticleToUser save = articleToUserRepo.save(ArticleToUserRegisterRequestDto.ToDto(requestDto,account));
 
         return "ID : "+save.getId()+" 방명록 저장이 완료되었습니다.";
     }
 
 
-    // 방명록 삭제하기
     public String deleteArticle(Long articleId, Account account){
         articleToUserRepo.delete(getArticleToUser(articleId, account));
         return "삭제가 완료되었습니다.";
     }
 
 
-    // 방명록 수정하기
     public String updateArticle(ArticleToUserUpdateRequestDto requestDto, Account account){
         ArticleToUser articleToUser = getArticleToUser(requestDto.getArticleId(), account);
         articleToUser.updateContent(requestDto.getContent());
@@ -76,4 +73,9 @@ public class ArticleToUserService {
     }
 
 
+    public List<ArticleToUserResponseDto> findMyArticle(Account account) {
+        UserGuestBook userGuestBook = userGuestBookRepo.findUserGuestBookByAccount(account).get();
+        return articleToUserRepo.findAllByUserGuestBook(userGuestBook)
+                .stream().map(ArticleToUserResponseDto::toMyDto).collect(Collectors.toList());
+    }
 }

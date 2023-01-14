@@ -50,7 +50,7 @@ class ArticleToUserApiTest extends BaseMvcTest {
 
 
         ArticleToUserRegisterRequestDto requestDto
-        = new ArticleToUserRegisterRequestDto(UserGuestBookId, "content");
+        = new ArticleToUserRegisterRequestDto(UserGuestBookId, "content",true,"1");
 
         mockMvc.perform(
                 post("/api/v1/user/article")

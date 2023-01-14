@@ -4,6 +4,7 @@ import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.userguestbook.entity.UserGuestBook;
 import com.beside.ties.global.common.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,10 +31,19 @@ public class ArticleToUser extends BaseTimeEntity {
     @Column(length = 1200)
     String content;
 
-    public ArticleToUser(Account account, UserGuestBook userguestBook, String content){
+    @Column(name = "is_public")
+    Boolean isPublic;
+
+    @Column(length = 10)
+    String sticker;
+
+    @Builder
+    public ArticleToUser(Account account, UserGuestBook userguestBook, String content, Boolean isPublic, String sticker){
         this.account = account;
         this.userGuestBook = userguestBook;
         this.content = content;
+        this.isPublic = isPublic;
+        this.sticker = sticker;
     }
 
     public void updateContent(String content){

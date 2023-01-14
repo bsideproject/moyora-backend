@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(tags = "유저에게 방명록 API")
+@Api(tags = "쪽지 API")
 @RequestMapping("/api/v1/user/article")
 @RequiredArgsConstructor
 @RestController
@@ -22,7 +22,7 @@ public class ArticleToUserApi {
 
     private final ArticleToUserService articleToUserService;
 
-    @Operation(summary = "유저 방명록 글 가져오기")
+    @Operation(summary = "쪽지 가져오기")
     @GetMapping
     ResponseEntity<List<ArticleToUserResponseDto>> findArticleByGuestBook(
             @RequestParam(name = "user_id") Long userId
@@ -30,7 +30,17 @@ public class ArticleToUserApi {
         return ResponseEntity.ok().body(articleToUserService.findAllByGuestBook(userId));
     }
 
-    @Operation(summary = "유저 방명록에 글 등록하기")
+    @Operation(summary = "나의 쪽지 가져오기")
+    @GetMapping("/my")
+    ResponseEntity<List<ArticleToUserResponseDto>> findMyArticle(
+            @CurrentUser Account account
+    ){
+        List<ArticleToUserResponseDto> responseDto = articleToUserService.findMyArticle(account);
+
+        return ResponseEntity.ok().body(responseDto);
+    }
+
+    @Operation(summary = "유저 쪽지 등록하기")
     @PostMapping
     ResponseEntity<String> registerArticleToUser(
             @RequestBody ArticleToUserRegisterRequestDto requestDto,
@@ -39,7 +49,7 @@ public class ArticleToUserApi {
         return ResponseEntity.ok().body(articleToUserService.writeArticle(requestDto, account));
     }
 
-    @Operation(summary = "유저 방명록 글 수정하기")
+    @Operation(summary = "유저 쪽지 수정하기")
     @PutMapping
     ResponseEntity<String> updateArticle(
             @RequestBody ArticleToUserUpdateRequestDto requestDto,
@@ -48,7 +58,7 @@ public class ArticleToUserApi {
         return ResponseEntity.ok().body(articleToUserService.updateArticle(requestDto, account));
     }
 
-    @Operation(summary = "유저 방명록 글 삭제하기")
+    @Operation(summary = "유저 쪽지 삭제하기")
     @DeleteMapping
     void deleteArticle(
             @RequestParam Long articleId,

@@ -53,6 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 .antMatchers("/api/v1/user/school").hasRole(Role.USER.getName())
                                 .antMatchers("/api/v1/user/name").hasRole(Role.USER.getName())
                                 .antMatchers("/swagger-ui/**").permitAll()
+                                .antMatchers("/api/v1/user/article/my").hasRole(Role.USER.getName())
                                 .antMatchers(HttpMethod.GET,"/api/v1/region/state").permitAll()
                                 .antMatchers(HttpMethod.GET, "/api/v1/region/city").permitAll()
                                 .antMatchers(HttpMethod.POST, "/api/v1/region/state").hasRole(Role.USER.getName())
