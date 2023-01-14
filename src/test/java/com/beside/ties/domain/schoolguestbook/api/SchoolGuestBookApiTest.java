@@ -148,6 +148,7 @@ class SchoolGuestBookApiTest extends BaseMvcTest {
                 .andDo(print());
     }
 
+
     @Test
     void deleteApiTest() throws Exception {
         mockMvc.perform(
