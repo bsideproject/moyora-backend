@@ -1,6 +1,5 @@
 package com.beside.ties.domain.schoolguestbook.service;
 
-import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.schoolguestbook.dto.SchoolGuestBookUpdateDto;
 import com.beside.ties.domain.schoolguestbook.entity.SchoolGuestBook;
 import com.beside.ties.domain.schoolguestbook.repo.SchoolGuestBookRepo;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional
@@ -36,9 +34,9 @@ public class SchoolGuestBookService {
                 .orElseThrow(() -> new IllegalArgumentException("SchoolGuestBook doesn't exist"));
     }
 
-    public void update(SchoolGuestBookUpdateDto schoolGuestBookUpdateDto) {
+    public void contentUpdate(SchoolGuestBookUpdateDto schoolGuestBookUpdateDto) {
         SchoolGuestBook schoolGuestBook = findById(schoolGuestBookUpdateDto.getSchoolGuestBookId());
-        schoolGuestBook.update(schoolGuestBookUpdateDto.getContent());
+        schoolGuestBook.contentUpdate(schoolGuestBookUpdateDto.getContent());
     }
 
     public void delete(Long id) {

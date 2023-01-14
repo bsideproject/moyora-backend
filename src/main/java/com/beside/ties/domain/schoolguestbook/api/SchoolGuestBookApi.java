@@ -1,6 +1,6 @@
 package com.beside.ties.domain.schoolguestbook.api;
 
-import com.beside.ties.domain.ResponseVo;
+import com.beside.ties.domain.common.vo.ResponseVo;
 import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.school.service.SchoolService;
@@ -75,7 +75,7 @@ public class SchoolGuestBookApi {
     @Operation(summary = "학교 방명록 수정")
     @PutMapping("/")
     public ResponseEntity<?> updateSchoolGuestBook(@RequestBody SchoolGuestBookUpdateDto schoolGuestBookUpdateDto) {
-        schoolGuestBookService.update(schoolGuestBookUpdateDto);
+        schoolGuestBookService.contentUpdate(schoolGuestBookUpdateDto);
         return ResponseEntity.ok().body(
                 new ResponseVo(
                         "업데이트 성공(미확정)"

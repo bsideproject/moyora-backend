@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Getter
@@ -36,7 +35,7 @@ public class SchoolGuestBook extends BaseTimeEntity {
         this.content = content;
     }
 
-    public void update(String content) {
+    public void contentUpdate(String content) {
         this.content = content;
     }
 
