@@ -59,8 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 .antMatchers("/api/v1/user/article/my").hasRole(Role.USER.getName())
                                 .antMatchers(HttpMethod.GET,"/api/v1/region/state").permitAll()
                                 .antMatchers(HttpMethod.GET, "/api/v1/region/city").permitAll()
-                                .antMatchers(HttpMethod.POST, "/api/v1/region/state").permitAll()
-                                .antMatchers(HttpMethod.POST, "/api/v1/region/city").permitAll()
+                                .antMatchers(HttpMethod.POST, "/api/v1/region/state").hasRole(Role.ADMIN.getName())
+                                .antMatchers(HttpMethod.POST, "/api/v1/region/city").hasRole(Role.ADMIN.getName())
                                 .antMatchers(HttpMethod.GET, "/api/v1/job/category/parent").permitAll()
                                 .antMatchers(HttpMethod.GET, "/api/v1/job/category/child").permitAll()
                                 .antMatchers(HttpMethod.POST, "/api/v1/job/category/parent").permitAll()
@@ -108,7 +108,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/v3/api-docs",  "/configuration/ui",
                 "/swagger-resources", "/configuration/security",
                 "/swagger-ui.html", "/webjars/**","/swagger/**", "/swagger-ui/**");

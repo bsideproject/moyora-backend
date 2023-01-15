@@ -20,23 +20,23 @@ public class RegionApi {
 
     private final RegionService regionService;
 
-    @Operation(summary = "도, 시 조회")
+    @Operation(summary = "도, 광역시 조회")
     @GetMapping("/state")
-    public ResponseEntity<List<RegionResponseDto>> findAllStates(){
-        List<RegionResponseDto> allParentsRegion = regionService.findAllStates();
+    public ResponseEntity<List<String>> findAllStates(){
+        List<String> allParentsRegion = regionService.findAllStates();
         return ResponseEntity.ok().body(allParentsRegion);
     }
 
-    @Operation(summary = "구 조회")
+    @Operation(summary = "시,군 조회")
     @GetMapping("/city")
-    public ResponseEntity<List<RegionResponseDto>> findCitiesByState(
+    public ResponseEntity<List<String>> findCitiesByState(
             @RequestParam String state
     ){
-        List<RegionResponseDto> allParentsRegion = regionService.findAllCities(state);
+        List<String> allParentsRegion = regionService.findAllCities(state);
         return ResponseEntity.ok().body(allParentsRegion);
     }
 
-    @Operation(summary = "여러개의 도, 시 등록")
+    @Operation(summary = "여러개의 도, 광역시 등록")
     @PostMapping("/state")
     public ResponseEntity<String> saveState(
             @RequestBody RegionStateRequestDto requestDto
