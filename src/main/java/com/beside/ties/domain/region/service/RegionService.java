@@ -44,19 +44,26 @@ public class RegionService {
         return save.getId();
     }
 
-    public List<RegionResponseDto> findAllStates(){
+    public List<String> findAllStates(){
         List<Region> regionsByParentIsNull = regionRepo.findRegionsByParentIsNull();
-        List<RegionResponseDto> collect = regionsByParentIsNull.stream().map(RegionResponseDto::new).collect(Collectors.toList());
+        List<String> collect = regionsByParentIsNull.stream().map(it->it.getName()).collect(Collectors.toList());
         return collect;
     }
 
-    public List<RegionResponseDto> findAllCities(String name){
+    public List<String> findAllCities(String name){
         Optional<Region> parentRegionOptional = regionRepo.findRegionByName(name);
         if(parentRegionOptional.isEmpty()){
             throw new IllegalArgumentException("없는 도/시 입니다.");
         }
         List<Region> regionsByParentIsNull = regionRepo.findRegionsByParent(parentRegionOptional.get());
-        List<RegionResponseDto> collect = regionsByParentIsNull.stream().map(RegionResponseDto::new).collect(Collectors.toList());
+        List<String> collect = regionsByParentIsNull.stream().map(it->{
+            String regionName = it.getName();
+            if(it.name.contains("_")){
+                String[] strings = it.name.split("_");
+                regionName = strings[1];
+            }
+            return regionName;
+        }).collect(Collectors.toList());
         return collect;
     }
 
