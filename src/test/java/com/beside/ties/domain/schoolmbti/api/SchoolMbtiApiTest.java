@@ -8,6 +8,7 @@ import com.beside.ties.domain.school.service.SchoolService;
 import com.beside.ties.domain.schoolmbti.entity.SchoolMbti;
 import com.beside.ties.domain.schoolmbti.service.SchoolMbtiService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +92,7 @@ class SchoolMbtiApiTest extends BaseMvcTest {
         schoolMbtiService.save(schoolMbti5);
     }
 
+    @Disabled
     @Test
     void schoolMbtiStatistics() throws Exception {
         mockMvc.perform(

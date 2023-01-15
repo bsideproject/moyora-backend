@@ -1,6 +1,8 @@
 package com.beside.ties.domain.region.api;
 
-import com.beside.ties.domain.region.dto.RegionResponseDto;
+import com.beside.ties.domain.region.dto.request.RegionCityRequestDto;
+import com.beside.ties.domain.region.dto.request.RegionStateRequestDto;
+import com.beside.ties.domain.region.dto.response.RegionResponseDto;
 import com.beside.ties.domain.region.service.RegionService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,24 +36,21 @@ public class RegionApi {
         return ResponseEntity.ok().body(allParentsRegion);
     }
 
-    @Operation(summary = "도, 시 등록")
+    @Operation(summary = "여러개의 도, 시 등록")
     @PostMapping("/state")
     public ResponseEntity<String> saveState(
-            @RequestParam String state
-    ){
-        Long parentId = regionService.saveState(state);
-        String message = "state Id is" + parentId;
+            @RequestBody RegionStateRequestDto requestDto
+            ){
+        String message = regionService.saveStates(requestDto);
         return ResponseEntity.ok().body(message);
     }
 
-    @Operation(summary = "구 등록")
+    @Operation(summary = "여러개 구 등록")
     @PostMapping("/city")
     public ResponseEntity<String> saveCity(
-            @RequestParam String city,
-            @RequestParam String state
+            @RequestBody RegionCityRequestDto requestDto
     ){
-        Long cityId = regionService.saveCity(state, city);
-        String message = "city Id is" + cityId;
+        String message = regionService.saveCities(requestDto);
         return ResponseEntity.ok().body(message);
     }
 

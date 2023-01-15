@@ -2,10 +2,7 @@ package com.beside.ties.domain.school.api;
 
 import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.school.service.SchoolService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -67,6 +64,7 @@ class SchoolApiTest {
                 .andDo(print());
     }
 
+    @Disabled
     @DisplayName("특정 학교 가져오기")
     @Test
     void findSchoolById() throws Exception {

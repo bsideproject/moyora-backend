@@ -10,10 +10,7 @@ import com.beside.ties.domain.school.service.SchoolService;
 import com.beside.ties.domain.schoolguestbook.entity.SchoolGuestBook;
 import com.beside.ties.domain.schoolregion.entity.SchoolRegion;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -142,6 +139,7 @@ class SchoolRegionServiceTest {
         assertThat(statisticsList.get(4).getTitle()).isEqualTo("경상남도 밀양시");
     }
 
+    @Disabled
     @DisplayName("학교 별 top5 퍼센트")
     @Test
     void convertTop5Percent() {

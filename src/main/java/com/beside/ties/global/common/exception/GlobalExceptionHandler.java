@@ -18,4 +18,10 @@ public class GlobalExceptionHandler {
         log.error(String.valueOf(e));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
+        log.error(String.valueOf(e));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
 }
