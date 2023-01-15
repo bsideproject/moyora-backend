@@ -7,6 +7,7 @@ import com.beside.ties.domain.account.service.AccountService;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.jobcategory.repo.JobCategoryRepo;
 import com.beside.ties.domain.jobcategory.service.JobCategoryService;
+import com.beside.ties.domain.region.entity.Region;
 import com.beside.ties.domain.region.repo.RegionRepo;
 import com.beside.ties.domain.region.service.RegionService;
 import com.beside.ties.domain.school.entity.School;
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import javax.servlet.Filter;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 
 @DisplayName("계정 API 테스트")
@@ -84,7 +86,7 @@ class AccountApiTest extends BaseMvcTest {
     }
 
     private void setRegion() {
-        regionService.saveState("서울시");
+        regionRepo.saveAndFlush(new Region("서울시"));
         regionService.saveCity("서울시", "강남구");
     }
 

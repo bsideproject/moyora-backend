@@ -1,4 +1,4 @@
-package com.beside.ties.domain.region.dto;
+package com.beside.ties.domain.region.dto.response;
 
 import com.beside.ties.domain.region.entity.Region;
 import io.swagger.annotations.ApiModel;
@@ -12,6 +12,12 @@ public class RegionResponseDto {
     public String regionName;
 
     public RegionResponseDto(Region region) {
-        this.regionName = region.getName();
+
+        String regionName = region.getName();
+        if(region.name.contains("_")){
+            String[] strings = region.name.split("_");
+            regionName = strings[1];
+        }
+        this.regionName = regionName;
     }
 }
