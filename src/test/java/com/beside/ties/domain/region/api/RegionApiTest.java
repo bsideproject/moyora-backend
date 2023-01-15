@@ -1,6 +1,6 @@
 package com.beside.ties.domain.region.api;
 
-import com.beside.ties.domain.jobcategory.service.JobCategoryService;
+import com.beside.ties.domain.region.entity.Region;
 import com.beside.ties.domain.region.repo.RegionRepo;
 import com.beside.ties.domain.region.service.RegionService;
 import org.junit.jupiter.api.*;
@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -17,7 +16,6 @@ import javax.servlet.Filter;
 import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -48,7 +46,7 @@ class RegionApiTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .addFilter(springSecurityFilterChain)
                 .build();
-        regionService.saveState("Gyeongsangnam-do");
+        regionRepo.saveAndFlush(new Region("Gyeongsangnam-do"));
         regionService.saveCity("Gyeongsangnam-do","ChangwonCity");
     }
 
