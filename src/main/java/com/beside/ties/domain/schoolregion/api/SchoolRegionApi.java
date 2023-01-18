@@ -26,7 +26,7 @@ public class SchoolRegionApi {
 
     @Operation(summary = "학교 지역 통계")
     @GetMapping("/{schoolId}")
-    public ResponseEntity<?> schoolRegionStatistics(@PathVariable Long schoolId) {
+    public ResponseEntity<StatisticsVo> schoolRegionStatistics(@PathVariable Long schoolId) {
 
         Long totalCount = schoolRegionService.totalCountBySchoolId(schoolId);
         List<SchoolRegion> schoolRegionTop4 = schoolRegionService.countTop4BySchoolId(schoolId);
@@ -35,9 +35,6 @@ public class SchoolRegionApi {
         List<Long> top5PercentList = schoolRegionService.convertTop5Percent(schoolRegionTop4, totalCount);
         List<StatisticsDto> statisticsList = schoolRegionService.convertStatisticsDto(schoolRegions, totalCount);
 
-        return ResponseEntity.ok().body(
-                new ResponseVo(
-                        new StatisticsVo(top5PercentList, statisticsList)
-                ));
+        return ResponseEntity.ok().body(new StatisticsVo(top5PercentList, statisticsList));
     }
 }

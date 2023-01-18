@@ -30,35 +30,29 @@ public class SchoolGuestBookApi {
 
     @Operation(summary = "학교 방명록 조회")
     @GetMapping("/{schoolId}")
-    public ResponseEntity<?> findAllSchoolGuestBook(@PathVariable Long schoolId) {
+    public ResponseEntity<List<SchoolGuestBookDto>> findAllSchoolGuestBook(@PathVariable Long schoolId) {
         List<SchoolGuestBook> schoolGuestBookList = schoolGuestBookService.findBySchoolId(schoolId);
         List<SchoolGuestBookDto> schoolGuestBookDtoList = schoolGuestBookList.stream()
                 .map(SchoolGuestBook::toSchoolGuestBookDto)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(
-                new ResponseVo(
-                        schoolGuestBookDtoList
-                ));
+        return ResponseEntity.ok().body(schoolGuestBookDtoList);
     }
 
     @Operation(summary = "내가 작성한 방명록 조회")
     @GetMapping("/me")
-    public ResponseEntity<?> findAllSchoolGuestBookByAccountId(@CurrentUser Account account) {
+    public ResponseEntity<List<SchoolGuestBookDto>> findAllSchoolGuestBookByAccountId(@CurrentUser Account account) {
         List<SchoolGuestBook> schoolGuestBookList = schoolGuestBookService.findByAccountId(account.getId());
         List<SchoolGuestBookDto> schoolGuestBookDtoList = schoolGuestBookList.stream()
                 .map(SchoolGuestBook::toSchoolGuestBookDto)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(
-                new ResponseVo(
-                        schoolGuestBookDtoList
-                ));
+        return ResponseEntity.ok().body(schoolGuestBookDtoList);
     }
 
     @Operation(summary = "학교 방명록 등록")
     @PostMapping("/")
-    public ResponseEntity<?> saveSchoolGuestBook(@CurrentUser Account account,
+    public ResponseEntity<String> saveSchoolGuestBook(@CurrentUser Account account,
                                            @RequestBody SchoolGuestBookAddDto schoolGuestBookAddDto) {
         School school = schoolService.findSchoolById(schoolGuestBookAddDto.getSchoolId());
 
@@ -66,29 +60,20 @@ public class SchoolGuestBookApi {
 
         schoolGuestBookService.save(schoolGuestBook);
 
-        return ResponseEntity.ok().body(
-                new ResponseVo(
-                        "등록 성공(미확정)"
-                ));
+        return ResponseEntity.ok().body("등록 성공(미확정)");
     }
 
     @Operation(summary = "학교 방명록 수정")
     @PutMapping("/")
-    public ResponseEntity<?> updateSchoolGuestBook(@RequestBody SchoolGuestBookUpdateDto schoolGuestBookUpdateDto) {
+    public ResponseEntity<String> updateSchoolGuestBook(@RequestBody SchoolGuestBookUpdateDto schoolGuestBookUpdateDto) {
         schoolGuestBookService.contentUpdate(schoolGuestBookUpdateDto);
-        return ResponseEntity.ok().body(
-                new ResponseVo(
-                        "업데이트 성공(미확정)"
-                ));
+        return ResponseEntity.ok().body("업데이트 성공(미확정)");
     }
 
     @Operation(summary = "학교 방명록 삭제")
     @DeleteMapping("/{SchoolGuestBookId}")
-    public ResponseEntity<?> deleteSchoolGuestBook(@PathVariable Long SchoolGuestBookId) {
+    public ResponseEntity<String> deleteSchoolGuestBook(@PathVariable Long SchoolGuestBookId) {
         schoolGuestBookService.delete(SchoolGuestBookId);
-        return ResponseEntity.ok().body(
-                new ResponseVo(
-                        "삭제 성공(미확정)"
-                ));
+        return ResponseEntity.ok().body("삭제 성공(미확정)");
     }
 }
