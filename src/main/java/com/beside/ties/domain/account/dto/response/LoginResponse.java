@@ -1,6 +1,5 @@
 package com.beside.ties.domain.account.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 @ApiModel
 public class LoginResponse {
 
-    @JsonProperty("user_id")
     @ApiModelProperty(
             value = "유저 아이디",
             required = true,
@@ -24,7 +22,6 @@ public class LoginResponse {
     )
     public String email;
 
-    @JsonProperty("profile_image_url")
     @ApiModelProperty(
             value = "프로파일 이미지",
             required = true,
@@ -46,7 +43,6 @@ public class LoginResponse {
     )
     public String username;
 
-    @JsonProperty("is_first")
     @ApiModelProperty(
             value = "오늘 회원가입 하셨나요?",
             required = true,

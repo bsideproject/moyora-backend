@@ -2,7 +2,6 @@ package com.beside.ties.domain.articletouser.dto.response;
 
 
 import com.beside.ties.domain.articletouser.entity.ArticleToUser;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -30,7 +29,6 @@ public class ArticleToUserResponseDto {
             name = "공개 여부 설정",
             example = "true"
     )
-    @JsonProperty("is_public")
     private Boolean isPublic;
 
     @ApiModelProperty(
