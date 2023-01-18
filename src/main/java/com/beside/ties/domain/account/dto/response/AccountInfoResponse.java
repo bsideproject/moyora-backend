@@ -1,7 +1,6 @@
 package com.beside.ties.domain.account.dto.response;
 
 import com.beside.ties.domain.account.entity.MBTI;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -31,14 +30,12 @@ public class AccountInfoResponse {
     )
     public String nickname;
 
-    @JsonProperty("school_name")
     @ApiModelProperty(
             value = "schoolName",
             example = "신월초등하교"
     )
     public String schoolName;
 
-    @JsonProperty("phone")
     @ApiModelProperty(
             value = "휴대전화",
             example = "01012345678"
@@ -99,7 +96,6 @@ public class AccountInfoResponse {
     )
     public LocalDate birthDate;
 
-    @JsonProperty("private_setting")
     @ApiModelProperty(
             value = "private_setting",
             example = "true",
