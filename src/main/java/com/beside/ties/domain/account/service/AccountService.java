@@ -82,6 +82,12 @@ public class AccountService {
             isFirst = true;
             register(kakaoUser);
         }
+        if(optionalAccount.isPresent()){
+            School school = optionalAccount.get().getSchool();
+            if(school == null){
+                isFirst = true;
+            }
+        }
         account = accountRepo.findAccountByKakaoId(kakaoUser.getId()).get();
 
         String accessToken = jwtUtil.createJwt(account.getUsername(), JwtType.ACCESS_TOKEN);
