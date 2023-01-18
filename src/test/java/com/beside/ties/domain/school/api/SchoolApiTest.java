@@ -1,5 +1,6 @@
 package com.beside.ties.domain.school.api;
 
+import com.beside.ties.domain.BaseMvcTest;
 import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.school.service.SchoolService;
 import org.junit.jupiter.api.*;
@@ -13,14 +14,16 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.servlet.Filter;
 import java.nio.charset.StandardCharsets;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("학교 API 테스트")
 @ActiveProfiles("test")
 @SpringBootTest
-class SchoolApiTest {
+class SchoolApiTest extends BaseMvcTest {
 
     @Autowired
     private WebApplicationContext wac;
@@ -62,6 +65,21 @@ class SchoolApiTest {
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
+    }
+
+    @Disabled
+    @DisplayName("특정 학교 이름으로 조회")
+    @Test
+    void findSchoolByName() throws Exception {
+        String name = "테스트학교";
+        mockMvc.perform(
+                        get("/api/v1/school/schoolName")
+                                .param("schoolName",name)
+                                .characterEncoding(StandardCharsets.UTF_8)
+                )
+                .andExpect(status().isOk())
+                .andDo(print());
+
     }
 
     @Disabled
