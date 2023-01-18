@@ -25,23 +25,24 @@ public class SchoolApi {
 
     @Operation(summary = "전체 학교 조회")
     @GetMapping("/")
-    public ResponseEntity<?> findAllSchool() {
+    public ResponseEntity<List<SchoolDto>> findAllSchool() {
         List<SchoolDto> schoolDtoList = schoolService.findAllSchool().stream()
                 .map(SchoolDto::new)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok().body(
-                new ResponseVo(
-                        schoolDtoList
-                ));
+        return ResponseEntity.ok().body(schoolDtoList);
     }
 
-    @Operation(summary = "특전 학교 조회")
+    @Operation(summary = "특정 학교 조회")
     @GetMapping("/{schoolId}")
-    public ResponseEntity<?> findSchoolById(@PathVariable Long schoolId) {
+    public ResponseEntity<SchoolDto> findSchoolById(@PathVariable Long schoolId) {
         SchoolDto schoolDto = new SchoolDto(schoolService.findSchoolById(schoolId));
-        return ResponseEntity.ok().body(
-                new ResponseVo(
-                        schoolDto
-                ));
+        return ResponseEntity.ok().body(schoolDto);
+    }
+
+    @Operation(summary = "특정 학교 조회 이름으로 조회")
+    @GetMapping("/schoolName")
+    public ResponseEntity<SchoolDto> findSchoolByName(String schoolName) {
+        SchoolDto schoolDto = new SchoolDto(schoolService.findBySchoolName(schoolName));
+        return ResponseEntity.ok().body(schoolDto);
     }
 }
