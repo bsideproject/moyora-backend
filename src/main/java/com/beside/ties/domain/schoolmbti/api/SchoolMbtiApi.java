@@ -27,7 +27,7 @@ public class SchoolMbtiApi {
 
     @Operation(summary = "학교 Mbti 통계")
     @GetMapping("/{schoolId}")
-    public ResponseEntity<?> schoolMbtiStatistics(@PathVariable Long schoolId) {
+    public ResponseEntity<StatisticsVo> schoolMbtiStatistics(@PathVariable Long schoolId) {
 
         Long totalCount = schoolMbtiService.totalCountBySchoolId(schoolId);
         List<SchoolMbti> schoolMbtiTop4 = schoolMbtiService.countTop4BySchoolId(schoolId);
@@ -36,9 +36,6 @@ public class SchoolMbtiApi {
         List<Long> top5PercentList = schoolMbtiService.convertTop5Percent(schoolMbtiTop4, totalCount);
         List<StatisticsDto> statisticsList = schoolMbtiService.convertStatisticsDto(schoolMbtis, totalCount);
 
-        return ResponseEntity.ok().body(
-                new ResponseVo(
-                        new StatisticsVo(top5PercentList, statisticsList)
-                ));
+        return ResponseEntity.ok().body(new StatisticsVo(top5PercentList, statisticsList));
     }
 }
