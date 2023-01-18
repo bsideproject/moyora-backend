@@ -1,6 +1,5 @@
 package com.beside.ties.domain.account.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -32,7 +31,6 @@ public class AccountSecondarySignUpRequest {
             example = "2002",
             required = true
         )
-        @JsonProperty("graduation_year")
         int graduationYear;
 
         @ApiModelProperty(
@@ -47,7 +45,6 @@ public class AccountSecondarySignUpRequest {
             example = "창원시",
             required = true
         )
-        @JsonProperty("parent_region")
         String State;
 
         @ApiModelProperty(
@@ -55,7 +52,6 @@ public class AccountSecondarySignUpRequest {
             example = "성산구",
             required = true
         )
-        @JsonProperty("child_region")
         String city;
 
         @ApiModelProperty(
@@ -63,7 +59,6 @@ public class AccountSecondarySignUpRequest {
             example = "학교 코드xaaa34",
             required = true
         )
-        @JsonProperty("school_code")
         String schoolCode;
 
 }

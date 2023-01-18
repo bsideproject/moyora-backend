@@ -1,7 +1,6 @@
 package com.beside.ties.domain.account.dto.response;
 
 import com.beside.ties.domain.account.entity.MBTI;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,7 +32,6 @@ public class ClassmateDetailResponse {
     )
     public String nickname;
 
-    @JsonProperty("school_name")
     @ApiModelProperty(
             value = "schoolName",
             example = "신월초등하교"
@@ -60,7 +58,6 @@ public class ClassmateDetailResponse {
     )
     public String job;
 
-    @JsonProperty("job_category")
     @ApiModelProperty(
             value = "job_category",
             example = "IT 직군",

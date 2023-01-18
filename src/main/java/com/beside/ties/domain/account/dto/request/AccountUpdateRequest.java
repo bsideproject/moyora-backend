@@ -1,7 +1,6 @@
 package com.beside.ties.domain.account.dto.request;
 
 import com.beside.ties.domain.account.entity.MBTI;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -34,7 +33,6 @@ public class AccountUpdateRequest {
     String job;
 
 
-    @JsonProperty("private_setting")
     @ApiModelProperty(
             value = "필수정보 비공개 세팅",
             example = "true",
