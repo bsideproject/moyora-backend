@@ -42,7 +42,7 @@ public class SchoolService {
     }
 
     public List<School> findBySchoolName(String schoolName) {
-        return schoolRepo.findBySchoolName(schoolName);
+        return schoolRepo.findBySchoolNameContaining(schoolName);
     }
 
 }

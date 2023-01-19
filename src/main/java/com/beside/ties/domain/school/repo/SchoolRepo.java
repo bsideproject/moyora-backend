@@ -10,5 +10,5 @@ public interface SchoolRepo extends JpaRepository<School, Long> {
 
     Optional<School> findSchoolBySchoolCode(String schoolCode);
     School findSchoolById(Long id);
-    List<School> findBySchoolName(String schoolName);
+    List<School> findBySchoolNameContaining(String schoolName);
 }

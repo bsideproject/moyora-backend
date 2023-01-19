@@ -71,7 +71,7 @@ class SchoolApiTest extends BaseMvcTest {
     @DisplayName("특정 학교 이름으로 조회")
     @Test
     void findSchoolByName() throws Exception {
-        String name = "테스트학교";
+        String name = "트학교";
         mockMvc.perform(
                         get("/api/v1/school/schoolName")
                                 .param("schoolName",name)
