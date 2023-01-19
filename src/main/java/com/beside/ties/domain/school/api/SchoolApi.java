@@ -41,8 +41,10 @@ public class SchoolApi {
 
     @Operation(summary = "특정 학교 조회 이름으로 조회")
     @GetMapping("/schoolName")
-    public ResponseEntity<SchoolDto> findSchoolByName(String schoolName) {
-        SchoolDto schoolDto = new SchoolDto(schoolService.findBySchoolName(schoolName));
-        return ResponseEntity.ok().body(schoolDto);
+    public ResponseEntity<List<SchoolDto>> findSchoolByName(String schoolName) {
+        List<SchoolDto> schoolDtoList = schoolService.findBySchoolName(schoolName).stream()
+                                                                                  .map(SchoolDto::new)
+                                                                                  .collect(Collectors.toList());
+        return ResponseEntity.ok().body(schoolDtoList);
     }
 }

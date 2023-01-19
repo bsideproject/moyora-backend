@@ -86,7 +86,7 @@ class SchoolGuestBookApiTest extends BaseMvcTest {
         schoolService.save(school1);
         schoolService.save(school2);
 
-        searchSchool = schoolService.findBySchoolName("테스트학교");
+        searchSchool = schoolService.findBySchoolName("테스트학교").get(0);
 
         SchoolGuestBook schoolGuestBook1 = new SchoolGuestBook(searchSchool, account, "우리학교 짱1");
         SchoolGuestBook schoolGuestBook2 = new SchoolGuestBook(searchSchool, account, "우리학교 짱2");

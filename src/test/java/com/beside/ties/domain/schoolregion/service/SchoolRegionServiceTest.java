@@ -49,7 +49,7 @@ class SchoolRegionServiceTest {
         schoolService.save(school1);
         schoolService.save(school2);
 
-        searchSchool = schoolService.findBySchoolName("테스트학교");
+        searchSchool = schoolService.findBySchoolName("테스트학교").get(0);
 
         String parent = "경상남도";
         String child1 = "창원시";
