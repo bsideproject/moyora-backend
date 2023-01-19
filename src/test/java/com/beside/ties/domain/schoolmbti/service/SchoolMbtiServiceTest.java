@@ -45,7 +45,7 @@ class SchoolMbtiServiceTest {
         schoolService.save(school1);
         schoolService.save(school2);
 
-        searchSchool = schoolService.findBySchoolName("테스트학교");
+        searchSchool = schoolService.findBySchoolName("테스트학교").get(0);
 
         Mbti mbti1 = new Mbti("ENTP");
         Mbti mbti2 = new Mbti("ENTJ");
