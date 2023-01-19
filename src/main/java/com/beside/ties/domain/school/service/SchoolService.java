@@ -41,7 +41,7 @@ public class SchoolService {
         schoolRepo.deleteAllInBatch();
     }
 
-    public School findBySchoolName(String schoolName) {
+    public List<School> findBySchoolName(String schoolName) {
         return schoolRepo.findBySchoolName(schoolName);
     }
 

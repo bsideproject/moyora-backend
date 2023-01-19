@@ -63,7 +63,7 @@ class SchoolJobApiTest extends BaseMvcTest {
         schoolService.save(school1);
         schoolService.save(school2);
 
-        searchSchool = schoolService.findBySchoolName("테스트학교");
+        searchSchool = schoolService.findBySchoolName("테스트학교").get(0);
 
         String parent = "의료";
         String child1 = "간호사";
