@@ -21,7 +21,6 @@ import java.io.IOException;
 import static com.beside.ties.global.auth.filter.WhiteList.checkWhiteList;
 
 @RequiredArgsConstructor
-@Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;

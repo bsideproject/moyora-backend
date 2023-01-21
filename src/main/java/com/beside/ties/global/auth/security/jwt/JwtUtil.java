@@ -56,7 +56,7 @@ public class JwtUtil {
         log.info("토큰 " + token);
         log.info("토큰 subject [sub: "+result+"] ]");
 
-        if(result == JwtType.ACCESS_TOKEN.name()){
+        if(result.equals(JwtType.ACCESS_TOKEN.name())){
                return JwtType.ACCESS_TOKEN;
         }else{
             return JwtType.REFRESH_TOKEN;
