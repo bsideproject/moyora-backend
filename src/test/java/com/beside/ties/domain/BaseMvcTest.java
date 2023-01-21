@@ -59,7 +59,7 @@ public class BaseMvcTest {
                 .nickname("nickname")
                 .phoneNum("01084554545")
                 .profile("dsfhiufhuw.rl")
-                .username("goddirc")
+                .name("goddirc")
                 .build();
 
         account.updatePassword(passwordEncoder.encode("213"));

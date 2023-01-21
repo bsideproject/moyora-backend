@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 public class RegionResponseDto {
     public String regionName;
 
+    public Long id;
+
     public RegionResponseDto(Region region) {
 
         String regionName = region.getName();
@@ -19,5 +21,9 @@ public class RegionResponseDto {
             regionName = strings[1];
         }
         this.regionName = regionName;
+    }
+
+    public static RegionResponseDto toDto(Region region){
+        return new RegionResponseDto(region.getName(), region.getId());
     }
 }

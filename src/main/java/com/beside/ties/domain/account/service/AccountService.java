@@ -14,6 +14,7 @@ import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.school.repo.SchoolRepo;
 import com.beside.ties.domain.school.service.SchoolService;
 import com.beside.ties.domain.userguestbook.entity.UserGuestBook;
+import com.beside.ties.domain.userguestbook.repo.UserGuestBookRepo;
 import com.beside.ties.global.auth.kakao.KakaoUser;
 import com.beside.ties.global.auth.security.jwt.JwtDto;
 import com.beside.ties.global.auth.security.jwt.JwtType;
@@ -62,6 +63,7 @@ public class AccountService {
     private final AccountMapper accountMapper;
     private final SchoolRepo schoolRepo;
     private final NaverUploader naverUploader;
+    private final UserGuestBookRepo userGuestBookRepo;
 
     public String uploadImage(MultipartFile multipartFile, Account account) throws IOException {
         String substring = String.valueOf(UUID.randomUUID()).substring(1, 22);
@@ -73,7 +75,7 @@ public class AccountService {
 
     public JwtDto kakaoSignIn(HttpServletRequest request){
         String token = RequestUtil.getAuthorizationToken(request.getHeader("Authorization"));
-        Account account = null;
+        Account account;
         KakaoUser kakaoUser = getUserFromToken(token);
         boolean isFirst = false;
         Optional<Account> optionalAccount = accountRepo.findAccountByKakaoId(kakaoUser.getId());
@@ -101,7 +103,6 @@ public class AccountService {
         account.updatePassword(passwordEncoder.encode(account.getPw()));
         Account save = accountRepo.save(account);
 
-        if(save == null) throw new IllegalArgumentException("유저 저장 실패");
         logger.debug("유저 저장 성공");
 
         return save.getId();
@@ -113,7 +114,7 @@ public class AccountService {
                 .email(request.getEmail())
                 .phoneNum(request.getPhoneNum())
                 .profile(request.getProfile())
-                .username(request.getUsername())
+                .name(request.getUsername())
                 .kakaoId("sfoiusdjfioswf")
                 .nickname(request.getNickname()).build();
 
@@ -169,7 +170,13 @@ public class AccountService {
         return accountByEmail.get();
     }
 
-    public String secondarySignUp(AccountSecondarySignUpRequest request, Account account) {
+    public String secondarySignUp(AccountSecondarySignUpRequest request, Long accountId) {
+
+        Account account = accountRepo.findById(accountId).get();
+
+        if(account.school != null){
+            throw new IllegalArgumentException("이미 회원가입한 유저입니다.");
+        }
 
         // 학교 존재 여부 확인
         Optional<School> optionalSchool = schoolService.checkSchoolCode(request.getSchoolCode());
@@ -178,15 +185,20 @@ public class AccountService {
             throw new IllegalArgumentException("등록되어있지 않은 학교입니다. 관리자 문의 부탁드립니다.");
         }
 
+
+        Optional<UserGuestBook> optionalUserGuestBook = userGuestBookRepo.findByAccount(account);
+        if(optionalUserGuestBook.isPresent()){
+            throw new IllegalArgumentException("이미 방명록이 생성되어 있습니다.");
+        }
         // 유저 방명록 생성
-        UserGuestBook userGuestBook = new UserGuestBook(account);
-        logger.info("유저 방명록 생성이 ID"+userGuestBook.getId()+" 로 생성되었습니다.");
+        UserGuestBook userGuestBook1 = userGuestBookRepo.save(new UserGuestBook(account));
+        logger.info("유저 방명록 생성이 ID"+userGuestBook1.getId()+" 로 생성되었습니다.");
 
         // 직업 조회
         JobCategory jobCategory = jobCategoryService.findJobCategoryByName(request.getJob());
 
         // 지역 업데이트
-        Optional<Region> regionOptional = regionRepo.findRegionByName(request.getCity());
+        Optional<Region> regionOptional = regionRepo.findById(request.getRegionId());
         if(regionOptional.isEmpty()) throw new IllegalArgumentException("존재하지 않는 지역입니다.");
 
         // 회원 정보 업데이트
@@ -209,8 +221,10 @@ public class AccountService {
         return "유저 프로필 정보가 업데이트 되었습니다.";
     }
 
-    public AccountInfoResponse findByAccount(Account account) {
-        return accountMapper.toAccountInfoResponse(account);
+    public AccountInfoResponse findByAccount(Long accountId) {
+        Optional<Account> optional = accountRepo.findById(accountId);
+        Account account = optional.get();
+        return AccountInfoResponse.toDto(account);
     }
 
     public String updateNameAndNickName(AccountUpdateNameRequest request, Account account) {

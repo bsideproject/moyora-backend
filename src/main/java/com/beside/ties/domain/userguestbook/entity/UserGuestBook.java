@@ -20,7 +20,7 @@ public class UserGuestBook extends BaseTimeEntity {
     Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_id", unique = true)
     Account account;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userGuestBook")

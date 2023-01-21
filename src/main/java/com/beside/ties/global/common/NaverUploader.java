@@ -55,7 +55,7 @@ public class NaverUploader {
         String originalName = multipartFile.getOriginalFilename();
         String ext = originalName.substring(originalName.lastIndexOf(".")+1);
         String time = now().toString();
-        String fullFilename = filename + time + ext;
+        String fullFilename = filename + time +"."+ ext;
 
         s3.putObject(
                 new PutObjectRequest(bucketName, fullFilename, multipartFile.getInputStream(), objectMetadata)

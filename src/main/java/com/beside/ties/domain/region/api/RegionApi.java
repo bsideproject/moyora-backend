@@ -22,17 +22,17 @@ public class RegionApi {
 
     @Operation(summary = "도, 광역시 조회")
     @GetMapping("/state")
-    public ResponseEntity<List<String>> findAllStates(){
-        List<String> allParentsRegion = regionService.findAllStates();
+    public ResponseEntity<List<RegionResponseDto>> findAllStates(){
+        List<RegionResponseDto> allParentsRegion = regionService.findAllStates();
         return ResponseEntity.ok().body(allParentsRegion);
     }
 
     @Operation(summary = "시,군 조회")
     @GetMapping("/city")
-    public ResponseEntity<List<String>> findCitiesByState(
+    public ResponseEntity<List<RegionResponseDto>> findCitiesByState(
             @RequestParam String state
     ){
-        List<String> allParentsRegion = regionService.findAllCities(state);
+        List<RegionResponseDto> allParentsRegion = regionService.findAllCities(state);
         return ResponseEntity.ok().body(allParentsRegion);
     }
 

@@ -38,7 +38,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
             String email,
             String profile,
             String nickname,
-            String username,
+            String name,
             String phoneNum,
             String kakaoId
     )
@@ -49,7 +49,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
         this.nickname = nickname;
         this.phoneNum = phoneNum;
         this.kakaoId = kakaoId;
-        this.username = username;
+        this.name = name;
         this.profile = profile;
     }
 
@@ -80,8 +80,8 @@ public class Account extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false, unique = true,name = "kakao_id")
     private String kakaoId;
 
-    @Column(length = 25)
-    public String username;
+    @Column(length = 60)
+    public String name;
 
     @Column(nullable = false)
     public String profile;
@@ -146,7 +146,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
                 .nickname(nickname)
                 .kakaoId(kakaoUser.getId())
                 .phoneNum(phone)
-                .username(null)
+                .name(null)
                 .profile(profile)
                 .build();
     }
@@ -154,7 +154,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
     public void secondaryInput(AccountSecondarySignUpRequest request, School school, JobCategory job, Region region){
         this.myJob = job;
         this.school = school;
-        this.username = request.getName();
+        this.name = request.getName();
         this.nickname = request.getNickname();
         this.graduationYear = request.getGraduationYear();
         this.region = region;
@@ -177,7 +177,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
 
     public void updateNameAndNickName(AccountUpdateNameRequest request){
         this.nickname = request.getNickname();
-        this.username = request.getName();
+        this.name = request.getName();
     }
 
     public void updateSchool(AccountUpdateSchoolRequest request, School school){
@@ -197,6 +197,10 @@ public class Account extends BaseTimeEntity implements UserDetails {
     @Override
     public String getUsername() {
         return getKakaoId();
+    }
+
+    public String getRealName(){
+        return this.name;
     }
 
 

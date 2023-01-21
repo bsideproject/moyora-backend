@@ -5,7 +5,6 @@ import com.beside.ties.domain.articletouser.dto.request.ArticleToUserRegisterReq
 import com.beside.ties.domain.articletouser.repo.ArticleToUserRepo;
 import com.beside.ties.domain.userguestbook.entity.UserGuestBook;
 import com.beside.ties.domain.userguestbook.repo.UserGuestBookRepo;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -78,7 +77,7 @@ class ArticleToUserApiTest extends BaseMvcTest {
 
     @BeforeEach
     void beforeEach(){
-        Optional<UserGuestBook> optionalUserGuestBook = userGuestBookRepo.findUserGuestBookByAccount(testMember);
+        Optional<UserGuestBook> optionalUserGuestBook = userGuestBookRepo.findByAccount(testMember);
         if(optionalUserGuestBook.isPresent()){
             userGuestBookRepo.delete(optionalUserGuestBook.get());
         }

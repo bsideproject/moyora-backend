@@ -20,7 +20,8 @@ public class ClassmateResponse {
                 .id(account.getId())
                 .nickname(account.getNickname())
                 .profile(account.getProfile())
-                .username(account.getUsername())
+                .username(account.getRealName())
+                .schoolName(account.getSchool().getSchoolName())
                 .build();
     }
 }
