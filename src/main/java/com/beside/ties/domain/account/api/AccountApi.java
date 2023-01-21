@@ -51,7 +51,7 @@ public class AccountApi {
             @RequestBody AccountSecondarySignUpRequest request,
             @CurrentUser Account account
     ){
-        String message = accountService.secondarySignUp(request, account);
+        String message = accountService.secondarySignUp(request, account.getId());
         return ResponseEntity.ok().body(message);
     }
 
@@ -119,7 +119,7 @@ public class AccountApi {
     public ResponseEntity<AccountInfoResponse> getUserInfo(
             @CurrentUser Account account
     ){
-        AccountInfoResponse response = accountService.findByAccount(account);
+        AccountInfoResponse response = accountService.findByAccount(account.getId());
         return ResponseEntity.ok().body(response);
     }
 }

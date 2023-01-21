@@ -41,18 +41,11 @@ public class AccountSecondarySignUpRequest {
         String job;
 
         @ApiModelProperty(
-            value = "parent_region",
-            example = "창원시",
+            value = "지역 ID",
+            example = "102",
             required = true
         )
-        String State;
-
-        @ApiModelProperty(
-            value = "child_region",
-            example = "성산구",
-            required = true
-        )
-        String city;
+        Long regionId;
 
         @ApiModelProperty(
             value = "school_code",

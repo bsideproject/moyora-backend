@@ -38,6 +38,8 @@ class AccountApiTest extends BaseMvcTest {
     private static final String nickname = "godric";
     private static final String picture = "https://www.balladang.com";
 
+    private static Long regionId;
+
 
 
     @Autowired
@@ -87,7 +89,7 @@ class AccountApiTest extends BaseMvcTest {
 
     private void setRegion() {
         regionRepo.saveAndFlush(new Region("서울시"));
-        regionService.saveCity("서울시", "강남구");
+        regionId = regionService.saveCity("서울시", "강남구");
     }
 
     @AfterEach
@@ -128,13 +130,12 @@ class AccountApiTest extends BaseMvcTest {
     void secondarySignUp() throws Exception {
         Long id = addAccount();
         AccountSecondarySignUpRequest requestDto = AccountSecondarySignUpRequest.builder()
-                .city("강남구")
                 .job("백엔드 개발자")
                 .graduationYear(2002)
                 .name("김철수")
                 .nickname("godric")
                 .schoolCode("schoolCode")
-                .State("서울시")
+                .regionId(regionId)
                 .build();
 
 

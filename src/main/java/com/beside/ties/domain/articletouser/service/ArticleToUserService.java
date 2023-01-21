@@ -30,7 +30,7 @@ public class ArticleToUserService {
     @Transactional(readOnly = true)
     public List<ArticleToUserResponseDto> findAllByGuestBook(Long userId) {
         Account account = accountRepo.findById(userId).get();
-        UserGuestBook userGuestBook = userGuestBookRepo.findUserGuestBookByAccount(account).get();
+        UserGuestBook userGuestBook = userGuestBookRepo.findByAccount(account).get();
         return articleToUserRepo.findAllByUserGuestBook(userGuestBook)
                 .stream().map(ArticleToUserResponseDto::toDto).collect(Collectors.toList());
     }
@@ -74,7 +74,7 @@ public class ArticleToUserService {
 
 
     public List<ArticleToUserResponseDto> findMyArticle(Account account) {
-        UserGuestBook userGuestBook = userGuestBookRepo.findUserGuestBookByAccount(account).get();
+        UserGuestBook userGuestBook = userGuestBookRepo.findByAccount(account).get();
         return articleToUserRepo.findAllByUserGuestBook(userGuestBook)
                 .stream().map(ArticleToUserResponseDto::toMyDto).collect(Collectors.toList());
     }

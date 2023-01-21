@@ -41,7 +41,7 @@ public class LoginResponse {
             required = true,
             example = "10000"
     )
-    public String username;
+    public String name;
 
     @ApiModelProperty(
             value = "오늘 회원가입 하셨나요?",
@@ -54,7 +54,7 @@ public class LoginResponse {
         this.email = email;
         this.profileImageUrl = profileImageUrl;
         this.nickname = nickname;
-        this.username = username;
+        this.name = username;
         this.isFirst = isFirst;
     }
 }

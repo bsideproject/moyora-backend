@@ -1,12 +1,15 @@
 package com.beside.ties.domain.account.dto.response;
 
+import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.account.entity.MBTI;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
+@Builder
 @Getter
 @ApiModel
 public class AccountInfoResponse {
@@ -18,10 +21,10 @@ public class AccountInfoResponse {
     public String profile;
 
     @ApiModelProperty(
-            value = "username",
-            example = "별명"
+            value = "이름",
+            example = "김찬수"
     )
-    public String username;
+    public String name;
 
     @ApiModelProperty(
             value = "nickname",
@@ -40,7 +43,7 @@ public class AccountInfoResponse {
             value = "휴대전화",
             example = "01012345678"
     )
-    public String phone;
+    public String phoneNum;
 
     @ApiModelProperty(
             value = "state",
@@ -102,5 +105,24 @@ public class AccountInfoResponse {
             required = false
     )
     public Boolean privateSetting;
+
+    public static AccountInfoResponse toDto(Account account){
+        return AccountInfoResponse.builder()
+                .name(account.getName())
+                .birthDate(account.getBirthDate())
+                .city(account.getRegion().getName())
+                .state(account.getRegion().getParent().getName())
+                .facebook(account.getFacebook())
+                .instagram(account.getInstagram())
+                .youtube(account.getYoutube())
+                .mbti(account.getMbti())
+                .nickname(account.getNickname())
+                .job(account.getMyJob().getName())
+                .schoolName(account.getSchool().getSchoolName())
+                .privateSetting(account.getPrivateSetting())
+                .profile(account.getProfile())
+                .phoneNum(account.getPhoneNum())
+                .build();
+    }
 
 }
