@@ -12,18 +12,11 @@ import java.time.LocalDate;
 public class AccountUpdateRequest {
 
     @ApiModelProperty(
-            value = "state",
-            example = "도",
+            value = "지역 ID",
+            example = "10201",
             required = true
     )
-    String state;
-
-    @ApiModelProperty(
-            value = "region",
-            example = "도시",
-            required = false
-    )
-    String city;
+    Long regionId;
 
     @ApiModelProperty(
             value = "job",
@@ -43,7 +36,7 @@ public class AccountUpdateRequest {
 
     @ApiModelProperty(
             value = "birthday",
-            example = "생일",
+            example = "1996-01-01",
             required = true
     )
     String birthdate;
