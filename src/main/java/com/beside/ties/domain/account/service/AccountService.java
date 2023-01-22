@@ -13,8 +13,8 @@ import com.beside.ties.domain.region.repo.RegionRepo;
 import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.school.repo.SchoolRepo;
 import com.beside.ties.domain.school.service.SchoolService;
-import com.beside.ties.domain.userguestbook.entity.UserGuestBook;
-import com.beside.ties.domain.userguestbook.repo.UserGuestBookRepo;
+import com.beside.ties.domain.notebox.entity.NoteBox;
+import com.beside.ties.domain.notebox.repo.NoteBoxRepo;
 import com.beside.ties.global.auth.kakao.KakaoUser;
 import com.beside.ties.global.auth.security.jwt.JwtDto;
 import com.beside.ties.global.auth.security.jwt.JwtType;
@@ -63,7 +63,7 @@ public class AccountService {
     private final AccountMapper accountMapper;
     private final SchoolRepo schoolRepo;
     private final NaverUploader naverUploader;
-    private final UserGuestBookRepo userGuestBookRepo;
+    private final NoteBoxRepo noteBoxRepo;
 
     public String uploadImage(MultipartFile multipartFile, Account account) throws IOException {
         String substring = String.valueOf(UUID.randomUUID()).substring(1, 22);
@@ -186,13 +186,13 @@ public class AccountService {
         }
 
 
-        Optional<UserGuestBook> optionalUserGuestBook = userGuestBookRepo.findByAccount(account);
-        if(optionalUserGuestBook.isPresent()){
-            throw new IllegalArgumentException("이미 방명록이 생성되어 있습니다.");
+        Optional<NoteBox> optionalNoteBox = noteBoxRepo.findByAccount(account);
+        if(optionalNoteBox.isPresent()){
+            throw new IllegalArgumentException("이미 쪽지함이 생성되어 있습니다.");
         }
         // 유저 방명록 생성
-        UserGuestBook userGuestBook1 = userGuestBookRepo.save(new UserGuestBook(account));
-        logger.info("유저 방명록 생성이 ID"+userGuestBook1.getId()+" 로 생성되었습니다.");
+        NoteBox noteBox1 = noteBoxRepo.save(new NoteBox(account));
+        logger.info("유저 쪽지함이 생성이 ID"+ noteBox1.getId()+" 로 생성되었습니다.");
 
         // 직업 조회
         JobCategory jobCategory = jobCategoryService.findJobCategoryByName(request.getJob());
@@ -265,6 +265,7 @@ public class AccountService {
                     .instagram(account.getInstagram())
                     .youtube(account.getYoutube())
                     .mbti(account.getMbti())
+                    .profile(account.getProfile())
                     .nickname(account.getNickname())
                     .username(account.getUsername())
                     .schoolName(account.getSchool().getSchoolName())
@@ -283,6 +284,7 @@ public class AccountService {
                     .mbti(account.getMbti())
                     .nickname(account.getNickname())
                     .username(account.getUsername())
+                    .profile(account.getProfile())
                     .schoolName(account.getSchool().getSchoolName())
                     .city(account.getRegion().getName())
                     .state(account.getRegion().getParent().getName())
