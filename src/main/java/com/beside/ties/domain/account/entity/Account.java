@@ -11,7 +11,7 @@ import com.beside.ties.global.auth.kakao.KakaoUser;
 import com.beside.ties.global.common.BaseTimeEntity;
 import com.beside.ties.domain.account.Role;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
-import com.beside.ties.domain.userguestbook.entity.UserGuestBook;
+import com.beside.ties.domain.notebox.entity.NoteBox;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -98,7 +98,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
 
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.ALL)
-    UserGuestBook userGuestBooks;
+    NoteBox noteBox;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "school_id")
