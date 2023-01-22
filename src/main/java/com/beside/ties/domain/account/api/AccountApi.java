@@ -61,7 +61,7 @@ public class AccountApi {
             @CurrentUser Account account,
             @RequestBody AccountUpdateRequest request
     ){
-        String message = accountService.updateUserInfo(request, account);
+        String message = accountService.updateUserInfo(request, account.getId());
         return ResponseEntity.ok().body(message);
     }
 
@@ -71,7 +71,7 @@ public class AccountApi {
             @CurrentUser Account account,
             @RequestBody AccountUpdateNameRequest request
     ){
-        String message = accountService.updateNameAndNickName(request, account);
+        String message = accountService.updateNameAndNickName(request, account.getId());
         return ResponseEntity.ok().body(message);
     }
 
@@ -81,7 +81,7 @@ public class AccountApi {
             @CurrentUser Account account,
             @RequestBody AccountUpdateSchoolRequest request
     ){
-        String message = accountService.updateSchool(account, request);
+        String message = accountService.updateSchool(account.getId(), request);
         return ResponseEntity.ok().body(message);
     }
 

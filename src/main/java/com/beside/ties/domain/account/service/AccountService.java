@@ -207,16 +207,16 @@ public class AccountService {
         return "회원가입이 완료되었습니다.";
     }
 
-    public String updateUserInfo(AccountUpdateRequest request, Account account){
-        Account account1 = accountRepo.findAccountByKakaoId(account.getKakaoId()).get();
+    public String updateUserInfo(AccountUpdateRequest request, Long accountId){
+        Account account = accountRepo.findById(accountId).get();
 
-        Optional<Region> regionOptional = regionRepo.findRegionByName(request.getCity());
+        Optional<Region> regionOptional = regionRepo.findById(request.getRegionId());
         if(regionOptional.isEmpty()) throw new IllegalArgumentException("존재하지 않는 지역입니다.");
 
         Optional<JobCategory> optionalJobCategory = jobCategoryRepo.findJobCategoryByName(request.getJob());
         if(optionalJobCategory.isEmpty()) throw new IllegalArgumentException("존재하지 않는 직업입니다.");
 
-        account1.updateProfile(request,optionalJobCategory.get(), regionOptional.get());
+        account.updateProfile(request,optionalJobCategory.get(), regionOptional.get());
 
         return "유저 프로필 정보가 업데이트 되었습니다.";
     }
@@ -227,21 +227,21 @@ public class AccountService {
         return AccountInfoResponse.toDto(account);
     }
 
-    public String updateNameAndNickName(AccountUpdateNameRequest request, Account account) {
-        Account account1 = accountRepo.findById(account.id).get();
-        account1.updateNameAndNickName(request);
+    public String updateNameAndNickName(AccountUpdateNameRequest request, Long accountId) {
+        Account account = accountRepo.findById(accountId).get();
+        account.updateNameAndNickName(request);
         return "이름 및 닉네임이 업데이트 되었습니다.";
     }
 
-    public String updateSchool(Account account, AccountUpdateSchoolRequest request) {
+    public String updateSchool(Long accountId, AccountUpdateSchoolRequest request) {
 
-        Account account1 = accountRepo.findById(account.id).get();
+        Account account = accountRepo.findById(accountId).get();
         Optional<School> optionalSchool = schoolRepo.findSchoolBySchoolCode(request.getSchoolCode());
         if(optionalSchool.isEmpty()){
             throw new IllegalArgumentException("존재하지 않는 학교입니다.");
         }
 
-        account1.updateSchool(request, optionalSchool.get());
+        account.updateSchool(request, optionalSchool.get());
 
         return "학교 정보가 업데이트 되었습니다.";
     }

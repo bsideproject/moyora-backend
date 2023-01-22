@@ -22,6 +22,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static com.beside.ties.global.common.NaverUploader.nCloudUrl;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SequenceGenerator(
         name = "ACCOUNT_SEQ_GEN",
@@ -172,7 +174,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
     }
 
     public void updateImage(String image){
-        this.profile = image;
+        this.profile = nCloudUrl+image;
     }
 
     public void updateNameAndNickName(AccountUpdateNameRequest request){

@@ -33,6 +33,8 @@ public class NaverUploader {
     @Value("${cloud.bucket-name}")
     private String bucketName;
 
+    public static String nCloudUrl = "https://kr.object.ncloudstorage.com/moyora.storage/";
+
     @PostConstruct
     private void setAmazonS3() {
         // S3 client

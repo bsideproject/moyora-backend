@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.format.DateTimeParseException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -24,4 +26,10 @@ public class GlobalExceptionHandler {
         log.error(String.valueOf(e));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+    @ExceptionHandler(DateTimeParseException.class)
+    ResponseEntity<String> handleIllegalArgumentException(DateTimeParseException e) {
+        log.error(String.valueOf(e));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
 }
