@@ -54,4 +54,11 @@ public class AccountSecondarySignUpRequest {
         )
         String schoolCode;
 
+        @ApiModelProperty(
+                value = "School Guest Book Comment",
+                example = "안녕 예들아 다시 만나서 반가워~",
+                required = true
+        )
+        String schoolComment;
+
 }
