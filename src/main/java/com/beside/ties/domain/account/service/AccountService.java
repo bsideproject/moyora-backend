@@ -15,6 +15,8 @@ import com.beside.ties.domain.school.repo.SchoolRepo;
 import com.beside.ties.domain.school.service.SchoolService;
 import com.beside.ties.domain.notebox.entity.NoteBox;
 import com.beside.ties.domain.notebox.repo.NoteBoxRepo;
+import com.beside.ties.domain.schoolguestbook.entity.SchoolGuestBook;
+import com.beside.ties.domain.schoolguestbook.repo.SchoolGuestBookRepo;
 import com.beside.ties.global.auth.kakao.KakaoUser;
 import com.beside.ties.global.auth.security.jwt.JwtDto;
 import com.beside.ties.global.auth.security.jwt.JwtType;
@@ -64,6 +66,7 @@ public class AccountService {
     private final SchoolRepo schoolRepo;
     private final NaverUploader naverUploader;
     private final NoteBoxRepo noteBoxRepo;
+    private final SchoolGuestBookRepo schoolGuestBookRepo;
 
     public String uploadImage(MultipartFile multipartFile, Account account) throws IOException {
         String substring = String.valueOf(UUID.randomUUID()).substring(1, 22);
@@ -183,6 +186,12 @@ public class AccountService {
         // 없으면 학교 등록
         if(optionalSchool.isEmpty()){
             throw new IllegalArgumentException("등록되어있지 않은 학교입니다. 관리자 문의 부탁드립니다.");
+        }
+
+        if(!request.getSchoolComment().isEmpty() && !request.getSchoolComment().isBlank()) {
+            SchoolGuestBook schoolGuestBook = new SchoolGuestBook(optionalSchool.get(), account, request.getSchoolComment());
+            SchoolGuestBook savedSchoolGuestBook = schoolGuestBookRepo.save(schoolGuestBook);
+            logger.info("school guest book Id : " + savedSchoolGuestBook.getId());
         }
 
 
