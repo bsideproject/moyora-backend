@@ -4,6 +4,7 @@ import com.beside.ties.domain.account.dto.request.*;
 import com.beside.ties.domain.account.dto.response.AccountInfoResponse;
 import com.beside.ties.domain.account.dto.response.ClassmateDetailResponse;
 import com.beside.ties.domain.account.dto.response.ClassmateResponse;
+import com.beside.ties.domain.account.entity.QAccount;
 import com.beside.ties.domain.account.mapper.AccountMapper;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.jobcategory.repo.JobCategoryRepo;
@@ -27,6 +28,7 @@ import com.beside.ties.global.common.exception.custom.InvalidSocialTokenExceptio
 import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.account.repo.AccountRepo;
 import com.google.gson.Gson;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -67,6 +70,8 @@ public class AccountService {
     private final NaverUploader naverUploader;
     private final NoteBoxRepo noteBoxRepo;
     private final SchoolGuestBookRepo schoolGuestBookRepo;
+    private final EntityManager em;
+
 
     public String uploadImage(MultipartFile multipartFile, Account account) throws IOException {
         String substring = String.valueOf(UUID.randomUUID()).substring(1, 22);
@@ -304,7 +309,20 @@ public class AccountService {
 
     }
 
+    public int getActivatedSchool(){
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        QAccount qAccount = QAccount.account;
+        return query.select(
+                qAccount.school.id
+        ).distinct().from(qAccount).fetch().size();
+    }
+
     public void deleteAllInBatch() {
         accountRepo.deleteAllInBatch();
+    }
+
+    public long getAllUserCount() {
+
+        return accountRepo.count();
     }
 }

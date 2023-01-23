@@ -122,4 +122,11 @@ public class AccountApi {
         AccountInfoResponse response = accountService.findByAccount(account.getId());
         return ResponseEntity.ok().body(response);
     }
+
+    @Operation(summary = "총 참여자 수")
+    @GetMapping("/allcount")
+    public ResponseEntity<Long> findAllUserCount(){
+        long allCount = accountService.getAllUserCount();
+        return ResponseEntity.ok().body(allCount);
+    }
 }
