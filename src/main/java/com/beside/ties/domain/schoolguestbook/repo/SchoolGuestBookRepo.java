@@ -1,5 +1,6 @@
 package com.beside.ties.domain.schoolguestbook.repo;
 
+import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.schoolguestbook.entity.SchoolGuestBook;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,4 +12,6 @@ public interface SchoolGuestBookRepo extends JpaRepository<SchoolGuestBook, Long
     List<SchoolGuestBook> findBySchool_IdOrderByCreatedDateDesc(Long schoolId);
     List<SchoolGuestBook> findByAccount_IdOrderByCreatedDateDesc(Long accountId);
     Optional<SchoolGuestBook> findById(Long schoolGuestBookId);
+
+    Long countAllBySchool(School school);
 }
