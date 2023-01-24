@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -65,7 +66,6 @@ public class AccountService {
     private final JobCategoryService jobCategoryService;
     private final RegionRepo regionRepo;
     private final JobCategoryRepo jobCategoryRepo;
-    private final AccountMapper accountMapper;
     private final SchoolRepo schoolRepo;
     private final NaverUploader naverUploader;
     private final NoteBoxRepo noteBoxRepo;
@@ -272,9 +272,14 @@ public class AccountService {
 
         Account account = accountOptional.get();
 
+        int establishmentDate = Integer.parseInt(account.school.getEstablishmentDate().substring(0,4));
+        int nowYear = Year.now().getValue();
+        int graduateYear = nowYear - establishmentDate;
+        String graduate = "(" + graduateYear + "회 졸업)";
+
         if(account.privateSetting){
             return ClassmateDetailResponse.builder()
-                    .birthDate(account.getBirthDate())
+                    .birthDate(account.getBirthDate().toString().replace('-','.').substring(2,10))
                     .facebook(account.getFacebook())
                     .instagram(account.getInstagram())
                     .youtube(account.getYoutube())
@@ -282,16 +287,15 @@ public class AccountService {
                     .profile(account.getProfile())
                     .nickname(account.getNickname())
                     .username(account.getUsername())
-                    .schoolName(account.getSchool().getSchoolName())
-                    .city(null)
-                    .state(null)
+                    .schoolName(account.getSchool().getSchoolName() + graduate)
+                    .residence(null)
                     .job(null)
                     .jobCategory(null)
                     .build();
 
         }else{
             return ClassmateDetailResponse.builder()
-                    .birthDate(account.getBirthDate())
+                    .birthDate(account.getBirthDate().toString().replace('-','.').substring(2,10))
                     .facebook(account.getFacebook())
                     .instagram(account.getInstagram())
                     .youtube(account.getYoutube())
@@ -299,9 +303,8 @@ public class AccountService {
                     .nickname(account.getNickname())
                     .username(account.getUsername())
                     .profile(account.getProfile())
-                    .schoolName(account.getSchool().getSchoolName())
-                    .city(account.getRegion().getName())
-                    .state(account.getRegion().getParent().getName())
+                    .schoolName(account.getSchool().getSchoolName() + graduate)
+                    .residence(account.getRegion().getParent().getName()+" "+account.getRegion().getName())
                     .job(account.getMyJob().getName())
                     .jobCategory(account.getMyJob().getParent().getName())
                     .build();
