@@ -14,4 +14,6 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
     Optional<Account> findAccountByKakaoId(String kakaoId);
 
     List<Account> findAllBySchool(School school);
+
+    Long countAllBySchool(School school);
 }

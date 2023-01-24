@@ -1,5 +1,7 @@
 package com.beside.ties.domain.schoolguestbook.service;
 
+import com.beside.ties.domain.school.entity.School;
+import com.beside.ties.domain.school.repo.SchoolRepo;
 import com.beside.ties.domain.schoolguestbook.dto.SchoolGuestBookUpdateDto;
 import com.beside.ties.domain.schoolguestbook.entity.SchoolGuestBook;
 import com.beside.ties.domain.schoolguestbook.repo.SchoolGuestBookRepo;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional
@@ -15,6 +18,7 @@ import java.util.List;
 public class SchoolGuestBookService {
 
     private final SchoolGuestBookRepo schoolGuestBookRepo;
+    private final SchoolRepo schoolRepo;
 
     public Long save(SchoolGuestBook schoolGuestBook){
         SchoolGuestBook save = schoolGuestBookRepo.save(schoolGuestBook);
@@ -47,4 +51,12 @@ public class SchoolGuestBookService {
         schoolGuestBookRepo.deleteAllInBatch();
     }
 
+    public Long countAllBySchool(Long schoolId) {
+
+        Optional<School> optionalSchool = schoolRepo.findById(schoolId);
+        if(optionalSchool.isEmpty()){
+            throw new IllegalArgumentException("존재하지 않는 학교입니다.");
+        }
+        return schoolGuestBookRepo.countAllBySchool(optionalSchool.get());
+    }
 }
