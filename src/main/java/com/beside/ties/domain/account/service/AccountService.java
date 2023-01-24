@@ -335,4 +335,16 @@ public class AccountService {
 
         return accountRepo.count();
     }
+
+    public long getAllSchoolMateCount(Long schoolId) {
+
+        Optional<School> schoolOptional = schoolRepo.findById(schoolId);
+        if(schoolOptional.isEmpty()){
+            throw new IllegalArgumentException("존재하지 않는 학교를 조회했습니다.");
+        }
+
+        return accountRepo.countAllBySchool(schoolOptional.get());
+    }
+
+
 }

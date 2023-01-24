@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = "총 COUNT API")
@@ -19,6 +20,7 @@ public class CountController
 {
     private final AccountService accountService;
     private final SchoolGuestBookRepo schoolGuestBookRepo;
+    private final SchoolGuestBookService schoolGuestBookService;
 
 
     @Operation(summary = "총 참여자 수")
@@ -37,5 +39,21 @@ public class CountController
     @GetMapping("/schoolguestbook")
     public ResponseEntity<Long> findAllSchoolGuestBook(){
         return ResponseEntity.ok().body(schoolGuestBookRepo.count()+156);
+    }
+
+    @Operation(summary = "나의 학교 가입한 동창")
+    @GetMapping("/schoolmate")
+    public ResponseEntity<Long> findAllSchoolMateCount(
+            @RequestParam Long schoolId
+    ){
+        return ResponseEntity.ok().body(accountService.getAllSchoolMateCount(schoolId));
+    }
+
+    @Operation(summary = "나의 학교 방명록 수")
+    @GetMapping("/our/schoolguestbook")
+    public ResponseEntity<Long> findAllOurSchoolGuestBook(
+            @RequestParam Long schoolId
+    ){
+        return ResponseEntity.ok().body(schoolGuestBookService.countAllBySchool(schoolId));
     }
 }
