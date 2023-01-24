@@ -40,16 +40,10 @@ public class ClassmateDetailResponse {
 
 
     @ApiModelProperty(
-            value = "state",
-            example = "도, 시"
+            value = "거주 지역",
+            example = "서울특별시 강남구"
     )
-    public String state;
-
-    @ApiModelProperty(
-            value = "city",
-            example = "도시"
-    )
-    public String city;
+    public String residence;
 
     @ApiModelProperty(
             value = "job",
@@ -98,7 +92,7 @@ public class ClassmateDetailResponse {
             example = "1996.07.25",
             required = false
     )
-    public LocalDate birthDate;
+    public String birthDate;
 
 
 }
