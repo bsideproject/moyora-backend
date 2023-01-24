@@ -31,7 +31,7 @@ public class AccountUpdateRequest {
             example = "true",
             required = true
     )
-    Boolean privateSetting;
+    Boolean isPublic;
 
 
     @ApiModelProperty(

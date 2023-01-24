@@ -122,8 +122,8 @@ public class Account extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
-    @Column(name = "private_setting", nullable = false)
-    public Boolean privateSetting = false;
+    @Column(name = "is_public", nullable = false)
+    public Boolean isPublic = false;
 
 
 
@@ -170,7 +170,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
         this.myJob = job;
         this.region = region;
         this.birthDate = LocalDate.parse(request.getBirthdate(), DateTimeFormatter.ISO_DATE);
-        this.privateSetting = request.getPrivateSetting();
+        this.isPublic = request.getIsPublic();
     }
 
     public void updateImage(String image){

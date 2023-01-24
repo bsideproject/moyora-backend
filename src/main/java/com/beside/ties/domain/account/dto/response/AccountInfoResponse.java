@@ -7,8 +7,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
-
 @Builder
 @Getter
 @ApiModel
@@ -46,22 +44,10 @@ public class AccountInfoResponse {
     public Long schoolId;
 
     @ApiModelProperty(
-            value = "휴대전화",
-            example = "01012345678"
+            value = "거주 지역",
+            example = "서울특별시 강남구"
     )
-    public String phoneNum;
-
-    @ApiModelProperty(
-            value = "state",
-            example = "도, 시"
-    )
-    public String state;
-
-    @ApiModelProperty(
-            value = "city",
-            example = "도시"
-    )
-    public String city;
+    public String residence;
 
     @ApiModelProperty(
             value = "job",
@@ -103,21 +89,20 @@ public class AccountInfoResponse {
             example = "1996.07.25",
             required = false
     )
-    public LocalDate birthDate;
+    public String birthDate;
 
     @ApiModelProperty(
-            value = "private_setting",
+            value = "공개 여부",
             example = "true",
             required = false
     )
-    public Boolean privateSetting;
+    public Boolean isPublic;
 
-    public static AccountInfoResponse toDto(Account account){
+    public static AccountInfoResponse toDto(Account account, String graduate){
         return AccountInfoResponse.builder()
                 .name(account.getName())
-                .birthDate(account.getBirthDate())
-                .city(account.getRegion().getName())
-                .state(account.getRegion().getParent().getName())
+                .birthDate(account.getBirthDate().toString().replace('-','.').substring(2,10))
+                .residence(account.getRegion().getParent().getName() +" "+account.getRegion().getName())
                 .facebook(account.getFacebook())
                 .instagram(account.getInstagram())
                 .youtube(account.getYoutube())
@@ -125,10 +110,9 @@ public class AccountInfoResponse {
                 .schoolId(account.getSchool().getId())
                 .nickname(account.getNickname())
                 .job(account.getMyJob().getName())
-                .schoolName(account.getSchool().getSchoolName())
-                .privateSetting(account.getPrivateSetting())
+                .schoolName(account.getSchool().getSchoolName()+graduate)
+                .isPublic(account.getIsPublic())
                 .profile(account.getProfile())
-                .phoneNum(account.getPhoneNum())
                 .build();
     }
 
