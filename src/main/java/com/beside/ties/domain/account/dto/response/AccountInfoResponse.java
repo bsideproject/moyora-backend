@@ -40,6 +40,12 @@ public class AccountInfoResponse {
     public String schoolName;
 
     @ApiModelProperty(
+            value = "schoolID",
+            example = "학교ID"
+    )
+    public Long schoolId;
+
+    @ApiModelProperty(
             value = "휴대전화",
             example = "01012345678"
     )
@@ -116,6 +122,7 @@ public class AccountInfoResponse {
                 .instagram(account.getInstagram())
                 .youtube(account.getYoutube())
                 .mbti(account.getMbti())
+                .schoolId(account.getSchool().getId())
                 .nickname(account.getNickname())
                 .job(account.getMyJob().getName())
                 .schoolName(account.getSchool().getSchoolName())
