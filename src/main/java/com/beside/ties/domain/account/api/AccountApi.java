@@ -123,10 +123,4 @@ public class AccountApi {
         return ResponseEntity.ok().body(response);
     }
 
-    @Operation(summary = "REAL 총 참여자 수")
-    @GetMapping("/allcount")
-    public ResponseEntity<Long> findAllUserCount(){
-        long allCount = accountService.getAllUserCount();
-        return ResponseEntity.ok().body(allCount);
-    }
 }
