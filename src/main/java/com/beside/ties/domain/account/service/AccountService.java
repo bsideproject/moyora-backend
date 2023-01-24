@@ -5,7 +5,6 @@ import com.beside.ties.domain.account.dto.response.AccountInfoResponse;
 import com.beside.ties.domain.account.dto.response.ClassmateDetailResponse;
 import com.beside.ties.domain.account.dto.response.ClassmateResponse;
 import com.beside.ties.domain.account.entity.QAccount;
-import com.beside.ties.domain.account.mapper.AccountMapper;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.jobcategory.repo.JobCategoryRepo;
 import com.beside.ties.domain.jobcategory.service.JobCategoryService;
@@ -236,9 +235,12 @@ public class AccountService {
     }
 
     public AccountInfoResponse findByAccount(Long accountId) {
+
         Optional<Account> optional = accountRepo.findById(accountId);
         Account account = optional.get();
-        return AccountInfoResponse.toDto(account);
+        String graduate = getGraduate(account);
+
+        return AccountInfoResponse.toDto(account, graduate);
     }
 
     public String updateNameAndNickName(AccountUpdateNameRequest request, Long accountId) {
@@ -272,25 +274,22 @@ public class AccountService {
 
         Account account = accountOptional.get();
 
-        int establishmentDate = Integer.parseInt(account.school.getEstablishmentDate().substring(0,4));
-        int nowYear = Year.now().getValue();
-        int graduateYear = nowYear - establishmentDate;
-        String graduate = "(" + graduateYear + "회 졸업)";
+        String graduate = getGraduate(account);
 
-        if(account.privateSetting){
+        if(account.isPublic){
             return ClassmateDetailResponse.builder()
                     .birthDate(account.getBirthDate().toString().replace('-','.').substring(2,10))
                     .facebook(account.getFacebook())
                     .instagram(account.getInstagram())
                     .youtube(account.getYoutube())
                     .mbti(account.getMbti())
-                    .profile(account.getProfile())
                     .nickname(account.getNickname())
-                    .username(account.getUsername())
+                    .username(account.getName())
+                    .profile(account.getProfile())
                     .schoolName(account.getSchool().getSchoolName() + graduate)
-                    .residence(null)
-                    .job(null)
-                    .jobCategory(null)
+                    .residence(account.getRegion().getParent().getName()+" "+account.getRegion().getName())
+                    .job(account.getMyJob().getName())
+                    .jobCategory(account.getMyJob().getParent().getName())
                     .build();
 
         }else{
@@ -300,16 +299,24 @@ public class AccountService {
                     .instagram(account.getInstagram())
                     .youtube(account.getYoutube())
                     .mbti(account.getMbti())
-                    .nickname(account.getNickname())
-                    .username(account.getUsername())
                     .profile(account.getProfile())
+                    .nickname(account.getNickname())
+                    .username(account.getName())
                     .schoolName(account.getSchool().getSchoolName() + graduate)
-                    .residence(account.getRegion().getParent().getName()+" "+account.getRegion().getName())
-                    .job(account.getMyJob().getName())
-                    .jobCategory(account.getMyJob().getParent().getName())
+                    .residence(null)
+                    .job(null)
+                    .jobCategory(null)
                     .build();
         }
 
+    }
+
+    private String getGraduate(Account account) {
+        int establishmentDate = Integer.parseInt(account.school.getEstablishmentDate().substring(0,4));
+        int nowYear = Year.now().getValue();
+        int graduateYear = nowYear - establishmentDate;
+        String graduate = "(" + graduateYear + "회 졸업)";
+        return graduate;
     }
 
     public int getActivatedSchool(){
