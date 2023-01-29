@@ -26,19 +26,19 @@ public class CountController
     @Operation(summary = "총 참여자 수")
     @GetMapping("/user")
     public ResponseEntity<Long> findAllUserCount(){
-        return ResponseEntity.ok().body(accountService.getAllUserCount()+1253);
+        return ResponseEntity.ok().body(accountService.getAllUserCount()+246);
     }
 
     @Operation(summary = "활성화 된 학교 수")
     @GetMapping("/school")
     public ResponseEntity<Integer> findAllActiveSchool(){
-        return ResponseEntity.ok().body(accountService.getActivatedSchool()+113);
+        return ResponseEntity.ok().body(accountService.getActivatedSchool()+64);
     }
 
     @Operation(summary = "누적 방명록 수")
     @GetMapping("/schoolguestbook")
     public ResponseEntity<Long> findAllSchoolGuestBook(){
-        return ResponseEntity.ok().body(schoolGuestBookRepo.count()+156);
+        return ResponseEntity.ok().body(schoolGuestBookRepo.count()+448);
     }
 
     @Operation(summary = "나의 학교 가입한 동창")
