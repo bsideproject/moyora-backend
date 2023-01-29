@@ -123,7 +123,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
     private Role role;
 
     @Column(name = "is_public", nullable = false)
-    public Boolean isPublic = false;
+    public Boolean isPublic = true;
 
 
 
