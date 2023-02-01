@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 
 @ApiModel
 @Builder
@@ -55,6 +57,12 @@ public class NoteResponse {
     )
     private String username;
 
+    @ApiModelProperty(
+            name = "생성날짜",
+            example = "2022/07/07"
+    )
+    private String createdDate;
+
     public static NoteResponse toDto(Note note){
 
         if(note.getIsPublic()) {
@@ -66,6 +74,7 @@ public class NoteResponse {
                     .content(note.getContent())
                     .nickname(note.getAccount().getNickname())
                     .username(note.getAccount().getUsername())
+                    .createdDate(note.getCreatedDate().toLocalDate().toString().replace("-","/"))
                     .build();
         }
         else{
@@ -76,6 +85,7 @@ public class NoteResponse {
                     .isPublic(note.getIsPublic())
                     .nickname(note.getAccount().getNickname())
                     .username(note.getAccount().getUsername())
+                    .createdDate(note.getCreatedDate().toLocalDate().toString().replace("-","/"))
                     .content("비공개")
                     .build();
         }
@@ -91,6 +101,7 @@ public class NoteResponse {
                     .content(note.getContent())
                     .nickname(note.getAccount().getNickname())
                     .username(note.getAccount().getUsername())
+                    .createdDate(note.getCreatedDate().toLocalDate().toString().replace("-","/"))
                     .build();
     }
 

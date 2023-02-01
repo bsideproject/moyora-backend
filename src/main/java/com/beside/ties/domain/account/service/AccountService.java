@@ -51,6 +51,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.beside.ties.global.auth.kakao.KakaoOAuthConstants.USER_INFO_URI;
+import static com.beside.ties.global.common.RequestUtil.parseRegion;
 
 @RequiredArgsConstructor
 @Transactional
@@ -287,7 +288,7 @@ public class AccountService {
                     .username(account.getName())
                     .profile(account.getProfile())
                     .schoolName(account.getSchool().getSchoolName() + graduate)
-                    .residence(account.getRegion().getParent().getName()+" "+account.getRegion().getName())
+                    .residence(account.getRegion().getParent().getName()+" "+parseRegion(account.getRegion().getName()))
                     .job(account.getMyJob().getName())
                     .jobCategory(account.getMyJob().getParent().getName())
                     .build();

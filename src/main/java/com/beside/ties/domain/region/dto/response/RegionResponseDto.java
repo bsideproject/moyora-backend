@@ -16,12 +16,13 @@ public class RegionResponseDto {
     public RegionResponseDto(Region region) {
 
         String regionName = region.getName();
-        if(region.name.contains("_")){
+        if(regionName.contains("_")){
             String[] strings = region.name.split("_");
             regionName = strings[1];
         }
         this.regionName = regionName;
     }
+
 
     public static RegionResponseDto toDto(Region region){
         return new RegionResponseDto(region.getName(), region.getId());
