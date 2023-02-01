@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
 
+import static com.beside.ties.global.common.RequestUtil.parseRegion;
+
 @Builder
 @Getter
 @ApiModel
@@ -48,6 +50,13 @@ public class AccountInfoResponse {
             example = "서울특별시 강남구"
     )
     public String residence;
+
+    @ApiModelProperty(
+            value = "job_category",
+            example = "IT 직군",
+            required = true
+    )
+    public String jobCategory;
 
     @ApiModelProperty(
             value = "job",
@@ -104,11 +113,12 @@ public class AccountInfoResponse {
             return AccountInfoResponse.builder()
                     .name(account.getName())
                     .birthDate(null)
-                    .residence(account.getRegion().getParent().getName() +" "+account.getRegion().getName())
+                    .residence(account.getRegion().getParent().getName() +" "+parseRegion(account.getRegion().getName()))
                     .facebook(account.getFacebook())
                     .instagram(account.getInstagram())
                     .youtube(account.getYoutube())
                     .mbti(account.getMbti())
+                    .jobCategory(account.getMyJob().getParent().getName())
                     .schoolId(account.getSchool().getId())
                     .nickname(account.getNickname())
                     .job(account.getMyJob().getName())
@@ -120,10 +130,11 @@ public class AccountInfoResponse {
             return AccountInfoResponse.builder()
                     .name(account.getName())
                     .birthDate(account.getBirthDate().toString().replace('-', '.').substring(2, 10))
-                    .residence(account.getRegion().getParent().getName() + " " + account.getRegion().getName())
+                    .residence(account.getRegion().getParent().getName() + " " + parseRegion(account.getRegion().getName()))
                     .facebook(account.getFacebook())
                     .instagram(account.getInstagram())
                     .youtube(account.getYoutube())
+                    .jobCategory(account.getMyJob().getParent().getName())
                     .mbti(account.getMbti())
                     .schoolId(account.getSchool().getId())
                     .nickname(account.getNickname())

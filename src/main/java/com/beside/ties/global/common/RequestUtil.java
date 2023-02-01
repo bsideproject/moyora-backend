@@ -24,4 +24,13 @@ public class RequestUtil {
     public static String getAuthorizationToken(HttpServletRequest request) {
         return getAuthorizationToken(request.getHeader("Authorization"));
     }
+
+
+    public static String parseRegion(String regionName){
+        if(regionName.contains("_")){
+            String[] strings = regionName.split("_");
+            regionName = strings[1];
+        }
+        return regionName;
+    }
 }
