@@ -108,22 +108,42 @@ public class AccountInfoResponse {
     public Boolean isPublic;
 
     public static AccountInfoResponse toDto(Account account, String graduate){
-        return AccountInfoResponse.builder()
-                .name(account.getName())
-                .birthDate(account.getBirthDate().toString().replace('-','.').substring(2,10))
-                .residence(account.getRegion().getParent().getName() +" "+parseRegion(account.getRegion().getName()))
-                .facebook(account.getFacebook())
-                .instagram(account.getInstagram())
-                .youtube(account.getYoutube())
-                .mbti(account.getMbti())
-                .schoolId(account.getSchool().getId())
-                .nickname(account.getNickname())
-                .job(account.getMyJob().getName())
-                .schoolName(account.getSchool().getSchoolName()+graduate)
-                .isPublic(account.getIsPublic())
-                .profile(account.getProfile())
-                .jobCategory(account.getMyJob().getParent().getName())
-                .build();
+
+        if(account.getBirthDate() == null){
+            return AccountInfoResponse.builder()
+                    .name(account.getName())
+                    .birthDate(null)
+                    .residence(account.getRegion().getParent().getName() +" "+parseRegion(account.getRegion().getName()))
+                    .facebook(account.getFacebook())
+                    .instagram(account.getInstagram())
+                    .youtube(account.getYoutube())
+                    .mbti(account.getMbti())
+                    .jobCategory(account.getMyJob().getParent().getName())
+                    .schoolId(account.getSchool().getId())
+                    .nickname(account.getNickname())
+                    .job(account.getMyJob().getName())
+                    .schoolName(account.getSchool().getSchoolName()+graduate)
+                    .isPublic(account.getIsPublic())
+                    .profile(account.getProfile())
+                    .build();
+        }else {
+            return AccountInfoResponse.builder()
+                    .name(account.getName())
+                    .birthDate(account.getBirthDate().toString().replace('-', '.').substring(2, 10))
+                    .residence(account.getRegion().getParent().getName() + " " + parseRegion(account.getRegion().getName()))
+                    .facebook(account.getFacebook())
+                    .instagram(account.getInstagram())
+                    .youtube(account.getYoutube())
+                    .jobCategory(account.getMyJob().getParent().getName())
+                    .mbti(account.getMbti())
+                    .schoolId(account.getSchool().getId())
+                    .nickname(account.getNickname())
+                    .job(account.getMyJob().getName())
+                    .schoolName(account.getSchool().getSchoolName() + graduate)
+                    .isPublic(account.getIsPublic())
+                    .profile(account.getProfile())
+                    .build();
+        }
     }
 
 }
