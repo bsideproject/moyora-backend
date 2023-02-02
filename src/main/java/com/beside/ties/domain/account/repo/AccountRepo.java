@@ -15,5 +15,8 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
 
     List<Account> findAllBySchool(School school);
 
+    List<Account> findAllBySchoolAndNameStartsWith(School school, String name);
+
+
     Long countAllBySchool(School school);
 }

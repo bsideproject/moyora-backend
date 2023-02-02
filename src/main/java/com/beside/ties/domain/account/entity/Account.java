@@ -201,9 +201,6 @@ public class Account extends BaseTimeEntity implements UserDetails {
         return getKakaoId();
     }
 
-    public String getRealName(){
-        return this.name;
-    }
 
 
     @Override
