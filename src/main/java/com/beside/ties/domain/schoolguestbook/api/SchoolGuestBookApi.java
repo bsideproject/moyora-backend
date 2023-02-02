@@ -56,7 +56,12 @@ public class SchoolGuestBookApi {
                                            @RequestBody SchoolGuestBookAddDto schoolGuestBookAddDto) {
         School school = schoolService.findSchoolById(schoolGuestBookAddDto.getSchoolId());
 
-        SchoolGuestBook schoolGuestBook = new SchoolGuestBook(school, account, schoolGuestBookAddDto.getContent());
+        SchoolGuestBook schoolGuestBook = SchoolGuestBook.builder()
+                .school(school)
+                .account(account)
+                .content(schoolGuestBookAddDto.getContent())
+                .sticker(schoolGuestBookAddDto.getSticker())
+                .build();
 
         schoolGuestBookService.save(schoolGuestBook);
 
