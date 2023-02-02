@@ -99,10 +99,12 @@ public class AccountApi {
     @Operation(summary = "동창 목록 조회")
     @GetMapping("/classmates")
     public List<ClassmateResponse> getSchoolmateList(
-            @CurrentUser Account account
+            @CurrentUser Account account,
+            @RequestParam(required = false) String name
     ){
-        return accountService.findClassMateList(account);
+        return accountService.findClassMateList(account, name);
     }
+
 
     @Operation(summary = "동창 단건 조회")
     @GetMapping("/classmate/detail")
