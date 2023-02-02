@@ -173,6 +173,10 @@ public class Account extends BaseTimeEntity implements UserDetails {
         this.isPublic = request.getIsPublic();
     }
 
+    public void deleteMe(){
+        this.kakaoId = UUID.randomUUID().toString().substring(1,30);
+    }
+
     public void updateImage(String image){
         this.profile = nCloudUrl+image;
     }

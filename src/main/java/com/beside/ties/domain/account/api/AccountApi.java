@@ -55,6 +55,15 @@ public class AccountApi {
         return ResponseEntity.ok().body(message);
     }
 
+    @Operation(summary = "회원탈퇴(프론트 테스트용)")
+    @DeleteMapping
+    public ResponseEntity<String> deleteUser(
+            @CurrentUser Account account
+    ){
+        String message = accountService.deleteMe(account.getId());
+        return ResponseEntity.ok().body(message);
+    }
+
     @Operation(summary = "프로필 정보 수정")
     @PutMapping("/profile")
     public ResponseEntity<String> updateUserInfo(

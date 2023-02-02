@@ -24,7 +24,7 @@ public class JobCategoryService {
         Optional<JobCategory> optionalJobCategory = jobCategoryRepo.findJobCategoryByName(name);
 
         if(optionalJobCategory.isEmpty()){
-            throw new IllegalArgumentException("존재하지 않는 직업입니다.");
+            throw new IllegalArgumentException("존재하지 않는 직업입니다. 직업을 다시 선택해주세요!");
         }
 
         return optionalJobCategory.get();

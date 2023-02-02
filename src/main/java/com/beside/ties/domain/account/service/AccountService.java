@@ -190,7 +190,7 @@ public class AccountService {
         Optional<School> optionalSchool = schoolService.checkSchoolCode(request.getSchoolCode());
         // 없으면 학교 등록
         if(optionalSchool.isEmpty()){
-            throw new IllegalArgumentException("등록되어있지 않은 학교입니다. 관리자 문의 부탁드립니다.");
+            throw new IllegalArgumentException("학교 정보가 잘못되었습니다. 학교를 다시 입력하여 주세요 ");
         }
 
         if(!request.getSchoolComment().isEmpty() && !request.getSchoolComment().isBlank()) {
@@ -353,4 +353,10 @@ public class AccountService {
     }
 
 
+    public String deleteMe(Long accountId) {
+        Account account = accountRepo.findById(accountId).get();
+        account.deleteMe();
+        return "삭제되었습니다.";
+
+    }
 }
