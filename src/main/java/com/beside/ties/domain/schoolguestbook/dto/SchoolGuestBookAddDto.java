@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class SchoolGuestBookAddDto {
     private Long schoolId;
     private String content;
+    private String sticker;
 }

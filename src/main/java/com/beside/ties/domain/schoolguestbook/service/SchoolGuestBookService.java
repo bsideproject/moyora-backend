@@ -21,6 +21,9 @@ public class SchoolGuestBookService {
     private final SchoolRepo schoolRepo;
 
     public Long save(SchoolGuestBook schoolGuestBook){
+        if (schoolGuestBook.getSticker() == null || schoolGuestBook.getSticker().equals("")) {
+            schoolGuestBook.settingRandomSticker();
+        }
         SchoolGuestBook save = schoolGuestBookRepo.save(schoolGuestBook);
         return save.getId();
     }

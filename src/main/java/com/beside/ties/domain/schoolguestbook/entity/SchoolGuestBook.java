@@ -5,10 +5,13 @@ import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.schoolguestbook.dto.SchoolGuestBookDto;
 import com.beside.ties.global.common.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,6 +30,9 @@ public class SchoolGuestBook extends BaseTimeEntity {
     @JoinColumn(name = "account_id")
     private Account account;
 
+    @Column(length = 10)
+    private String sticker;
+
     private String content;
 
     public SchoolGuestBook(School school, Account account, String content) {
@@ -35,8 +41,22 @@ public class SchoolGuestBook extends BaseTimeEntity {
         this.content = content;
     }
 
+    @Builder
+    public SchoolGuestBook(School school, Account account, String content, String sticker) {
+        this.school = school;
+        this.account = account;
+        this.content = content;
+        this.sticker = sticker;
+    }
+    
     public void contentUpdate(String content) {
         this.content = content;
+    }
+
+    public void settingRandomSticker() {
+        List<String> stickerIdList = List.of("1", "5", "9");
+        int randomNum = (int)(Math.random() * 3);
+        this.sticker = stickerIdList.get(randomNum);
     }
 
     public static SchoolGuestBookDto toSchoolGuestBookDto(SchoolGuestBook schoolGuestBook) {

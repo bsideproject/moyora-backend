@@ -108,11 +108,19 @@ class SchoolGuestBookServiceTest {
 
         School school = schoolService.findSchoolById(1L);
 
-        SchoolGuestBook schoolGuestBook = new SchoolGuestBook(school, account, content);
+        SchoolGuestBook schoolGuestBook = SchoolGuestBook.builder()
+                .school(school)
+                .account(account)
+                .content(content)
+                .build();
 
         schoolGuestBookService.save(schoolGuestBook);
 
         List<SchoolGuestBook> schoolGuestBookList = schoolGuestBookService.findBySchoolId(searchSchool.getId());
+
+        for (SchoolGuestBook guestBook : schoolGuestBookList) {
+            System.out.println("guestBook = " + guestBook.getSticker());
+        }
 
         assertThat(schoolGuestBookList.size()).isEqualTo(4);
     }

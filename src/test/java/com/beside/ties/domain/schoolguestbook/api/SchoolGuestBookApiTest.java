@@ -120,7 +120,7 @@ class SchoolGuestBookApiTest extends BaseMvcTest {
     void saveApiTest() throws Exception {
         String content = "우리학교 짱4";
 
-        SchoolGuestBookAddDto schoolGuestBookAddDto = new SchoolGuestBookAddDto(searchSchool.getId(), content);
+        SchoolGuestBookAddDto schoolGuestBookAddDto = new SchoolGuestBookAddDto(searchSchool.getId(), content, "");
 
         mockMvc.perform(
                         post("/api/v1/schoolGuestBook/")
