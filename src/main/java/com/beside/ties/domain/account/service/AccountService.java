@@ -263,8 +263,13 @@ public class AccountService {
         return "학교 정보가 업데이트 되었습니다.";
     }
 
-    public List<ClassmateResponse> findClassMateList(Account account) {
-        return accountRepo.findAllBySchool(account.school).stream().map(ClassmateResponse::toDto).collect(Collectors.toList());
+    public List<ClassmateResponse> findClassMateList(Account account, String name) {
+        if(name == null) {
+            return accountRepo.findAllBySchool(account.school).stream().map(ClassmateResponse::toDto).collect(Collectors.toList());
+        }
+        else{
+            return accountRepo.findAllBySchoolAndNameStartsWith(account.school, name).stream().map(ClassmateResponse::toDto).collect(Collectors.toList());
+        }
     }
 
     public ClassmateDetailResponse findSchoolmateDetail(Long schoolmateId) {
