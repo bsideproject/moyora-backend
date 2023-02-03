@@ -45,7 +45,7 @@ public class RegionService {
     }
 
     public List<RegionResponseDto> findAllStates(){
-        List<Region> regionsByParentIsNull = regionRepo.findRegionsByParentIsNull();
+        List<Region> regionsByParentIsNull = regionRepo.findByParentIsNullOrderByPriorityAsc();
         List<RegionResponseDto> collect = regionsByParentIsNull.stream().map(RegionResponseDto::toDto).collect(Collectors.toList());
         return collect;
     }

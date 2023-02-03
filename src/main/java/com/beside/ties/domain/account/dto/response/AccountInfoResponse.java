@@ -22,6 +22,12 @@ public class AccountInfoResponse {
     public Long id;
 
     @ApiModelProperty(
+            value = "지역 ID",
+            example = "150"
+    )
+    public Long regionId;
+
+    @ApiModelProperty(
             value = "profile",
             example = "이미지url"
     )
@@ -139,6 +145,7 @@ public class AccountInfoResponse {
                     .residence(getResidence(account))
                     .facebook(account.getFacebook())
                     .schoolCode(getSchoolCode(account))
+                    .regionId(getRegionId(account))
                     .instagram(account.getInstagram())
                     .id(account.getId())
                     .youtube(account.getYoutube())
@@ -154,10 +161,16 @@ public class AccountInfoResponse {
                     .build();
     }
 
+
     static String getSchoolCode(Account account){
         if(account.getSchool() == null) return "";
         if(account.getSchool().getSchoolCode() == null) return "";
         return account.school.getSchoolCode();
+    }
+
+    static Long getRegionId(Account account){
+        if(account.getRegion() == null) return 111L;
+        return account.getRegion().getId();
     }
 
     static String getBirthDate(Account account){

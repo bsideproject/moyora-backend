@@ -39,7 +39,7 @@ class RegionServiceTest {
         List<Region> actualParentRegions = List.of(regionParent);
         List<Region> actualChildRegions = List.of(regionChild);
 
-        List<Region> parentRegions = regionRepo.findRegionsByParentIsNull();
+        List<Region> parentRegions = regionRepo.findByParentIsNullOrderByPriorityAsc();
         List<Region> childRegions = regionRepo.findByParentOrderByNameAsc(regionParent);
 
         assertEquals(actualParentRegions.get(0).getName(), parentRegions.get(0).getName());
