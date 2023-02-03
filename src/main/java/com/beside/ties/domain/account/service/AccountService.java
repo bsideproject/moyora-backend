@@ -284,11 +284,12 @@ public class AccountService {
 
         if(account.isPublic){
             return ClassmateDetailResponse.builder()
-                    .birthDate(account.getBirthDate().toString().replace('-','.').substring(2,10))
+                    .birthDate(getBirthDate(account))
                     .facebook(account.getFacebook())
                     .instagram(account.getInstagram())
                     .youtube(account.getYoutube())
                     .mbti(account.getMbti())
+                    .id(account.getId())
                     .nickname(account.getNickname())
                     .username(account.getName())
                     .profile(account.getProfile())
@@ -300,9 +301,10 @@ public class AccountService {
 
         }else{
             return ClassmateDetailResponse.builder()
-                    .birthDate(account.getBirthDate().toString().replace('-','.').substring(2,10))
+                    .birthDate(getBirthDate(account))
                     .facebook(account.getFacebook())
                     .instagram(account.getInstagram())
+                    .id(account.getId())
                     .youtube(account.getYoutube())
                     .mbti(account.getMbti())
                     .profile(account.getProfile())
@@ -317,7 +319,17 @@ public class AccountService {
 
     }
 
+    public static String getBirthDate(Account account){
+        if(account.getBirthDate() == null){
+            return "";
+        }
+        return account.getBirthDate().toString().replace('-','.').substring(2,10);
+    }
+
     private String getGraduate(Account account) {
+        if(account.school == null) return "";
+        if(account.school.getEstablishmentDate() == null) return "";
+
         int establishmentDate = Integer.parseInt(account.school.getEstablishmentDate().substring(0,4));
         int nowYear = Year.now().getValue();
         int graduateYear = nowYear - establishmentDate;

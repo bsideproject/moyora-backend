@@ -2,6 +2,7 @@ package com.beside.ties.domain.account.dto.response;
 
 import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.account.entity.MBTI;
+import com.beside.ties.domain.account.service.AccountService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -13,6 +14,12 @@ import static com.beside.ties.global.common.RequestUtil.parseRegion;
 @Getter
 @ApiModel
 public class AccountInfoResponse {
+
+    @ApiModelProperty(
+            value = "계정 ID",
+            example = "10020"
+    )
+    public Long id;
 
     @ApiModelProperty(
             value = "profile",
@@ -109,41 +116,54 @@ public class AccountInfoResponse {
 
     public static AccountInfoResponse toDto(Account account, String graduate){
 
-        if(account.getBirthDate() == null){
             return AccountInfoResponse.builder()
                     .name(account.getName())
-                    .birthDate(null)
-                    .residence(account.getRegion().getParent().getName() +" "+parseRegion(account.getRegion().getName()))
+                    .birthDate(getBirthDate(account))
+                    .residence(getResidence(account))
                     .facebook(account.getFacebook())
                     .instagram(account.getInstagram())
+                    .id(account.getId())
                     .youtube(account.getYoutube())
+                    .jobCategory(getParentJob(account))
                     .mbti(account.getMbti())
-                    .jobCategory(account.getMyJob().getParent().getName())
-                    .schoolId(account.getSchool().getId())
+                    .schoolId(getSchoolId(account))
                     .nickname(account.getNickname())
-                    .job(account.getMyJob().getName())
-                    .schoolName(account.getSchool().getSchoolName()+graduate)
+                    .job(getJob(account))
+                    .schoolName(getSchoolNameWithGraduate(account,graduate))
                     .isPublic(account.getIsPublic())
                     .profile(account.getProfile())
                     .build();
-        }else {
-            return AccountInfoResponse.builder()
-                    .name(account.getName())
-                    .birthDate(account.getBirthDate().toString().replace('-', '.').substring(2, 10))
-                    .residence(account.getRegion().getParent().getName() + " " + parseRegion(account.getRegion().getName()))
-                    .facebook(account.getFacebook())
-                    .instagram(account.getInstagram())
-                    .youtube(account.getYoutube())
-                    .jobCategory(account.getMyJob().getParent().getName())
-                    .mbti(account.getMbti())
-                    .schoolId(account.getSchool().getId())
-                    .nickname(account.getNickname())
-                    .job(account.getMyJob().getName())
-                    .schoolName(account.getSchool().getSchoolName() + graduate)
-                    .isPublic(account.getIsPublic())
-                    .profile(account.getProfile())
-                    .build();
-        }
     }
+
+    static String getBirthDate(Account account){
+        if(account.getBirthDate() == null) return "";
+        return AccountService.getBirthDate(account);
+    }
+
+    static String getResidence(Account account){
+        if(account.getRegion() == null) return "";
+        return account.getRegion().getParent().getName() + " " + parseRegion(account.getRegion().getName());
+    }
+
+    static String getParentJob(Account account){
+        if(account.getMyJob() == null) return "";
+        return account.getMyJob().getParent().getName();
+    }
+
+    static String getJob(Account account){
+        if(account.getMyJob() == null) return "";
+        return account.getMyJob().getName();
+    }
+
+    static String getSchoolNameWithGraduate(Account account, String graduate){
+        if(account.getSchool() == null) return "";
+        return  account.getSchool().getSchoolName() + graduate;
+    }
+
+    static Long getSchoolId(Account account){
+        if(account.getSchool() == null) return 2L;
+        return  account.getSchool().getId();
+    }
+
 
 }
