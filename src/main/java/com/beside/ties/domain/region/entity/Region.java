@@ -39,6 +39,8 @@ public class Region {
     @JoinColumn(name = "parent")
     public Region parent;
 
+    public int priority;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     Set<Region> children;
 

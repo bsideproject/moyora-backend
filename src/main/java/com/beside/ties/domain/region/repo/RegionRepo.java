@@ -10,7 +10,7 @@ public interface RegionRepo extends JpaRepository<Region, Long> {
 
     public Optional<Region> findByName(String name);
 
-    public List<Region> findRegionsByParentIsNull();
+    public List<Region> findByParentIsNullOrderByPriorityAsc();
 
     public List<Region> findByParentOrderByNameAsc(Region region);
 }
