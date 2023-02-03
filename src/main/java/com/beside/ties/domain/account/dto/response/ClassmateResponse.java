@@ -24,4 +24,6 @@ public class ClassmateResponse {
                 .schoolName(account.getSchool().getSchoolName())
                 .build();
     }
+
+
 }

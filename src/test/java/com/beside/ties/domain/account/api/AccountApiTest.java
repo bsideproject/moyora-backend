@@ -136,6 +136,7 @@ class AccountApiTest extends BaseMvcTest {
                 .nickname("godric")
                 .schoolCode("schoolCode")
                 .regionId(regionId)
+                .schoolComment("hello")
                 .build();
 
 
