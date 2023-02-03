@@ -1,15 +1,11 @@
 package com.beside.ties.domain.schoolregion.service;
 
-import com.beside.ties.domain.account.dto.request.LocalSignUpRequest;
-import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.common.dto.StatisticsDto;
 import com.beside.ties.domain.region.entity.Region;
 import com.beside.ties.domain.region.repo.RegionRepo;
 import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.school.service.SchoolService;
-import com.beside.ties.domain.schoolguestbook.entity.SchoolGuestBook;
 import com.beside.ties.domain.schoolregion.entity.SchoolRegion;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("학교 지역 서비스 로직 테스트")
 @ActiveProfiles("test")
@@ -71,11 +66,11 @@ class SchoolRegionServiceTest {
         regionRepo.save(regionChild3);
         regionRepo.save(regionChild4);
         regionRepo.save(regionChild5);
-        Optional<Region> regionByName = regionRepo.findRegionByName(child1);
+        Optional<Region> regionByName = regionRepo.findByName(child1);
 
         searchRegion = regionByName.get();
 
-        List<Region> regions = regionRepo.findRegionsByParent(regionParent);
+        List<Region> regions = regionRepo.findByParentOrderByNameAsc(regionParent);
 
         SchoolRegion schoolRegion1 = SchoolRegion.createSchoolRegion(regions.get(0), searchSchool, 5L);
         SchoolRegion schoolRegion2 = SchoolRegion.createSchoolRegion(regions.get(1), searchSchool, 1L);
