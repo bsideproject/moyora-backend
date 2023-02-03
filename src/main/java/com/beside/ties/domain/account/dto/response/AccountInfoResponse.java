@@ -114,6 +114,16 @@ public class AccountInfoResponse {
     )
     public Boolean isPublic;
 
+    @ApiModelProperty(
+            value = "졸업 년도",
+            example = "2002",
+            required = true
+    )
+    public int graduationYear;
+
+
+
+
     public static AccountInfoResponse toDto(Account account, String graduate){
 
             return AccountInfoResponse.builder()
@@ -129,6 +139,7 @@ public class AccountInfoResponse {
                     .schoolId(getSchoolId(account))
                     .nickname(account.getNickname())
                     .job(getJob(account))
+                    .graduationYear(account.getGraduationYear())
                     .schoolName(getSchoolNameWithGraduate(account,graduate))
                     .isPublic(account.getIsPublic())
                     .profile(account.getProfile())
