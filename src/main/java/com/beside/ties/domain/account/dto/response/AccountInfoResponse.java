@@ -108,6 +108,13 @@ public class AccountInfoResponse {
     public String birthDate;
 
     @ApiModelProperty(
+            value = "schoolCode",
+            example = "321334",
+            required = false
+    )
+    public String schoolCode;
+
+    @ApiModelProperty(
             value = "공개 여부",
             example = "true",
             required = false
@@ -131,6 +138,7 @@ public class AccountInfoResponse {
                     .birthDate(getBirthDate(account))
                     .residence(getResidence(account))
                     .facebook(account.getFacebook())
+                    .schoolCode(getSchoolCode(account))
                     .instagram(account.getInstagram())
                     .id(account.getId())
                     .youtube(account.getYoutube())
@@ -144,6 +152,12 @@ public class AccountInfoResponse {
                     .isPublic(account.getIsPublic())
                     .profile(account.getProfile())
                     .build();
+    }
+
+    static String getSchoolCode(Account account){
+        if(account.getSchool() == null) return "";
+        if(account.getSchool().getSchoolCode() == null) return "";
+        return account.school.getSchoolCode();
     }
 
     static String getBirthDate(Account account){
