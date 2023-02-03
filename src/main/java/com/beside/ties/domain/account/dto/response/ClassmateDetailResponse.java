@@ -14,6 +14,12 @@ import java.time.LocalDate;
 public class ClassmateDetailResponse {
 
     @ApiModelProperty(
+            value = "계정 ID",
+            example = "10020"
+    )
+    public Long id;
+
+    @ApiModelProperty(
             value = "profile",
             example = "이미지url"
     )

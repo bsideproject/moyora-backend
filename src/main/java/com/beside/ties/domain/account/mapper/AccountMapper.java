@@ -24,14 +24,4 @@ public interface AccountMapper {
     })
     LoginResponse toLoginResponseDto(Account account);
 
-
-//    @Mappings({
-//            @Mapping(target = "schoolName", source = "school.schoolName"),
-//            @Mapping(target = "state", source = "region.parent.name"),
-//            @Mapping(target = "city", source = "region.name"),
-//            @Mapping(target = "job", source = "jobCategory.name"),
-//            @Mapping(target = "name", source = "account.name")
-//    })
-//    AccountInfoResponse toAccountInfoResponse(Account account, Region region, JobCategory jobCategory, School school);
-
 }

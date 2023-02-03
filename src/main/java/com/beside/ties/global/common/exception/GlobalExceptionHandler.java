@@ -1,5 +1,6 @@
 package com.beside.ties.global.common.exception;
 
+import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.beside.ties.global.common.exception.custom.InvalidSocialTokenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,5 +32,12 @@ public class GlobalExceptionHandler {
         log.error(String.valueOf(e));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+    @ExceptionHandler(SignatureVerificationException.class)
+    ResponseEntity<String> handleSignatureVerificationException(SignatureVerificationException e) {
+        log.error(String.valueOf(e));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+
 
 }
