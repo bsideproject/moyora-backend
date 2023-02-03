@@ -32,7 +32,7 @@ public class RegionService {
 
     public Long saveCity(String parentName, String name){
 
-        Optional<Region> parentOptional = regionRepo.findRegionByName(parentName);
+        Optional<Region> parentOptional = regionRepo.findByName(parentName);
 
         if(parentOptional.isEmpty()){
             throw new IllegalArgumentException("부모 지역 이름이 존재하지 않습니다.");
@@ -51,11 +51,11 @@ public class RegionService {
     }
 
     public List<RegionResponseDto> findAllCities(String name){
-        Optional<Region> parentRegionOptional = regionRepo.findRegionByName(name);
+        Optional<Region> parentRegionOptional = regionRepo.findByName(name);
         if(parentRegionOptional.isEmpty()){
             throw new IllegalArgumentException("없는 도/시 입니다.");
         }
-        List<Region> regionsByParentIsNull = regionRepo.findRegionsByParent(parentRegionOptional.get());
+        List<Region> regionsByParentIsNull = regionRepo.findByParentOrderByNameAsc(parentRegionOptional.get());
         List<RegionResponseDto> collect = regionsByParentIsNull.stream().map(it->{
             String regionName = it.getName();
             if(it.name.contains("_")){
@@ -69,7 +69,7 @@ public class RegionService {
 
     public String saveCities(RegionCityRequestDto requestDto) {
 
-        Optional<Region> regionOptional = regionRepo.findRegionByName(requestDto.getState());
+        Optional<Region> regionOptional = regionRepo.findByName(requestDto.getState());
         if(regionOptional.isEmpty()){
             throw new IllegalArgumentException("존재하지 않는 state 입니다.");
         }

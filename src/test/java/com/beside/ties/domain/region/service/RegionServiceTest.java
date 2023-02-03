@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,7 +40,7 @@ class RegionServiceTest {
         List<Region> actualChildRegions = List.of(regionChild);
 
         List<Region> parentRegions = regionRepo.findRegionsByParentIsNull();
-        List<Region> childRegions = regionRepo.findRegionsByParent(regionParent);
+        List<Region> childRegions = regionRepo.findByParentOrderByNameAsc(regionParent);
 
         assertEquals(actualParentRegions.get(0).getName(), parentRegions.get(0).getName());
         assertEquals(actualChildRegions.get(0).getName(), childRegions.get(0).getName());
