@@ -265,7 +265,7 @@ public class AccountService {
 
     public List<ClassmateResponse> findClassMateList(Account account, String name) {
         if(name == null) {
-            return accountRepo.findAllBySchool(account.school).stream().map(ClassmateResponse::toDto).collect(Collectors.toList());
+            return accountRepo.findAllBySchoolAndKakaoIdNot(account.school, account.getKakaoId()).stream().map(ClassmateResponse::toDto).collect(Collectors.toList());
         }
         else{
             return accountRepo.findAllBySchoolAndNameContains(account.school, name).stream().map(ClassmateResponse::toDto).collect(Collectors.toList());

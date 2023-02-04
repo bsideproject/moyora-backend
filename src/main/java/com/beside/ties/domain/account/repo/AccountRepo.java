@@ -13,8 +13,9 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
 
     Optional<Account> findAccountByKakaoId(String kakaoId);
 
-    List<Account> findAllBySchool(School school);
+    List<Account> findAllBySchoolAndKakaoIdNot(School school, String kakaoId);
 
+    //findAllBySchool
     List<Account> findAllBySchoolAndNameContains(School school, String name);
 
 
