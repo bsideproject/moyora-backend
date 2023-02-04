@@ -268,7 +268,7 @@ public class AccountService {
             return accountRepo.findAllBySchool(account.school).stream().map(ClassmateResponse::toDto).collect(Collectors.toList());
         }
         else{
-            return accountRepo.findAllBySchoolAndNameStartsWith(account.school, name).stream().map(ClassmateResponse::toDto).collect(Collectors.toList());
+            return accountRepo.findAllBySchoolAndNameContains(account.school, name).stream().map(ClassmateResponse::toDto).collect(Collectors.toList());
         }
     }
 
