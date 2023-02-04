@@ -65,6 +65,7 @@ public class SchoolGuestBook extends BaseTimeEntity {
                 schoolGuestBook.getSchool().getId(),
                 schoolGuestBook.getAccount().getId(),
                 schoolGuestBook.getContent(),
+                schoolGuestBook.getSticker(),
                 schoolGuestBook.getCreatedDate(),
                 schoolGuestBook.getModifiedDate()
         );
