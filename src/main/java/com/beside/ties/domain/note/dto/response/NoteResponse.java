@@ -73,7 +73,7 @@ public class NoteResponse {
                     .isPublic(note.getIsPublic())
                     .content(note.getContent())
                     .nickname(note.getAccount().getNickname())
-                    .username(note.getAccount().getUsername())
+                    .username(note.getAccount().getName())
                     .createdDate(note.getCreatedDate().toLocalDate().toString().replace("-","/"))
                     .build();
         }
@@ -84,7 +84,7 @@ public class NoteResponse {
                     .sticker(note.getSticker())
                     .isPublic(note.getIsPublic())
                     .nickname(note.getAccount().getNickname())
-                    .username(note.getAccount().getUsername())
+                    .username(note.getAccount().getName())
                     .createdDate(note.getCreatedDate().toLocalDate().toString().replace("-","/"))
                     .content("비공개")
                     .build();
@@ -100,7 +100,7 @@ public class NoteResponse {
                     .isPublic(note.getIsPublic())
                     .content(note.getContent())
                     .nickname(note.getAccount().getNickname())
-                    .username(note.getAccount().getUsername())
+                    .username(note.getAccount().getName())
                     .createdDate(note.getCreatedDate().toLocalDate().toString().replace("-","/"))
                     .build();
     }
