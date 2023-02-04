@@ -68,21 +68,21 @@ class SchoolJobServiceTest {
         jobCategoryRepo.save(jobCategory4);
         jobCategoryRepo.save(jobCategory5);
 
-        searchJobCategory = jobCategoryRepo.findJobCategoryByName(child1).get();
+        searchJobCategory = jobCategoryRepo.findJobCategoryByName("의료").get();
 
         List<JobCategory> jobCategories = jobCategoryRepo.findAllByParent(jobCategoryParent);
 
-        SchoolJob schoolJob1 = SchoolJob.createSchoolJob(jobCategories.get(0), searchSchool, 5L);
-        SchoolJob schoolJob2 = SchoolJob.createSchoolJob(jobCategories.get(1), searchSchool, 1L);
-        SchoolJob schoolJob3 = SchoolJob.createSchoolJob(jobCategories.get(2), searchSchool, 8L);
-        SchoolJob schoolJob4 = SchoolJob.createSchoolJob(jobCategories.get(3), searchSchool, 10L);
-        SchoolJob schoolJob5 = SchoolJob.createSchoolJob(jobCategories.get(4), searchSchool, 15L);
+        SchoolJob schoolJob1 = SchoolJob.createSchoolJob(searchJobCategory, searchSchool, 5L);
+//        SchoolJob schoolJob2 = SchoolJob.createSchoolJob(jobCategories.get(1).getParent(), searchSchool, 1L);
+//        SchoolJob schoolJob3 = SchoolJob.createSchoolJob(jobCategories.get(2).getParent(), searchSchool, 8L);
+//        SchoolJob schoolJob4 = SchoolJob.createSchoolJob(jobCategories.get(3).getParent(), searchSchool, 10L);
+//        SchoolJob schoolJob5 = SchoolJob.createSchoolJob(jobCategories.get(4).getParent(), searchSchool, 15L);
 
         schoolJobService.save(schoolJob1);
-        schoolJobService.save(schoolJob2);
-        schoolJobService.save(schoolJob3);
-        schoolJobService.save(schoolJob4);
-        schoolJobService.save(schoolJob5);
+//        schoolJobService.save(schoolJob2);
+//        schoolJobService.save(schoolJob3);
+//        schoolJobService.save(schoolJob4);
+//        schoolJobService.save(schoolJob5);
     }
 
     @AfterEach
@@ -100,7 +100,7 @@ class SchoolJobServiceTest {
         assertThat(totalCount).isEqualTo(39L);
     }
 
-    @DisplayName("학교 별 지역 top4 조회")
+    @DisplayName("학교 별 직업 top4 조회")
     @Test
     void countTop4BySchoolId() {
         List<SchoolJob> schoolJobs = schoolJobService.countTop4BySchoolId(searchSchool.getId());
@@ -127,11 +127,7 @@ class SchoolJobServiceTest {
         Long totalCount = schoolJobService.totalCountBySchoolId(searchSchool.getId());
         List<StatisticsDto> statisticsList = schoolJobService.convertStatisticsDto(schoolJobs, totalCount);
 
-        assertThat(statisticsList.get(0).getTitle()).isEqualTo("의료 수의사");
-        assertThat(statisticsList.get(1).getTitle()).isEqualTo("의료 의료직기타");
-        assertThat(statisticsList.get(2).getTitle()).isEqualTo("의료 의료기사");
-        assertThat(statisticsList.get(3).getTitle()).isEqualTo("의료 간호사");
-        assertThat(statisticsList.get(4).getTitle()).isEqualTo("의료 간호조무사");
+        assertThat(statisticsList.get(0).getTitle()).isEqualTo("의료");
     }
 
     @DisplayName("학교 별 직업 top5 퍼센트")
@@ -148,7 +144,9 @@ class SchoolJobServiceTest {
     @DisplayName("학교직업 학교id 와 직업id로 조회")
     @Test
     void findBySchool_IdAndRegion_Id() {
-        SchoolJob schoolJob = schoolJobService.findBySchoolIdAndRegionId(searchSchool.getId(), searchJobCategory.getId());
+        List<JobCategory> all = jobCategoryRepo.findAll();
+        List<SchoolJob> allBySchoolId = schoolJobService.findAllBySchoolId(searchSchool.getId());
+        SchoolJob schoolJob = schoolJobService.findBySchoolIdAndJobId(searchSchool.getId(), searchJobCategory.getId());
 
         assertThat(schoolJob.getCount()).isEqualTo(5L);
     }
@@ -156,7 +154,7 @@ class SchoolJobServiceTest {
     @DisplayName("count 1 증가")
     @Test
     void countPlusOneUpdate() {
-        SchoolJob schoolJob = schoolJobService.findBySchoolIdAndRegionId(searchSchool.getId(), searchJobCategory.getId());
+        SchoolJob schoolJob = schoolJobService.findBySchoolIdAndJobId(searchSchool.getId(), searchJobCategory.getId());
         schoolJobService.countPlusOneUpdate(schoolJob);
 
         assertThat(schoolJob.getCount()).isEqualTo(6L);

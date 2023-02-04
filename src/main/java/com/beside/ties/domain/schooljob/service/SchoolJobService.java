@@ -42,8 +42,8 @@ public class SchoolJobService {
         return saveSchoolJob.getId();
     }
 
-    public SchoolJob findBySchoolIdAndRegionId(Long schoolId, Long regionId) {
-        return schoolJobRepo.findBySchool_IdAndJobCategory_Id(schoolId, regionId)
+    public SchoolJob findBySchoolIdAndJobId(Long schoolId, Long jobId) {
+        return schoolJobRepo.findBySchool_IdAndJobCategory_Id(schoolId, jobId)
                 .orElseThrow(() -> new IllegalArgumentException("SchoolJob doesn't exist"));
     }
 
@@ -55,7 +55,7 @@ public class SchoolJobService {
         return schoolJobs.stream()
                 .map(item ->
                         new StatisticsDto(
-                                item.getJobCategory().getParent().getName() + " " + item.getJobCategory().getName(),
+                                item.getJobCategory().getName(),
                                 percentCalculate(item.getCount(), totalCount)))
                 .collect(Collectors.toList());
     }
