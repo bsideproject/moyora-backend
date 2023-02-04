@@ -12,6 +12,7 @@ public class SchoolGuestBookDto {
     private Long schoolId;
     private Long accountId;
     private String content;
+    private String sticker;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 }
