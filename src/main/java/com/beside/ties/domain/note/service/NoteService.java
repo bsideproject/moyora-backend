@@ -82,7 +82,18 @@ public class NoteService {
 
 
     public List<NoteResponse> findMyNote(Account account) {
-        NoteBox noteBox = noteBoxRepo.findByAccount(account).get();
+
+        Optional<NoteBox> optionalNoteBox = noteBoxRepo.findByAccount(account);
+
+        NoteBox noteBox;
+
+        if(optionalNoteBox.isEmpty()){
+            noteBox = noteBoxRepo.saveAndFlush(new NoteBox(account));
+        }
+        else {
+            noteBox = optionalNoteBox.get();
+        }
+
         return noteRepo.findAllByNoteBox(noteBox)
                 .stream().map(NoteResponse::toMyDto).collect(Collectors.toList());
     }
