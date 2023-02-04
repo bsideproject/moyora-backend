@@ -282,41 +282,43 @@ public class AccountService {
 
         String graduate = getGraduate(account);
 
-        if(account.isPublic){
-            return ClassmateDetailResponse.builder()
-                    .birthDate(getBirthDate(account))
-                    .facebook(account.getFacebook())
-                    .instagram(account.getInstagram())
-                    .youtube(account.getYoutube())
-                    .mbti(account.getMbti())
-                    .id(account.getId())
-                    .nickname(account.getNickname())
-                    .username(account.getName())
-                    .profile(account.getProfile())
-                    .schoolName(account.getSchool().getSchoolName() + graduate)
-                    .residence(account.getRegion().getParent().getName()+" "+parseRegion(account.getRegion().getName()))
-                    .job(account.getMyJob().getName())
-                    .jobCategory(account.getMyJob().getParent().getName())
-                    .build();
 
-        }else{
-            return ClassmateDetailResponse.builder()
-                    .birthDate(getBirthDate(account))
-                    .facebook(account.getFacebook())
-                    .instagram(account.getInstagram())
-                    .id(account.getId())
-                    .youtube(account.getYoutube())
-                    .mbti(account.getMbti())
-                    .profile(account.getProfile())
-                    .nickname(account.getNickname())
-                    .username(account.getName())
-                    .schoolName(account.getSchool().getSchoolName() + graduate)
-                    .residence(null)
-                    .job(null)
-                    .jobCategory(null)
-                    .build();
-        }
+        return ClassmateDetailResponse.builder()
+                .birthDate(getBirthDate(account))
+                .facebook(account.getFacebook())
+                .instagram(account.getInstagram())
+                .id(account.getId())
+                .youtube(account.getYoutube())
+                .mbti(account.getMbti())
+                .profile(account.getProfile())
+                .nickname(account.getNickname())
+                .username(account.getName())
+                .schoolName(getSchoolName(account,graduate))
+                .residence(getResidence(account))
+                .job(getJob(account))
+                .jobCategory(getJobCategory(account))
+                .build();
 
+    }
+
+    static String getSchoolName(Account account, String graduate){
+        if(account.getSchool() == null) return "";
+        return account.getSchool().getSchoolName() + graduate;
+    }
+
+    static String getResidence(Account account){
+        if(account.getRegion() == null || account.isPublic == false) return "";
+        return account.getRegion().getParent().getName()+" "+parseRegion(account.getRegion().getName());
+    }
+
+    static String getJob(Account account) {
+        if(account.getMyJob() == null || account.isPublic == false) return "";
+        return account.getMyJob().getName();
+    }
+    static String getJobCategory(Account account) {
+        if(account.getMyJob() == null) return "";
+        if(account.getMyJob().getParent() == null || account.isPublic == false) return "";
+        return account.getMyJob().getParent().getName();
     }
 
     public static String getBirthDate(Account account){
