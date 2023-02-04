@@ -1,6 +1,8 @@
 package com.beside.ties.domain.schooljob.service;
 
 import com.beside.ties.domain.common.dto.StatisticsDto;
+import com.beside.ties.domain.jobcategory.entity.JobCategory;
+import com.beside.ties.domain.jobcategory.repo.JobCategoryRepo;
 import com.beside.ties.domain.schooljob.entity.SchoolJob;
 import com.beside.ties.domain.schooljob.repo.SchoolJobRepo;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -16,6 +19,7 @@ import java.util.stream.Collectors;
 public class SchoolJobService {
 
     private final SchoolJobRepo schoolJobRepo;
+    private final JobCategoryRepo jobCategoryRepo;
 
     public List<SchoolJob> countTop4BySchoolId(Long schoolId) {
         return schoolJobRepo.findTop4BySchool_IdOrderByCountDesc(schoolId);
@@ -30,7 +34,11 @@ public class SchoolJobService {
     }
 
     public Long save(SchoolJob schoolJob) {
-        SchoolJob saveSchoolJob = schoolJobRepo.save(schoolJob);
+        JobCategory jobCategory = jobCategoryRepo.findById(schoolJob.getJobCategory().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Job doesn't exist"));
+
+        SchoolJob resultSchoolJob = SchoolJob.createSchoolJob(jobCategory.getParent(), schoolJob.getSchool(), schoolJob.getCount());
+        SchoolJob saveSchoolJob = schoolJobRepo.save(resultSchoolJob);
         return saveSchoolJob.getId();
     }
 
