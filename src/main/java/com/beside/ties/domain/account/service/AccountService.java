@@ -325,7 +325,7 @@ public class AccountService {
         if(account.getBirthDate() == null){
             return "";
         }
-        return account.getBirthDate().toString().replace('-','.').substring(2,10);
+        return account.getBirthDate().toString().replace('-','.').substring(0,10);
     }
 
     private String getGraduate(Account account) {
