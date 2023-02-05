@@ -19,6 +19,8 @@ import com.beside.ties.domain.schoolguestbook.entity.SchoolGuestBook;
 import com.beside.ties.domain.schoolguestbook.repo.SchoolGuestBookRepo;
 import com.beside.ties.domain.schooljob.entity.SchoolJob;
 import com.beside.ties.domain.schooljob.service.SchoolJobService;
+import com.beside.ties.domain.schoolmbti.repo.SchoolMbtiRepo;
+import com.beside.ties.domain.schoolmbti.service.SchoolMbtiService;
 import com.beside.ties.domain.schoolregion.entity.SchoolRegion;
 import com.beside.ties.domain.schoolregion.repo.SchoolRegionRepo;
 import com.beside.ties.domain.schoolregion.service.SchoolRegionService;
@@ -78,6 +80,7 @@ public class AccountService {
     private final EntityManager em;
     private final SchoolRegionService schoolRegionService;
     private final SchoolJobService schoolJobService;
+    private final SchoolMbtiService schoolMbtiService;
 
 
     public String uploadImage(MultipartFile multipartFile, Account account) throws IOException {
@@ -238,6 +241,18 @@ public class AccountService {
 
     public String updateUserInfo(AccountUpdateRequest request, Long accountId){
         Account account = accountRepo.findById(accountId).get();
+
+        if(account.mbti == null && request.getMbti() != null){
+            schoolMbtiService.countPlus(account.getSchool(), request.getMbti());
+        }
+        else if(account.mbti != null && request.getMbti() != null){
+
+            if(!account.mbti.equals(request.getMbti())){
+                schoolMbtiService.countPlus(account.getSchool(), request.getMbti());
+                schoolMbtiService.countMinus(account.getSchool(), account.getMbti().name());
+            }
+
+        }
 
         Optional<Region> regionOptional = regionRepo.findById(request.getRegionId());
         if(regionOptional.isEmpty()) throw new IllegalArgumentException("존재하지 않는 지역입니다.");
