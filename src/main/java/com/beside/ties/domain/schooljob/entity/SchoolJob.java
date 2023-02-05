@@ -37,6 +37,12 @@ public class SchoolJob {
         this.count = count;
     }
 
+    public SchoolJob(JobCategory jobCategory, School school) {
+        this.jobCategory = jobCategory;
+        this.school = school;
+        this.count = 1L;
+    }
+
     public void plusOneCount() {
         this.count = this.count + 1L;
     }
