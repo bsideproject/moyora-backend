@@ -64,9 +64,20 @@ public class SchoolJobService {
     }
 
     public void countPlus(School school, JobCategory jobCategory) {
-        Optional<SchoolJob> optionalSchoolJob = schoolJobRepo.findBySchool_IdAndJobCategory_Id(school.getId(), jobCategory.getId());
+        Optional<SchoolJob> optionalSchoolJob = schoolJobRepo.findBySchool_IdAndJobCategory_Id(school.getId(), jobCategory.getParent().getId());
         if(optionalSchoolJob.isPresent()){
             optionalSchoolJob.get().plusOneCount();
+        }else{
+            if(jobCategory.getParent() != null) {
+                schoolJobRepo.save(new SchoolJob(jobCategory.getParent(), school));
+            }
+        }
+    }
+
+    public void countMinus(School school, JobCategory jobCategory) {
+        Optional<SchoolJob> optionalSchoolJob = schoolJobRepo.findBySchool_IdAndJobCategory_Id(school.getId(), jobCategory.getParent().getId());
+        if(optionalSchoolJob.isPresent()){
+            optionalSchoolJob.get().minusOneCount();
         }else{
             if(jobCategory.getParent() != null) {
                 schoolJobRepo.save(new SchoolJob(jobCategory.getParent(), school));
