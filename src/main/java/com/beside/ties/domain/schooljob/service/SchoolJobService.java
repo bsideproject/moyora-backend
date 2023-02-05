@@ -3,8 +3,11 @@ package com.beside.ties.domain.schooljob.service;
 import com.beside.ties.domain.common.dto.StatisticsDto;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.jobcategory.repo.JobCategoryRepo;
+import com.beside.ties.domain.region.entity.Region;
+import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.schooljob.entity.SchoolJob;
 import com.beside.ties.domain.schooljob.repo.SchoolJobRepo;
+import com.beside.ties.domain.schoolregion.entity.SchoolRegion;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +61,17 @@ public class SchoolJobService {
                                 item.getJobCategory().getName(),
                                 percentCalculate(item.getCount(), totalCount)))
                 .collect(Collectors.toList());
+    }
+
+    public void countPlus(School school, JobCategory jobCategory) {
+        Optional<SchoolJob> optionalSchoolJob = schoolJobRepo.findBySchool_IdAndJobCategory_Id(school.getId(), jobCategory.getId());
+        if(optionalSchoolJob.isPresent()){
+            optionalSchoolJob.get().plusOneCount();
+        }else{
+            if(jobCategory.getParent() != null) {
+                schoolJobRepo.save(new SchoolJob(jobCategory.getParent(), school));
+            }
+        }
     }
 
     public List<Long> convertTop5Percent(List<SchoolJob> schoolRegions, Long totalCount) {
