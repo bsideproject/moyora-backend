@@ -163,14 +163,19 @@ public class Account extends BaseTimeEntity implements UserDetails {
     }
 
     public void updateProfile(AccountUpdateRequest request, JobCategory job, Region region){
-        this.mbti = request.getMbti();
+        if(request.getMbti() != null) {
+            this.mbti = MBTI.valueOf(request.getMbti());
+        }
         this.instagram = request.getInstagram();
         this.youtube = request.getYoutube();
         this.facebook = request.getFacebook();
         this.myJob = job;
         this.region = region;
-        this.birthDate = LocalDate.parse(request.getBirthdate(), DateTimeFormatter.ISO_DATE);
-        this.isPublic = request.getIsPublic();
+        if(request.getBirthdate() != null)
+            this.birthDate = LocalDate.parse(request.getBirthdate(), DateTimeFormatter.ISO_DATE);
+        if(request.getIsPublic() != null) {
+            this.isPublic = request.getIsPublic();
+        }
     }
 
     public void deleteMe(){
