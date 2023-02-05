@@ -242,17 +242,10 @@ public class AccountService {
     public String updateUserInfo(AccountUpdateRequest request, Long accountId){
         Account account = accountRepo.findById(accountId).get();
 
-        if(account.mbti == null && request.getMbti() != null){
-            schoolMbtiService.countPlus(account.getSchool(), request.getMbti());
-        }
-        else if(account.mbti != null && request.getMbti() != null){
+        countMBTI(request, account);
 
-            if(!account.mbti.equals(request.getMbti())){
-                schoolMbtiService.countPlus(account.getSchool(), request.getMbti());
-                schoolMbtiService.countMinus(account.getSchool(), account.getMbti().name());
-            }
+        countJob(request, account);
 
-        }
 
         Optional<Region> regionOptional = regionRepo.findById(request.getRegionId());
         if(regionOptional.isEmpty()) throw new IllegalArgumentException("존재하지 않는 지역입니다.");
@@ -264,6 +257,38 @@ public class AccountService {
 
         return "유저 프로필 정보가 업데이트 되었습니다.";
     }
+
+    private void countMBTI(AccountUpdateRequest request, Account account) {
+        if(account.mbti == null && request.getMbti() != null){
+            schoolMbtiService.countPlus(account.getSchool(), request.getMbti());
+        }
+        else if(account.mbti != null && request.getMbti() != null){
+
+            if(!account.mbti.equals(request.getMbti())){
+                schoolMbtiService.countPlus(account.getSchool(), request.getMbti());
+                schoolMbtiService.countMinus(account.getSchool(), account.getMbti().name());
+            }
+
+        }
+    }
+
+    private void countJob(AccountUpdateRequest request, Account account) {
+        JobCategory jobCategory = jobCategoryRepo.findJobCategoryByName(request.getJob()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 직업입니다."));
+
+        if(account.getMyJob() == null && request.getMbti() != null){
+            schoolJobService.countPlus(account.getSchool(), jobCategory);
+        }
+        else if(account.getMyJob() != null && request.getJob() != null){
+
+            if(!account.getMyJob().getParent().getName().equals(request.getJob())){
+                schoolJobService.countPlus(account.getSchool(), jobCategory);
+                schoolJobService.countMinus(account.getSchool(), account.getMyJob());
+            }
+
+        }
+
+    }
+
 
     public AccountInfoResponse findByAccount(Long accountId) {
 
