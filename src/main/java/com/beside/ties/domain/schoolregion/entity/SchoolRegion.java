@@ -34,6 +34,12 @@ public class SchoolRegion {
         this.count = count;
     }
 
+    public SchoolRegion(Region region, School school) {
+        this.region = region;
+        this.school = school;
+        this.count = 1L;
+    }
+
     public void plusOneCount() {
         this.count = this.count + 1L;
     }

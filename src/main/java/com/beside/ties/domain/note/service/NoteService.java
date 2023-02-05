@@ -31,7 +31,7 @@ public class NoteService {
     public List<NoteResponse> findAllNote(Long userId) {
         Account account = accountRepo.findById(userId).get();
         NoteBox noteBox = noteBoxRepo.findByAccount(account).get();
-        return noteRepo.findAllByNoteBox(noteBox)
+        return noteRepo.findAllByNoteBoxOrderByCreatedDateDesc(noteBox)
                 .stream().map(NoteResponse::toDto).collect(Collectors.toList());
     }
 
@@ -94,7 +94,7 @@ public class NoteService {
             noteBox = optionalNoteBox.get();
         }
 
-        return noteRepo.findAllByNoteBox(noteBox)
+        return noteRepo.findAllByNoteBoxOrderByCreatedDateDesc(noteBox)
                 .stream().map(NoteResponse::toMyDto).collect(Collectors.toList());
     }
 }

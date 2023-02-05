@@ -17,6 +17,11 @@ import com.beside.ties.domain.notebox.entity.NoteBox;
 import com.beside.ties.domain.notebox.repo.NoteBoxRepo;
 import com.beside.ties.domain.schoolguestbook.entity.SchoolGuestBook;
 import com.beside.ties.domain.schoolguestbook.repo.SchoolGuestBookRepo;
+import com.beside.ties.domain.schooljob.entity.SchoolJob;
+import com.beside.ties.domain.schooljob.service.SchoolJobService;
+import com.beside.ties.domain.schoolregion.entity.SchoolRegion;
+import com.beside.ties.domain.schoolregion.repo.SchoolRegionRepo;
+import com.beside.ties.domain.schoolregion.service.SchoolRegionService;
 import com.beside.ties.global.auth.kakao.KakaoUser;
 import com.beside.ties.global.auth.security.jwt.JwtDto;
 import com.beside.ties.global.auth.security.jwt.JwtType;
@@ -71,6 +76,8 @@ public class AccountService {
     private final NoteBoxRepo noteBoxRepo;
     private final SchoolGuestBookRepo schoolGuestBookRepo;
     private final EntityManager em;
+    private final SchoolRegionService schoolRegionService;
+    private final SchoolJobService schoolJobService;
 
 
     public String uploadImage(MultipartFile multipartFile, Account account) throws IOException {
@@ -210,13 +217,21 @@ public class AccountService {
 
         // 직업 조회
         JobCategory jobCategory = jobCategoryService.findJobCategoryByName(request.getJob());
+        schoolJobService.countPlus(optionalSchool.get(), jobCategory);
+
 
         // 지역 업데이트
         Optional<Region> regionOptional = regionRepo.findById(request.getRegionId());
         if(regionOptional.isEmpty()) throw new IllegalArgumentException("존재하지 않는 지역입니다.");
+        schoolRegionService.countPlus(optionalSchool.get(), regionOptional.get());
+
 
         // 회원 정보 업데이트
         account.secondaryInput(request, optionalSchool.get(), jobCategory,regionOptional.get());
+
+
+
+
 
         return "회원가입이 완료되었습니다.";
     }
@@ -325,7 +340,7 @@ public class AccountService {
         if(account.getBirthDate() == null){
             return "";
         }
-        return account.getBirthDate().toString().replace('-','.').substring(2,10);
+        return account.getBirthDate().toString().replace('-','.').substring(0,10);
     }
 
     private String getGraduate(Account account) {

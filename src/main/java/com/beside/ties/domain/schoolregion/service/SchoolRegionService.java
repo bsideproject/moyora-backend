@@ -1,6 +1,8 @@
 package com.beside.ties.domain.schoolregion.service;
 
 import com.beside.ties.domain.common.dto.StatisticsDto;
+import com.beside.ties.domain.region.entity.Region;
+import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.schoolregion.entity.SchoolRegion;
 import com.beside.ties.domain.schoolregion.repo.SchoolRegionRepo;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -41,6 +44,17 @@ public class SchoolRegionService {
     public void countPlusOneUpdate(SchoolRegion schoolRegion) {
         schoolRegion.plusOneCount();
     }
+
+    public void countPlus(School school, Region region) {
+        Optional<SchoolRegion> optionalSchoolRegion = schoolRegionRepo.findBySchool_IdAndRegion_Id(school.getId(), region.getId());
+        if(optionalSchoolRegion.isPresent()){
+            optionalSchoolRegion.get().plusOneCount();
+        }else{
+            schoolRegionRepo.save(new SchoolRegion(region, school));
+        }
+    }
+
+
 
     public List<StatisticsDto> convertStatisticsDto(List<SchoolRegion> schoolRegions, Long totalCount) {
         return schoolRegions.stream()

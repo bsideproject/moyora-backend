@@ -11,6 +11,8 @@ public class SchoolDto {
     private String schoolName;
     private String establishmentDate;
     private String address;
+
+    private String simpleAddress;
     private String schoolCode;
 
     public SchoolDto(School school) {
@@ -18,6 +20,7 @@ public class SchoolDto {
         this.schoolName = school.getSchoolName();
         this.establishmentDate = school.getEstablishmentDate();
         this.address = school.getAddress();
+        this.simpleAddress = school.getAddress().split(" ")[0] + " " + school.getAddress().split(" ")[1];
         this.schoolCode = school.getSchoolCode();
     }
 

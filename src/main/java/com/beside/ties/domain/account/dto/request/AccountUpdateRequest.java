@@ -4,6 +4,7 @@ import com.beside.ties.domain.account.entity.MBTI;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -46,7 +47,7 @@ public class AccountUpdateRequest {
             example = "INFP",
             required = false
     )
-    MBTI mbti;
+    String mbti;
     @ApiModelProperty(
             value = "facebook",
             example = "facebook_link",
