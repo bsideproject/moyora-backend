@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface NoteRepo extends JpaRepository<Note, Long> {
 
-    List<Note> findAllByNoteBox(NoteBox noteBox);
+    List<Note> findAllByNoteBoxOrderByCreatedDateAsc(NoteBox noteBox);
 
 }
