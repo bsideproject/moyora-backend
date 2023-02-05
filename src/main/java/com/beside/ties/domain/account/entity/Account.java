@@ -166,6 +166,8 @@ public class Account extends BaseTimeEntity implements UserDetails {
         if(request.getMbti() != null) {
             this.mbti = MBTI.valueOf(request.getMbti());
         }
+        else
+            this.mbti = null;
         this.instagram = request.getInstagram();
         this.youtube = request.getYoutube();
         this.facebook = request.getFacebook();
@@ -173,6 +175,8 @@ public class Account extends BaseTimeEntity implements UserDetails {
         this.region = region;
         if(request.getBirthdate() != null)
             this.birthDate = LocalDate.parse(request.getBirthdate(), DateTimeFormatter.ISO_DATE);
+        else
+            this.birthDate = null;
         if(request.getIsPublic() != null) {
             this.isPublic = request.getIsPublic();
         }
