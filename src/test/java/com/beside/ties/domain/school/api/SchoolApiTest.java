@@ -42,9 +42,9 @@ class SchoolApiTest extends BaseMvcTest {
                 .addFilter(springSecurityFilterChain)
                 .build();
 
-        School school = new School("테스트학교", "2022-10-11", "테스트주소", "테스트코드");
-        School school1 = new School("테스트학교1", "2022-10-12", "테스트주소1", "테스트코드1");
-        School school2 = new School("테스트학교2", "2022-10-13", "테스트주소2", "테스트코드2");
+        School school = new School("테스트학교", "2022-10-11", "테스트시 테스트구1 709", "테스트코드");
+        School school1 = new School("테스트학교1", "2022-10-12", "테스트시 테스트구2 701", "테스트코드1");
+        School school2 = new School("테스트학교2", "2022-10-13", "테스트시 테스트구3 702", "테스트코드2");
         schoolService.save(school);
         schoolService.save(school1);
         schoolService.save(school2);

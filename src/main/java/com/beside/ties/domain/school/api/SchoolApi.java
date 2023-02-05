@@ -23,14 +23,14 @@ public class SchoolApi {
 
     private final SchoolService schoolService;
 
-    @Operation(summary = "전체 학교 조회")
-    @GetMapping("/")
-    public ResponseEntity<List<SchoolDto>> findAllSchool() {
-        List<SchoolDto> schoolDtoList = schoolService.findAllSchool().stream()
-                .map(SchoolDto::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(schoolDtoList);
-    }
+//    @Operation(summary = "전체 학교 조회")
+//    @GetMapping("/")
+//    public ResponseEntity<List<SchoolDto>> findAllSchool() {
+//        List<SchoolDto> schoolDtoList = schoolService.findAllSchool().stream()
+//                .map(SchoolDto::new)
+//                .collect(Collectors.toList());
+//        return ResponseEntity.ok().body(schoolDtoList);
+//    }
 
     @Operation(summary = "특정 학교 조회")
     @GetMapping("/{schoolId}")
