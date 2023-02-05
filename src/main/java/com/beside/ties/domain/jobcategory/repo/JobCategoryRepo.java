@@ -1,6 +1,7 @@
 package com.beside.ties.domain.jobcategory.repo;
 
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,5 +15,8 @@ public interface JobCategoryRepo extends JpaRepository<JobCategory, Long> {
 
     List<JobCategory> findAllByParentIsNull();
 
+    @Override
+    @EntityGraph(attributePaths = {"parent"})
+    Optional<JobCategory> findById(Long id);
 
 }
