@@ -79,8 +79,8 @@ public class SchoolJobService {
                 .map(item -> percentCalculate(item.getCount(), totalCount))
                 .collect(Collectors.toList());
 
-        top5Percent.add(100L-top5Percent.stream().mapToLong(Long::longValue).sum());
-
+        top5Percent.add(100L-top5Percent.stream().mapToLong(Long::longValue).sum() == 100L ?
+                0L : 100L-top5Percent.stream().mapToLong(Long::longValue).sum());
         return top5Percent;
     }
 
