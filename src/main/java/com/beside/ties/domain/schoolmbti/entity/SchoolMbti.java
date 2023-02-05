@@ -35,8 +35,18 @@ public class SchoolMbti {
         this.count = count;
     }
 
+    public SchoolMbti(Mbti mbti, School school) {
+        this.mbti = mbti;
+        this.school = school;
+        this.count = 1L;
+    }
+
     public void plusOneCount() {
         this.count = this.count + 1L;
+    }
+
+    public void minusOneCount() {
+        this.count = this.count - 1L;
     }
 
     public static SchoolMbti createSchoolMbti(Mbti mbti, School school, Long count) {
