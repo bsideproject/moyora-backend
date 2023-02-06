@@ -69,7 +69,7 @@ public class SchoolMbtiService {
         if(optionalSchoolMbti.isPresent()){
             optionalSchoolMbti.get().minusOneCount();
         }else{
-            schoolMbtiRepo.save(new SchoolMbti(mbti, school));
+            schoolMbtiRepo.save(new SchoolMbti(mbti, school,0L));
         }
     }
 

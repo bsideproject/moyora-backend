@@ -80,7 +80,7 @@ public class SchoolJobService {
             optionalSchoolJob.get().minusOneCount();
         }else{
             if(jobCategory.getParent() != null) {
-                schoolJobRepo.save(new SchoolJob(jobCategory.getParent(), school));
+                schoolJobRepo.save(new SchoolJob(jobCategory.getParent(), school,0L));
             }
         }
     }
