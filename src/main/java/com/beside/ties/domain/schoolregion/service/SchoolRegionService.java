@@ -1,6 +1,7 @@
 package com.beside.ties.domain.schoolregion.service;
 
 import com.beside.ties.domain.common.dto.StatisticsDto;
+import com.beside.ties.domain.common.dto.StatisticsRequestDto;
 import com.beside.ties.domain.region.entity.Region;
 import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.schoolregion.entity.SchoolRegion;
@@ -19,16 +20,22 @@ import java.util.stream.Collectors;
 public class SchoolRegionService {
     private final SchoolRegionRepo schoolRegionRepo;
 
-    public List<SchoolRegion> countTop4BySchoolId(Long schoolId) {
-        return schoolRegionRepo.findTop4BySchool_IdOrderByCountDesc(schoolId);
+    public List<SchoolRegion> countTop4BySchoolId(StatisticsRequestDto statisticsRequestDto) {
+        return schoolRegionRepo.findTop4BySchool_IdAndGraduationYearOrderByCountDesc(
+                statisticsRequestDto.getSchoolId(),
+                statisticsRequestDto.getGraduationYear());
     }
 
-    public Long totalCountBySchoolId(Long schoolId) {
-        return schoolRegionRepo.totalCountBySchoolId(schoolId);
+    public Long totalCountBySchoolId(StatisticsRequestDto statisticsRequestDto) {
+        return schoolRegionRepo.totalCountBySchoolId(
+                statisticsRequestDto.getSchoolId(),
+                statisticsRequestDto.getGraduationYear());
     }
 
-    public List<SchoolRegion> findAllBySchoolId(Long schoolId) {
-        return schoolRegionRepo.findAllBySchool_Id(schoolId);
+    public List<SchoolRegion> findAllBySchoolId(StatisticsRequestDto statisticsRequestDto) {
+        return schoolRegionRepo.findAllBySchool_Id(
+                statisticsRequestDto.getSchoolId(),
+                statisticsRequestDto.getGraduationYear());
     }
 
     public Long save(SchoolRegion schoolRegion) {

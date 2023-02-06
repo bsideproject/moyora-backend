@@ -31,6 +31,16 @@ public class SchoolJob {
     @Column(name = "count")
     private Long count;
 
+    @Column(name = "graduation_year")
+    private Long graduationYear;
+
+    public SchoolJob(JobCategory jobCategory, School school, Long count, Long graduationYear) {
+        this.jobCategory = jobCategory;
+        this.school = school;
+        this.count = count;
+        this.graduationYear = graduationYear;
+    }
+
     public SchoolJob(JobCategory jobCategory, School school, Long count) {
         this.jobCategory = jobCategory;
         this.school = school;

@@ -28,6 +28,15 @@ public class SchoolRegion {
     @Column(name = "count")
     private Long count;
 
+    @Column(name = "graduation_year")
+    private Long graduationYear;
+
+    public SchoolRegion(Region region, School school, Long count, Long graduationYear) {
+        this.region = region;
+        this.school = school;
+        this.count = count;
+        this.graduationYear = graduationYear;
+    }
     public SchoolRegion(Region region, School school, Long count) {
         this.region = region;
         this.school = school;
@@ -47,7 +56,7 @@ public class SchoolRegion {
         this.count = this.count - 1L;
     }
 
-    public static SchoolRegion createSchoolRegion(Region region, School school, Long count) {
-        return new SchoolRegion(region, school, count);
+    public static SchoolRegion createSchoolRegion(Region region, School school, Long count, Long graduationYear) {
+        return new SchoolRegion(region, school, count, graduationYear);
     }
 }

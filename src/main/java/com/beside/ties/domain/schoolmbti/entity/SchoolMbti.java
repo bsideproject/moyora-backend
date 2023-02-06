@@ -29,6 +29,15 @@ public class SchoolMbti {
     @Column(name = "count")
     private Long count;
 
+    @Column(name = "graduation_year")
+    private Long graduationYear;
+
+    public SchoolMbti(Mbti mbti, School school, Long count, Long graduationYear) {
+        this.mbti = mbti;
+        this.school = school;
+        this.count = count;
+        this.graduationYear = graduationYear;
+    }
     public SchoolMbti(Mbti mbti, School school, Long count) {
         this.mbti = mbti;
         this.school = school;

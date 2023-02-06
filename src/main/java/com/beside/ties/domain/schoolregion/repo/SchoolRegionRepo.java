@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface SchoolRegionRepo extends JpaRepository<SchoolRegion, Long> {
 
-    List<SchoolRegion> findTop4BySchool_IdOrderByCountDesc(Long schoolId);
+    List<SchoolRegion> findTop4BySchool_IdAndGraduationYearOrderByCountDesc(Long schoolId, Long graduationYear);
 
     Optional<SchoolRegion> findBySchool_IdAndRegion_Id(Long schoolId, Long regionId);
 
@@ -18,9 +18,12 @@ public interface SchoolRegionRepo extends JpaRepository<SchoolRegion, Long> {
             "left join fetch sg.region sgg " +
             "left join fetch sgg.parent " +
             "where sg.school.id = :schoolId " +
+            "and sg.graduationYear = :graduationYear " +
             "order by sg.count desc")
-    List<SchoolRegion> findAllBySchool_Id(@Param("schoolId") Long schoolId);
+    List<SchoolRegion> findAllBySchool_Id(@Param("schoolId") Long schoolId, @Param("graduationYear") Long graduationYear);
 
-    @Query("select sum(sg.count) from SchoolRegion sg where sg.school.id = :schoolId")
-    Long totalCountBySchoolId(@Param("schoolId") Long schoolId);
+    @Query("select sum(sg.count) from SchoolRegion sg " +
+            "where sg.school.id = :schoolId " +
+            "and sg.graduationYear = :graduationYear")
+    Long totalCountBySchoolId(@Param("schoolId") Long schoolId, @Param("graduationYear") Long graduationYear);
 }

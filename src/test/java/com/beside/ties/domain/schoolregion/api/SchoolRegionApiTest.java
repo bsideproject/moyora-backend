@@ -86,11 +86,11 @@ class SchoolRegionApiTest extends BaseMvcTest {
 
         List<Region> regions = regionRepo.findByParentOrderByNameAsc(regionParent);
 
-        SchoolRegion schoolRegion1 = SchoolRegion.createSchoolRegion(regions.get(0), searchSchool, 5L);
-        SchoolRegion schoolRegion2 = SchoolRegion.createSchoolRegion(regions.get(1), searchSchool, 1L);
-        SchoolRegion schoolRegion3 = SchoolRegion.createSchoolRegion(regions.get(2), searchSchool, 8L);
-        SchoolRegion schoolRegion4 = SchoolRegion.createSchoolRegion(regions.get(3), searchSchool, 10L);
-        SchoolRegion schoolRegion5 = SchoolRegion.createSchoolRegion(regions.get(4), searchSchool, 15L);
+        SchoolRegion schoolRegion1 = SchoolRegion.createSchoolRegion(regions.get(0), searchSchool, 5L, 2002L);
+        SchoolRegion schoolRegion2 = SchoolRegion.createSchoolRegion(regions.get(1), searchSchool, 1L, 2002L);
+        SchoolRegion schoolRegion3 = SchoolRegion.createSchoolRegion(regions.get(2), searchSchool, 8L, 2003L);
+        SchoolRegion schoolRegion4 = SchoolRegion.createSchoolRegion(regions.get(3), searchSchool, 10L, 2003L);
+        SchoolRegion schoolRegion5 = SchoolRegion.createSchoolRegion(regions.get(4), searchSchool, 15L, 2002L);
 
         schoolRegionService.save(schoolRegion1);
         schoolRegionService.save(schoolRegion2);
