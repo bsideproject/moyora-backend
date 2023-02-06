@@ -40,8 +40,6 @@ class SchoolRegionServiceTest {
     @BeforeEach
     public void beforeEach() {
 
-        statisticsRequestDto = new StatisticsRequestDto(1L, 2002L);
-
         School school = new School("테스트학교", "2022-10-11", "테스트주소", "테스트코드");
         School school1 = new School("테스트학교1", "2022-10-12", "테스트주소1", "테스트코드1");
         School school2 = new School("테스트학교2", "2022-10-13", "테스트주소2", "테스트코드2");
@@ -50,6 +48,8 @@ class SchoolRegionServiceTest {
         schoolService.save(school2);
 
         searchSchool = schoolService.findBySchoolName("테스트학교").get(0);
+
+        statisticsRequestDto = new StatisticsRequestDto(2002L, searchSchool.getId());
 
         String parent = "경상남도";
         String child1 = "창원시";
@@ -103,14 +103,8 @@ class SchoolRegionServiceTest {
     @Test
     void totalCountBySchoolId() {
         Long totalCount = schoolRegionService.totalCountBySchoolId(statisticsRequestDto);
-        System.out.println("totalCount = " + totalCount);
 
-        List<SchoolRegion> allBySchoolId = schoolRegionService.findAllBySchoolId(statisticsRequestDto);
-        System.out.println("allBySchoolId.size() = " + allBySchoolId.size());
-        for (SchoolRegion schoolRegion : allBySchoolId) {
-            System.out.println("result = " + schoolRegion);
-        }
-//        assertThat(totalCount).isEqualTo(39L);
+        assertThat(totalCount).isEqualTo(21L);
     }
 
     @DisplayName("학교 별 지역 top4 조회")
@@ -118,11 +112,10 @@ class SchoolRegionServiceTest {
     void countTop4BySchoolId() {
         List<SchoolRegion> schoolRegions = schoolRegionService.countTop4BySchoolId(statisticsRequestDto);
 
-        assertThat(schoolRegions.size()).isEqualTo(4);
+        assertThat(schoolRegions.size()).isEqualTo(3);
         assertThat(schoolRegions.get(0).getCount()).isEqualTo(15L);
-        assertThat(schoolRegions.get(1).getCount()).isEqualTo(10L);
-        assertThat(schoolRegions.get(2).getCount()).isEqualTo(8L);
-        assertThat(schoolRegions.get(3).getCount()).isEqualTo(5L);
+        assertThat(schoolRegions.get(1).getCount()).isEqualTo(5L);
+        assertThat(schoolRegions.get(2).getCount()).isEqualTo(1L);
     }
 
     @DisplayName("학교 별 지역 전체 조회")
@@ -130,7 +123,7 @@ class SchoolRegionServiceTest {
     void findAllBySchoolId() {
         List<SchoolRegion> schoolRegions = schoolRegionService.findAllBySchoolId(statisticsRequestDto);
 
-        assertThat(schoolRegions.size()).isEqualTo(5);
+        assertThat(schoolRegions.size()).isEqualTo(3);
     }
 
     @DisplayName("학교 별 지역 퍼센트")
@@ -140,11 +133,9 @@ class SchoolRegionServiceTest {
         Long totalCount = schoolRegionService.totalCountBySchoolId(statisticsRequestDto);
         List<StatisticsDto> statisticsList = schoolRegionService.convertStatisticsDto(schoolRegions, totalCount);
 
-        assertThat(statisticsList.get(0).getTitle()).isEqualTo("경상남도 거제시");
-        assertThat(statisticsList.get(1).getTitle()).isEqualTo("경상남도 사천시");
-        assertThat(statisticsList.get(2).getTitle()).isEqualTo("경상남도 양산시");
-        assertThat(statisticsList.get(3).getTitle()).isEqualTo("경상남도 창원시");
-        assertThat(statisticsList.get(4).getTitle()).isEqualTo("경상남도 밀양시");
+        assertThat(statisticsList.get(0).getTitle()).isEqualTo("경상남도 창원시");
+        assertThat(statisticsList.get(1).getTitle()).isEqualTo("경상남도 거제시");
+        assertThat(statisticsList.get(2).getTitle()).isEqualTo("경상남도 밀양시");
     }
 
     @Disabled
@@ -164,7 +155,7 @@ class SchoolRegionServiceTest {
     void findBySchool_IdAndRegion_Id() {
         SchoolRegion schoolRegion = schoolRegionService.findBySchoolIdAndRegionId(searchSchool.getId(), searchRegion.getId());
 
-        assertThat(schoolRegion.getCount()).isEqualTo(5L);
+        assertThat(schoolRegion.getCount()).isEqualTo(15L);
     }
 
     @DisplayName("count 1 증가")
@@ -173,6 +164,6 @@ class SchoolRegionServiceTest {
         SchoolRegion schoolRegion = schoolRegionService.findBySchoolIdAndRegionId(searchSchool.getId(), searchRegion.getId());
         schoolRegionService.countPlusOneUpdate(schoolRegion);
 
-        assertThat(schoolRegion.getCount()).isEqualTo(6L);
+        assertThat(schoolRegion.getCount()).isEqualTo(16L);
     }
 }

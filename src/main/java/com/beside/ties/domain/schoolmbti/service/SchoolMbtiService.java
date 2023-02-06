@@ -2,6 +2,7 @@ package com.beside.ties.domain.schoolmbti.service;
 
 import com.beside.ties.domain.account.entity.MBTI;
 import com.beside.ties.domain.common.dto.StatisticsDto;
+import com.beside.ties.domain.common.dto.StatisticsRequestDto;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.mbti.entity.Mbti;
 import com.beside.ties.domain.mbti.repo.MbtiRepo;
@@ -25,16 +26,22 @@ public class SchoolMbtiService {
     private final SchoolMbtiRepo schoolMbtiRepo;
     private final MbtiRepo mbtiRepo;
 
-    public List<SchoolMbti> countTop4BySchoolId(Long schoolId) {
-        return schoolMbtiRepo.findTop4BySchool_IdOrderByCountDesc(schoolId);
+    public List<SchoolMbti> countTop4BySchoolId(StatisticsRequestDto statisticsRequestDto) {
+        return schoolMbtiRepo.findTop4BySchool_IdAndGraduationYearOrderByCountDesc(
+                statisticsRequestDto.getSchoolId(),
+                statisticsRequestDto.getGraduationYear());
     }
 
-    public Long totalCountBySchoolId(Long schoolId) {
-        return schoolMbtiRepo.totalCountBySchoolId(schoolId);
+    public Long totalCountBySchoolId(StatisticsRequestDto statisticsRequestDto) {
+        return schoolMbtiRepo.totalCountBySchoolId(
+                statisticsRequestDto.getSchoolId(),
+                statisticsRequestDto.getGraduationYear());
     }
 
-    public List<SchoolMbti> findAllBySchoolId(Long schoolId) {
-        return schoolMbtiRepo.findAllBySchool_Id(schoolId);
+    public List<SchoolMbti> findAllBySchoolId(StatisticsRequestDto statisticsRequestDto) {
+        return schoolMbtiRepo.findAllBySchool_Id(
+                statisticsRequestDto.getSchoolId(),
+                statisticsRequestDto.getGraduationYear());
     }
 
     public Long save(SchoolMbti schoolMbti) {
