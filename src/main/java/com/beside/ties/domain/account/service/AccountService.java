@@ -17,12 +17,8 @@ import com.beside.ties.domain.notebox.entity.NoteBox;
 import com.beside.ties.domain.notebox.repo.NoteBoxRepo;
 import com.beside.ties.domain.schoolguestbook.entity.SchoolGuestBook;
 import com.beside.ties.domain.schoolguestbook.repo.SchoolGuestBookRepo;
-import com.beside.ties.domain.schooljob.entity.SchoolJob;
 import com.beside.ties.domain.schooljob.service.SchoolJobService;
-import com.beside.ties.domain.schoolmbti.repo.SchoolMbtiRepo;
 import com.beside.ties.domain.schoolmbti.service.SchoolMbtiService;
-import com.beside.ties.domain.schoolregion.entity.SchoolRegion;
-import com.beside.ties.domain.schoolregion.repo.SchoolRegionRepo;
 import com.beside.ties.domain.schoolregion.service.SchoolRegionService;
 import com.beside.ties.global.auth.kakao.KakaoUser;
 import com.beside.ties.global.auth.security.jwt.JwtDto;
@@ -188,6 +184,7 @@ public class AccountService {
         return accountByEmail.get();
     }
 
+
     public String secondarySignUp(AccountSecondarySignUpRequest request, Long accountId) {
 
         Account account = accountRepo.findById(accountId).get();
@@ -205,9 +202,11 @@ public class AccountService {
 
         if(!request.getSchoolComment().isEmpty() && !request.getSchoolComment().isBlank()) {
             SchoolGuestBook schoolGuestBook = new SchoolGuestBook(optionalSchool.get(), account, request.getSchoolComment());
+            schoolGuestBook.settingRandomSticker();
             SchoolGuestBook savedSchoolGuestBook = schoolGuestBookRepo.save(schoolGuestBook);
             logger.info("school guest book Id : " + savedSchoolGuestBook.getId());
         }
+
 
 
         Optional<NoteBox> optionalNoteBox = noteBoxRepo.findByAccount(account);
@@ -246,6 +245,8 @@ public class AccountService {
 
         countJob(request, account);
 
+        countRegion(request, account);
+
 
         Optional<Region> regionOptional = regionRepo.findById(request.getRegionId());
         if(regionOptional.isEmpty()) throw new IllegalArgumentException("존재하지 않는 지역입니다.");
@@ -269,6 +270,19 @@ public class AccountService {
                 schoolMbtiService.countMinus(account.getSchool(), account.getMbti().name());
             }
 
+        }
+    }
+
+    private void countRegion(AccountUpdateRequest request, Account account){
+        Optional<Region> regionOptional = regionRepo.findById(request.getRegionId());
+        if(regionOptional.isPresent()) {
+            if (account.region == null) {
+                schoolRegionService.countPlus(account.getSchool(), regionOptional.get());
+            }
+            if(account.region.getId() != regionOptional.get().getId()){
+                schoolRegionService.countMinus(account.getSchool(), account.getRegion());
+                schoolRegionService.countPlus(account.getSchool(), regionOptional.get());
+            }
         }
     }
 
@@ -319,11 +333,12 @@ public class AccountService {
     }
 
     public List<ClassmateResponse> findClassMateList(Account account, String name) {
+
         if(name == null) {
-            return accountRepo.findAllBySchoolAndKakaoIdNot(account.school, account.getKakaoId()).stream().map(ClassmateResponse::toDto).collect(Collectors.toList());
+            return accountRepo.findAllBySchoolAndKakaoIdNotAndGraduationYear(account.school, account.getKakaoId(),account.getGraduationYear()).stream().map(ClassmateResponse::toDto).collect(Collectors.toList());
         }
         else{
-            return accountRepo.findAllBySchoolAndNameContains(account.school, name).stream().map(ClassmateResponse::toDto).collect(Collectors.toList());
+            return accountRepo.findAllBySchoolAndNameContainsAndGraduationYear(account.school, name,account.getGraduationYear()).stream().map(ClassmateResponse::toDto).collect(Collectors.toList());
         }
     }
 
