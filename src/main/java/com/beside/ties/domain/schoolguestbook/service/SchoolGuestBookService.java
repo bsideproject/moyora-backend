@@ -1,5 +1,6 @@
 package com.beside.ties.domain.schoolguestbook.service;
 
+import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.school.repo.SchoolRepo;
 import com.beside.ties.domain.schoolguestbook.dto.SchoolGuestBookUpdateDto;
@@ -54,12 +55,8 @@ public class SchoolGuestBookService {
         schoolGuestBookRepo.deleteAllInBatch();
     }
 
-    public Long countAllBySchool(Long schoolId) {
-
-        Optional<School> optionalSchool = schoolRepo.findById(schoolId);
-        if(optionalSchool.isEmpty()){
-            throw new IllegalArgumentException("존재하지 않는 학교입니다.");
-        }
-        return schoolGuestBookRepo.countAllBySchool(optionalSchool.get());
+    public Long countAllBySchool(Account account) {
+        if(account.getSchool() == null) return 0L;
+        return schoolGuestBookRepo.countAllBySchoolAndGraduationYear(account.getSchool(), account.getGraduationYear());
     }
 }

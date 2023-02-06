@@ -1,5 +1,6 @@
 package com.beside.ties.domain.schoolmbti.service;
 
+import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.account.entity.MBTI;
 import com.beside.ties.domain.common.dto.StatisticsDto;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
@@ -51,25 +52,28 @@ public class SchoolMbtiService {
         schoolMbti.plusOneCount();
     }
 
-    public void countPlus(School school, String stringMbti) {
+    public void countPlus(Account account, String stringMbti) {
+        if(account.getSchool() == null) return;
         Mbti mbti = mbtiRepo.findByName(stringMbti).orElseThrow(() -> new IllegalArgumentException("해당 엠비티아이가 존재하지 않습니다."));
 
-        Optional<SchoolMbti> optionalSchoolMbti = schoolMbtiRepo.findBySchool_IdAndMbti_Id(school.getId(), mbti.getId());
+        Optional<SchoolMbti> optionalSchoolMbti = schoolMbtiRepo.findBySchoolAndMbtiAndGraduationYear(account.getSchool(), mbti, Long.valueOf(account.getGraduationYear()));
         if(optionalSchoolMbti.isPresent()){
             optionalSchoolMbti.get().plusOneCount();
         }else{
-                schoolMbtiRepo.save(new SchoolMbti(mbti, school));
+                schoolMbtiRepo.save(new SchoolMbti(mbti, account.getSchool()));
         }
     }
 
-    public void countMinus(School school, String stringMbti) {
+    public void countMinus(Account account, String stringMbti) {
+        if(account.getSchool() == null) return;
         Mbti mbti = mbtiRepo.findByName(stringMbti).orElseThrow(() -> new IllegalArgumentException("해당 엠비티아이가 존재하지 않습니다."));
 
-        Optional<SchoolMbti> optionalSchoolMbti = schoolMbtiRepo.findBySchool_IdAndMbti_Id(school.getId(), mbti.getId());
+        Optional<SchoolMbti> optionalSchoolMbti
+                = schoolMbtiRepo.findBySchoolAndMbtiAndGraduationYear(account.getSchool(), mbti, Long.valueOf(account.getGraduationYear()));
         if(optionalSchoolMbti.isPresent()){
             optionalSchoolMbti.get().minusOneCount();
         }else{
-            schoolMbtiRepo.save(new SchoolMbti(mbti, school,0L));
+            schoolMbtiRepo.save(new SchoolMbti(mbti, account.getSchool(),0L));
         }
     }
 
