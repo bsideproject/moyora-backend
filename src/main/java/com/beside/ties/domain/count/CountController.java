@@ -51,7 +51,7 @@ public class CountController
 
     @Operation(summary = "나의 학교 방명록 수")
     @GetMapping("/our/schoolguestbook")
-    public ResponseEntity<Long> findAllOurSchoolGuestBook(
+    public ResponseEntity<Integer> findAllOurSchoolGuestBook(
             @RequestParam Long schoolId,
             @CurrentUser Account account
     ){

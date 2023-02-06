@@ -33,8 +33,6 @@ public class SchoolGuestBook extends BaseTimeEntity {
     @Column(length = 10)
     private String sticker;
 
-    @Column(name = "graduation_year")
-    int graduationYear;
 
 
     private String content;

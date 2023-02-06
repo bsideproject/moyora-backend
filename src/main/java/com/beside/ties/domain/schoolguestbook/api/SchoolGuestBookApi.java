@@ -1,6 +1,5 @@
 package com.beside.ties.domain.schoolguestbook.api;
 
-import com.beside.ties.domain.common.vo.ResponseVo;
 import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.school.service.SchoolService;
@@ -30,8 +29,11 @@ public class SchoolGuestBookApi {
 
     @Operation(summary = "학교 방명록 조회")
     @GetMapping("/{schoolId}")
-    public ResponseEntity<List<SchoolGuestBookDto>> findAllSchoolGuestBook(@PathVariable Long schoolId) {
-        List<SchoolGuestBook> schoolGuestBookList = schoolGuestBookService.findBySchoolId(schoolId);
+    public ResponseEntity<List<SchoolGuestBookDto>> findAllSchoolGuestBook(
+            @CurrentUser Account account,
+            @PathVariable Long schoolId
+    ) {
+        List<SchoolGuestBook> schoolGuestBookList = schoolGuestBookService.findByAccount(account);
         List<SchoolGuestBookDto> schoolGuestBookDtoList = schoolGuestBookList.stream()
                 .map(SchoolGuestBook::toSchoolGuestBookDto)
                 .collect(Collectors.toList());

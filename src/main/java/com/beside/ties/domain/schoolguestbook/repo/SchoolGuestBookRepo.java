@@ -10,10 +10,10 @@ import java.util.Optional;
 public interface SchoolGuestBookRepo extends JpaRepository<SchoolGuestBook, Long> {
 
     List<SchoolGuestBook> findBySchool_IdOrderByCreatedDateDesc(Long schoolId);
+
     List<SchoolGuestBook> findByAccount_IdOrderByCreatedDateDesc(Long accountId);
     Optional<SchoolGuestBook> findById(Long schoolGuestBookId);
 
     Long countAllBySchool(School school);
 
-    Long countAllBySchoolAndGraduationYear(School school, int graduationYear);
 }
