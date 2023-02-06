@@ -1,16 +1,15 @@
 package com.beside.ties.domain.count;
 
+import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.account.service.AccountService;
 import com.beside.ties.domain.schoolguestbook.repo.SchoolGuestBookRepo;
 import com.beside.ties.domain.schoolguestbook.service.SchoolGuestBookService;
+import com.beside.ties.global.common.annotation.CurrentUser;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "총 COUNT API")
 @RequestMapping("/api/v1/count")
@@ -44,16 +43,18 @@ public class CountController
     @Operation(summary = "나의 학교 가입한 동창")
     @GetMapping("/schoolmate")
     public ResponseEntity<Long> findAllSchoolMateCount(
-            @RequestParam Long schoolId
+            @RequestParam Long schoolId,
+            @CurrentUser Account account
     ){
-        return ResponseEntity.ok().body(accountService.getAllSchoolMateCount(schoolId));
+        return ResponseEntity.ok().body(accountService.getAllSchoolMateCount(account));
     }
 
     @Operation(summary = "나의 학교 방명록 수")
     @GetMapping("/our/schoolguestbook")
     public ResponseEntity<Long> findAllOurSchoolGuestBook(
-            @RequestParam Long schoolId
+            @RequestParam Long schoolId,
+            @CurrentUser Account account
     ){
-        return ResponseEntity.ok().body(schoolGuestBookService.countAllBySchool(schoolId));
+        return ResponseEntity.ok().body(schoolGuestBookService.countAllBySchool(account));
     }
 }

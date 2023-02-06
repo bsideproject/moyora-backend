@@ -23,4 +23,5 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
 
 
     Long countAllBySchool(School school);
+    Long countAllBySchoolAndGraduationYear(School school, int graduationYear);
 }

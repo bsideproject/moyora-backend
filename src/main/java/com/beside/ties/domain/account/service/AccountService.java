@@ -225,7 +225,7 @@ public class AccountService {
         // 지역 업데이트
         Optional<Region> regionOptional = regionRepo.findById(request.getRegionId());
         if(regionOptional.isEmpty()) throw new IllegalArgumentException("존재하지 않는 지역입니다.");
-        schoolRegionService.countPlus(optionalSchool.get(), regionOptional.get());
+        schoolRegionService.countPlus(account, regionOptional.get());
 
 
         // 회원 정보 업데이트
@@ -261,13 +261,13 @@ public class AccountService {
 
     private void countMBTI(AccountUpdateRequest request, Account account) {
         if(account.mbti == null && request.getMbti() != null){
-            schoolMbtiService.countPlus(account.getSchool(), request.getMbti());
+            schoolMbtiService.countPlus(account, request.getMbti());
         }
         else if(account.mbti != null && request.getMbti() != null){
 
             if(!account.mbti.equals(request.getMbti())){
-                schoolMbtiService.countPlus(account.getSchool(), request.getMbti());
-                schoolMbtiService.countMinus(account.getSchool(), account.getMbti().name());
+                schoolMbtiService.countPlus(account, request.getMbti());
+                schoolMbtiService.countMinus(account, account.getMbti().name());
             }
 
         }
@@ -277,11 +277,11 @@ public class AccountService {
         Optional<Region> regionOptional = regionRepo.findById(request.getRegionId());
         if(regionOptional.isPresent()) {
             if (account.region == null) {
-                schoolRegionService.countPlus(account.getSchool(), regionOptional.get());
+                schoolRegionService.countPlus(account, regionOptional.get());
             }
             if(account.region.getId() != regionOptional.get().getId()){
-                schoolRegionService.countMinus(account.getSchool(), account.getRegion());
-                schoolRegionService.countPlus(account.getSchool(), regionOptional.get());
+                schoolRegionService.countMinus(account, account.getRegion());
+                schoolRegionService.countPlus(account, regionOptional.get());
             }
         }
     }
@@ -402,9 +402,15 @@ public class AccountService {
         if(account.school == null) return "";
         if(account.school.getEstablishmentDate() == null) return "";
 
-        int establishmentDate = Integer.parseInt(account.school.getEstablishmentDate().substring(0,4));
-        int nowYear = Year.now().getValue();
-        int graduateYear = nowYear - establishmentDate;
+        var myGraduate = account.getGraduationYear();
+        if(account.getGraduationYear() == 0){
+            myGraduate = Year.now().getValue();
+        }else{
+            myGraduate = account.getGraduationYear();
+        }
+        var establishmentDate = Integer.parseInt(account.school.getEstablishmentDate().substring(0,4));
+
+        int graduateYear = establishmentDate - myGraduate;
         String graduate = "(" + graduateYear + "회 졸업)";
         return graduate;
     }
@@ -426,14 +432,9 @@ public class AccountService {
         return accountRepo.count();
     }
 
-    public long getAllSchoolMateCount(Long schoolId) {
-
-        Optional<School> schoolOptional = schoolRepo.findById(schoolId);
-        if(schoolOptional.isEmpty()){
-            throw new IllegalArgumentException("존재하지 않는 학교를 조회했습니다.");
-        }
-
-        return accountRepo.countAllBySchool(schoolOptional.get());
+    public long getAllSchoolMateCount(Account account) {
+        if(account.getSchool() == null) return 0L;
+        return accountRepo.countAllBySchoolAndGraduationYear(account.getSchool(), account.getGraduationYear());
     }
 
 

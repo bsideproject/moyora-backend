@@ -1,5 +1,6 @@
 package com.beside.ties.domain.schoolregion.service;
 
+import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.common.dto.StatisticsDto;
 import com.beside.ties.domain.common.dto.StatisticsRequestDto;
 import com.beside.ties.domain.region.entity.Region;
@@ -52,21 +53,21 @@ public class SchoolRegionService {
         schoolRegion.plusOneCount();
     }
 
-    public void countPlus(School school, Region region) {
-        Optional<SchoolRegion> optionalSchoolRegion = schoolRegionRepo.findBySchool_IdAndRegion_Id(school.getId(), region.getId());
+    public void countPlus(Account account, Region region) {
+        Optional<SchoolRegion> optionalSchoolRegion = schoolRegionRepo.findBySchoolAndRegionAndGraduationYear(account.getSchool(), region, account.getGraduationYear());
         if(optionalSchoolRegion.isPresent()){
             optionalSchoolRegion.get().plusOneCount();
         }else{
-            schoolRegionRepo.save(new SchoolRegion(region, school));
+            schoolRegionRepo.save(new SchoolRegion(region, account.getSchool()));
         }
     }
 
-    public void countMinus(School school, Region region) {
-        Optional<SchoolRegion> optionalSchoolRegion = schoolRegionRepo.findBySchool_IdAndRegion_Id(school.getId(), region.getId());
+    public void countMinus(Account account, Region region) {
+        Optional<SchoolRegion> optionalSchoolRegion = schoolRegionRepo.findBySchoolAndRegionAndGraduationYear(account.getSchool(), region, account.getGraduationYear());
         if(optionalSchoolRegion.isPresent()){
             optionalSchoolRegion.get().minusOneCount();
         }else{
-            schoolRegionRepo.save(new SchoolRegion(region, school, 0L));
+            schoolRegionRepo.save(new SchoolRegion(region, account.getSchool(), 0L));
         }
     }
 

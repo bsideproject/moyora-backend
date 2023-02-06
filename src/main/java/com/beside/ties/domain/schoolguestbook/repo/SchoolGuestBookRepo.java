@@ -14,4 +14,6 @@ public interface SchoolGuestBookRepo extends JpaRepository<SchoolGuestBook, Long
     Optional<SchoolGuestBook> findById(Long schoolGuestBookId);
 
     Long countAllBySchool(School school);
+
+    Long countAllBySchoolAndGraduationYear(School school, int graduationYear);
 }
