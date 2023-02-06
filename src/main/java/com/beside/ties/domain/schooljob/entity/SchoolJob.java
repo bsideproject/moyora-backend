@@ -31,6 +31,16 @@ public class SchoolJob {
     @Column(name = "count")
     private Long count;
 
+    @Column(name = "graduation_year")
+    private Long graduationYear;
+
+    public SchoolJob(JobCategory jobCategory, School school, Long count, Long graduationYear) {
+        this.jobCategory = jobCategory;
+        this.school = school;
+        this.count = count;
+        this.graduationYear = graduationYear;
+    }
+
     public SchoolJob(JobCategory jobCategory, School school, Long count) {
         this.jobCategory = jobCategory;
         this.school = school;
@@ -47,10 +57,12 @@ public class SchoolJob {
         this.count = this.count + 1L;
     }
     public void minusOneCount() {
-        this.count = this.count - 1L;
+        if(this.count >0) {
+            this.count -= 1L;
+        }
     }
 
-    public static SchoolJob createSchoolJob(JobCategory jobCategory, School school, Long count) {
-        return new SchoolJob(jobCategory, school, count);
+    public static SchoolJob createSchoolJob(JobCategory jobCategory, School school, Long count, Long graduationYear) {
+        return new SchoolJob(jobCategory, school, count, graduationYear);
     }
 }

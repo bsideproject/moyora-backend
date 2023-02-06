@@ -1,6 +1,7 @@
 package com.beside.ties.domain.schooljob.service;
 
 import com.beside.ties.domain.common.dto.StatisticsDto;
+import com.beside.ties.domain.common.dto.StatisticsRequestDto;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.jobcategory.repo.JobCategoryRepo;
 import com.beside.ties.domain.school.entity.School;
@@ -35,6 +36,8 @@ class SchoolJobServiceTest {
 
     private JobCategory searchJobCategory;
 
+    private StatisticsRequestDto statisticsRequestDto;
+
     @BeforeEach
     public void beforeEach() {
 
@@ -46,6 +49,8 @@ class SchoolJobServiceTest {
         schoolService.save(school2);
 
         searchSchool = schoolService.findBySchoolName("테스트학교").get(0);
+
+        statisticsRequestDto = new StatisticsRequestDto(2002L, searchSchool.getId());
 
         String parent = "의료";
         String child1 = "간호사";
@@ -74,7 +79,7 @@ class SchoolJobServiceTest {
 
         List<JobCategory> jobCategories = jobCategoryRepo.findAllByParent(jobCategoryParent);
 
-        SchoolJob schoolJob1 = SchoolJob.createSchoolJob(searchJobCategory, searchSchool, 0L);
+        SchoolJob schoolJob1 = SchoolJob.createSchoolJob(searchJobCategory, searchSchool, 10L, 2002L);
 //        SchoolJob schoolJob2 = SchoolJob.createSchoolJob(jobCategories.get(1).getParent(), searchSchool, 1L);
 //        SchoolJob schoolJob3 = SchoolJob.createSchoolJob(jobCategories.get(2).getParent(), searchSchool, 8L);
 //        SchoolJob schoolJob4 = SchoolJob.createSchoolJob(jobCategories.get(3).getParent(), searchSchool, 10L);
@@ -85,7 +90,7 @@ class SchoolJobServiceTest {
 //        schoolJobService.save(schoolJob3);
 //        schoolJobService.save(schoolJob4);
 //        schoolJobService.save(schoolJob5);
-        List<SchoolJob> allBySchoolId = schoolJobService.findAllBySchoolId(searchSchool.getId());
+        List<SchoolJob> allBySchoolId = schoolJobService.findAllBySchoolId(statisticsRequestDto);
     }
 
     @AfterEach
@@ -98,24 +103,24 @@ class SchoolJobServiceTest {
     @DisplayName("학교 별 직업 count 총합 조회")
     @Test
     void totalCountBySchoolId() {
-        Long totalCount = schoolJobService.totalCountBySchoolId(searchSchool.getId());
+        Long totalCount = schoolJobService.totalCountBySchoolId(statisticsRequestDto);
 
-        assertThat(totalCount).isEqualTo(5L);
+        assertThat(totalCount).isEqualTo(10L);
     }
 
     @DisplayName("학교 별 직업 top4 조회")
     @Test
     void countTop4BySchoolId() {
-        List<SchoolJob> schoolJobs = schoolJobService.countTop4BySchoolId(searchSchool.getId());
+        List<SchoolJob> schoolJobs = schoolJobService.countTop4BySchoolId(statisticsRequestDto);
 
         assertThat(schoolJobs.size()).isEqualTo(1);
-        assertThat(schoolJobs.get(0).getCount()).isEqualTo(5L);
+        assertThat(schoolJobs.get(0).getCount()).isEqualTo(10L);
     }
 
     @DisplayName("학교 별 직업 전체 조회")
     @Test
     void findAllBySchoolId() {
-        List<SchoolJob> schoolJobs = schoolJobService.findAllBySchoolId(searchSchool.getId());
+        List<SchoolJob> schoolJobs = schoolJobService.findAllBySchoolId(statisticsRequestDto);
 
         assertThat(schoolJobs.size()).isEqualTo(1);
     }
@@ -123,8 +128,8 @@ class SchoolJobServiceTest {
     @DisplayName("학교 별 직업 퍼센트")
     @Test
     void toPercent() {
-        List<SchoolJob> schoolJobs = schoolJobService.findAllBySchoolId(searchSchool.getId());
-        Long totalCount = schoolJobService.totalCountBySchoolId(searchSchool.getId());
+        List<SchoolJob> schoolJobs = schoolJobService.findAllBySchoolId(statisticsRequestDto);
+        Long totalCount = schoolJobService.totalCountBySchoolId(statisticsRequestDto);
         List<StatisticsDto> statisticsList = schoolJobService.convertStatisticsDto(schoolJobs, totalCount);
 
         assertThat(statisticsList.get(0).getTitle()).isEqualTo("의료");
@@ -133,8 +138,8 @@ class SchoolJobServiceTest {
     @DisplayName("학교 별 직업 top5 퍼센트")
     @Test
     void convertTop5Percent() {
-        List<SchoolJob> schoolJobs = schoolJobService.countTop4BySchoolId(searchSchool.getId());
-        Long totalCount = schoolJobService.totalCountBySchoolId(searchSchool.getId());
+        List<SchoolJob> schoolJobs = schoolJobService.countTop4BySchoolId(statisticsRequestDto);
+        Long totalCount = schoolJobService.totalCountBySchoolId(statisticsRequestDto);
         List<Long> longs = schoolJobService.convertTop5Percent(schoolJobs, totalCount);
         for (Long aLong : longs) {
             System.out.println("aLong = " + aLong);
@@ -144,10 +149,10 @@ class SchoolJobServiceTest {
     @DisplayName("학교직업 학교id 와 직업id로 조회")
     @Test
     void findBySchool_IdAndRegion_Id() {
-        List<SchoolJob> allBySchoolId = schoolJobService.findAllBySchoolId(searchSchool.getId());
+        List<SchoolJob> allBySchoolId = schoolJobService.findAllBySchoolId(statisticsRequestDto);
         SchoolJob schoolJob = schoolJobService.findBySchoolIdAndJobId(searchSchool.getId(), searchJobCategory.getParent().getId());
 
-        assertThat(schoolJob.getCount()).isEqualTo(5L);
+        assertThat(schoolJob.getCount()).isEqualTo(10L);
     }
 
     @DisplayName("count 1 증가")
@@ -156,6 +161,6 @@ class SchoolJobServiceTest {
         SchoolJob schoolJob = schoolJobService.findBySchoolIdAndJobId(searchSchool.getId(), searchJobCategory.getParent().getId());
         schoolJobService.countPlusOneUpdate(schoolJob);
 
-        assertThat(schoolJob.getCount()).isEqualTo(6L);
+        assertThat(schoolJob.getCount()).isEqualTo(11L);
     }
 }

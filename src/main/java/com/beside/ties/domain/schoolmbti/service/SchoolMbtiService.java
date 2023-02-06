@@ -1,7 +1,9 @@
 package com.beside.ties.domain.schoolmbti.service;
 
+import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.account.entity.MBTI;
 import com.beside.ties.domain.common.dto.StatisticsDto;
+import com.beside.ties.domain.common.dto.StatisticsRequestDto;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.mbti.entity.Mbti;
 import com.beside.ties.domain.mbti.repo.MbtiRepo;
@@ -25,16 +27,22 @@ public class SchoolMbtiService {
     private final SchoolMbtiRepo schoolMbtiRepo;
     private final MbtiRepo mbtiRepo;
 
-    public List<SchoolMbti> countTop4BySchoolId(Long schoolId) {
-        return schoolMbtiRepo.findTop4BySchool_IdOrderByCountDesc(schoolId);
+    public List<SchoolMbti> countTop4BySchoolId(StatisticsRequestDto statisticsRequestDto) {
+        return schoolMbtiRepo.findTop4BySchool_IdAndGraduationYearOrderByCountDesc(
+                statisticsRequestDto.getSchoolId(),
+                statisticsRequestDto.getGraduationYear());
     }
 
-    public Long totalCountBySchoolId(Long schoolId) {
-        return schoolMbtiRepo.totalCountBySchoolId(schoolId);
+    public Long totalCountBySchoolId(StatisticsRequestDto statisticsRequestDto) {
+        return schoolMbtiRepo.totalCountBySchoolId(
+                statisticsRequestDto.getSchoolId(),
+                statisticsRequestDto.getGraduationYear());
     }
 
-    public List<SchoolMbti> findAllBySchoolId(Long schoolId) {
-        return schoolMbtiRepo.findAllBySchool_Id(schoolId);
+    public List<SchoolMbti> findAllBySchoolId(StatisticsRequestDto statisticsRequestDto) {
+        return schoolMbtiRepo.findAllBySchool_Id(
+                statisticsRequestDto.getSchoolId(),
+                statisticsRequestDto.getGraduationYear());
     }
 
     public Long save(SchoolMbti schoolMbti) {
@@ -51,25 +59,28 @@ public class SchoolMbtiService {
         schoolMbti.plusOneCount();
     }
 
-    public void countPlus(School school, String stringMbti) {
+    public void countPlus(Account account, String stringMbti) {
+        if(account.getSchool() == null) return;
         Mbti mbti = mbtiRepo.findByName(stringMbti).orElseThrow(() -> new IllegalArgumentException("해당 엠비티아이가 존재하지 않습니다."));
 
-        Optional<SchoolMbti> optionalSchoolMbti = schoolMbtiRepo.findBySchool_IdAndMbti_Id(school.getId(), mbti.getId());
+        Optional<SchoolMbti> optionalSchoolMbti = schoolMbtiRepo.findBySchoolAndMbtiAndGraduationYear(account.getSchool(), mbti, Long.valueOf(account.getGraduationYear()));
         if(optionalSchoolMbti.isPresent()){
             optionalSchoolMbti.get().plusOneCount();
         }else{
-                schoolMbtiRepo.save(new SchoolMbti(mbti, school));
+                schoolMbtiRepo.save(new SchoolMbti(mbti, account.getSchool(),1L, Long.valueOf(account.getGraduationYear())));
         }
     }
 
-    public void countMinus(School school, String stringMbti) {
+    public void countMinus(Account account, String stringMbti) {
+        if(account.getSchool() == null) return;
         Mbti mbti = mbtiRepo.findByName(stringMbti).orElseThrow(() -> new IllegalArgumentException("해당 엠비티아이가 존재하지 않습니다."));
 
-        Optional<SchoolMbti> optionalSchoolMbti = schoolMbtiRepo.findBySchool_IdAndMbti_Id(school.getId(), mbti.getId());
+        Optional<SchoolMbti> optionalSchoolMbti
+                = schoolMbtiRepo.findBySchoolAndMbtiAndGraduationYear(account.getSchool(), mbti, Long.valueOf(account.getGraduationYear()));
         if(optionalSchoolMbti.isPresent()){
             optionalSchoolMbti.get().minusOneCount();
         }else{
-            schoolMbtiRepo.save(new SchoolMbti(mbti, school,0L));
+            schoolMbtiRepo.save(new SchoolMbti(mbti, account.getSchool(),0L,Long.valueOf(account.getGraduationYear())));
         }
     }
 
