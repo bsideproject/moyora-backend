@@ -54,6 +54,15 @@ public class SchoolRegionService {
         }
     }
 
+    public void countMinus(School school, Region region) {
+        Optional<SchoolRegion> optionalSchoolRegion = schoolRegionRepo.findBySchool_IdAndRegion_Id(school.getId(), region.getId());
+        if(optionalSchoolRegion.isPresent()){
+            optionalSchoolRegion.get().minusOneCount();
+        }else{
+            schoolRegionRepo.save(new SchoolRegion(region, school, 0L));
+        }
+    }
+
 
 
     public List<StatisticsDto> convertStatisticsDto(List<SchoolRegion> schoolRegions, Long totalCount) {
