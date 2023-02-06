@@ -1,17 +1,21 @@
 package com.beside.ties.domain.schoolguestbook.service;
 
 import com.beside.ties.domain.account.entity.Account;
-import com.beside.ties.domain.school.entity.School;
+import com.beside.ties.domain.account.entity.QAccount;
 import com.beside.ties.domain.school.repo.SchoolRepo;
 import com.beside.ties.domain.schoolguestbook.dto.SchoolGuestBookUpdateDto;
+import com.beside.ties.domain.schoolguestbook.entity.QSchoolGuestBook;
 import com.beside.ties.domain.schoolguestbook.entity.SchoolGuestBook;
 import com.beside.ties.domain.schoolguestbook.repo.SchoolGuestBookRepo;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
+
+import static com.beside.ties.domain.account.entity.QAccount.account;
 
 @RequiredArgsConstructor
 @Transactional
@@ -20,6 +24,7 @@ public class SchoolGuestBookService {
 
     private final SchoolGuestBookRepo schoolGuestBookRepo;
     private final SchoolRepo schoolRepo;
+    private final EntityManager em;
 
     public Long save(SchoolGuestBook schoolGuestBook){
         if (schoolGuestBook.getSticker() == null || schoolGuestBook.getSticker().equals("")) {
@@ -29,8 +34,16 @@ public class SchoolGuestBookService {
         return save.getId();
     }
 
-    public List<SchoolGuestBook> findBySchoolId(Long id) {
-        return schoolGuestBookRepo.findBySchool_IdOrderByCreatedDateDesc(id);
+    public List<SchoolGuestBook> findByAccount(Account me) {
+
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        QSchoolGuestBook schoolGuestBook = QSchoolGuestBook.schoolGuestBook;
+        return query
+                .selectFrom(schoolGuestBook)
+                .leftJoin(schoolGuestBook.account, account)
+                .where(account.graduationYear.eq(me.getGraduationYear()))
+                .fetch();
+        //return schoolGuestBookRepo.findAllBySchoolAndGraduationYearOrderByCreatedDate(me.getSchool(), me.getGraduationYear());
     }
 
     public List<SchoolGuestBook> findByAccountId(Long accountId) {
@@ -55,8 +68,15 @@ public class SchoolGuestBookService {
         schoolGuestBookRepo.deleteAllInBatch();
     }
 
-    public Long countAllBySchool(Account account) {
-        if(account.getSchool() == null) return 0L;
-        return schoolGuestBookRepo.countAllBySchoolAndGraduationYear(account.getSchool(), account.getGraduationYear());
+    public int countAllBySchool(Account me) {
+        if(me.getSchool() == null) return 0;
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        QSchoolGuestBook schoolGuestBook = QSchoolGuestBook.schoolGuestBook;
+        return query
+                .selectFrom(schoolGuestBook)
+                .leftJoin(schoolGuestBook.account, account)
+                .where(account.graduationYear.eq(me.getGraduationYear()))
+                .fetch().size();
+        //return schoolGuestBookRepo.countAllBySchoolAndGraduationYear(me.getSchool(), me.getGraduationYear());
     }
 }
