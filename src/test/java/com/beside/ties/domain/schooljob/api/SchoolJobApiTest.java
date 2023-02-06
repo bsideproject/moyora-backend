@@ -90,11 +90,11 @@ class SchoolJobApiTest extends BaseMvcTest {
 
         List<JobCategory> jobCategories = jobCategoryRepo.findAllByParent(jobCategoryParent);
 
-        SchoolJob schoolJob1 = SchoolJob.createSchoolJob(jobCategories.get(0), searchSchool, 5L);
-        SchoolJob schoolJob2 = SchoolJob.createSchoolJob(jobCategories.get(1), searchSchool, 1L);
-        SchoolJob schoolJob3 = SchoolJob.createSchoolJob(jobCategories.get(2), searchSchool, 8L);
-        SchoolJob schoolJob4 = SchoolJob.createSchoolJob(jobCategories.get(3), searchSchool, 10L);
-        SchoolJob schoolJob5 = SchoolJob.createSchoolJob(jobCategories.get(4), searchSchool, 15L);
+        SchoolJob schoolJob1 = SchoolJob.createSchoolJob(jobCategories.get(0), searchSchool, 5L, 2002L);
+        SchoolJob schoolJob2 = SchoolJob.createSchoolJob(jobCategories.get(1), searchSchool, 1L, 2002L);
+        SchoolJob schoolJob3 = SchoolJob.createSchoolJob(jobCategories.get(2), searchSchool, 8L, 2003L);
+        SchoolJob schoolJob4 = SchoolJob.createSchoolJob(jobCategories.get(3), searchSchool, 10L, 2003L);
+        SchoolJob schoolJob5 = SchoolJob.createSchoolJob(jobCategories.get(4), searchSchool, 15L, 2002L);
 
         schoolJobService.save(schoolJob1);
         schoolJobService.save(schoolJob2);

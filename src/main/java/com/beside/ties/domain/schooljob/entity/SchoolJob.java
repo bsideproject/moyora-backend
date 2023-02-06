@@ -60,7 +60,7 @@ public class SchoolJob {
         this.count = this.count - 1L;
     }
 
-    public static SchoolJob createSchoolJob(JobCategory jobCategory, School school, Long count) {
-        return new SchoolJob(jobCategory, school, count);
+    public static SchoolJob createSchoolJob(JobCategory jobCategory, School school, Long count, Long graduationYear) {
+        return new SchoolJob(jobCategory, school, count, graduationYear);
     }
 }

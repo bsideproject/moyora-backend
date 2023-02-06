@@ -1,6 +1,7 @@
 package com.beside.ties.domain.schoolmbti.service;
 
 import com.beside.ties.domain.common.dto.StatisticsDto;
+import com.beside.ties.domain.common.dto.StatisticsRequestDto;
 import com.beside.ties.domain.mbti.entity.Mbti;
 import com.beside.ties.domain.mbti.repo.MbtiRepo;
 import com.beside.ties.domain.school.entity.School;
@@ -35,6 +36,8 @@ class SchoolMbtiServiceTest {
 
     private Mbti searchMbti;
 
+    private StatisticsRequestDto statisticsRequestDto;
+
     @BeforeEach
     public void beforeEach() {
 
@@ -46,6 +49,8 @@ class SchoolMbtiServiceTest {
         schoolService.save(school2);
 
         searchSchool = schoolService.findBySchoolName("테스트학교").get(0);
+
+        statisticsRequestDto = new StatisticsRequestDto(2002L, searchSchool.getId());
 
         Mbti mbti1 = new Mbti("ENTP");
         Mbti mbti2 = new Mbti("ENTJ");
@@ -61,11 +66,11 @@ class SchoolMbtiServiceTest {
 
         searchMbti = mbtiRepo.findByName("ENTP").get();
 
-        SchoolMbti schoolMbti1 = new SchoolMbti(mbti1, searchSchool, 5L);
-        SchoolMbti schoolMbti2 = new SchoolMbti(mbti2, searchSchool, 1L);
-        SchoolMbti schoolMbti3 = new SchoolMbti(mbti3, searchSchool, 8L);
-        SchoolMbti schoolMbti4 = new SchoolMbti(mbti4, searchSchool, 10L);
-        SchoolMbti schoolMbti5 = new SchoolMbti(mbti5, searchSchool, 15L);
+        SchoolMbti schoolMbti1 = new SchoolMbti(mbti1, searchSchool, 5L ,2002L);
+        SchoolMbti schoolMbti2 = new SchoolMbti(mbti2, searchSchool, 1L, 2002L);
+        SchoolMbti schoolMbti3 = new SchoolMbti(mbti3, searchSchool, 8L, 2003L);
+        SchoolMbti schoolMbti4 = new SchoolMbti(mbti4, searchSchool, 10L, 2003L);
+        SchoolMbti schoolMbti5 = new SchoolMbti(mbti5, searchSchool, 15L, 2002L);
 
         schoolMbtiService.save(schoolMbti1);
         schoolMbtiService.save(schoolMbti2);
@@ -84,50 +89,45 @@ class SchoolMbtiServiceTest {
     @DisplayName("학교 별 Mbti count 총합 조회")
     @Test
     void totalCountBySchoolId() {
-        Long totalCount = schoolMbtiService.totalCountBySchoolId(searchSchool.getId());
+        Long totalCount = schoolMbtiService.totalCountBySchoolId(statisticsRequestDto);
 
-        assertThat(totalCount).isEqualTo(39L);
+        assertThat(totalCount).isEqualTo(21L);
     }
 
     @DisplayName("학교 별 Mbti top4 조회")
     @Test
     void countTop4BySchoolId() {
-        List<SchoolMbti> schoolMbtis = schoolMbtiService.countTop4BySchoolId(searchSchool.getId());
+        List<SchoolMbti> schoolMbtis = schoolMbtiService.countTop4BySchoolId(statisticsRequestDto);
 
-        assertThat(schoolMbtis.size()).isEqualTo(4);
+        assertThat(schoolMbtis.size()).isEqualTo(3);
         assertThat(schoolMbtis.get(0).getCount()).isEqualTo(15L);
-        assertThat(schoolMbtis.get(1).getCount()).isEqualTo(10L);
-        assertThat(schoolMbtis.get(2).getCount()).isEqualTo(8L);
-        assertThat(schoolMbtis.get(3).getCount()).isEqualTo(5L);
+        assertThat(schoolMbtis.get(1).getCount()).isEqualTo(5L);
     }
 
     @DisplayName("학교 별 Mbti 전체 조회")
     @Test
     void findAllBySchoolId() {
-        List<SchoolMbti> schoolMbtis = schoolMbtiService.findAllBySchoolId(searchSchool.getId());
+        List<SchoolMbti> schoolMbtis = schoolMbtiService.findAllBySchoolId(statisticsRequestDto);
 
-        assertThat(schoolMbtis.size()).isEqualTo(5);
+        assertThat(schoolMbtis.size()).isEqualTo(3);
     }
 
     @DisplayName("학교 별 Mbti 퍼센트")
     @Test
     void toPercent() {
-        List<SchoolMbti> schoolMbtis = schoolMbtiService.findAllBySchoolId(searchSchool.getId());
-        Long totalCount = schoolMbtiService.totalCountBySchoolId(searchSchool.getId());
+        List<SchoolMbti> schoolMbtis = schoolMbtiService.findAllBySchoolId(statisticsRequestDto);
+        Long totalCount = schoolMbtiService.totalCountBySchoolId(statisticsRequestDto);
         List<StatisticsDto> statisticsList = schoolMbtiService.convertStatisticsDto(schoolMbtis, totalCount);
 
         assertThat(statisticsList.get(0).getTitle()).isEqualTo("ISFJ");
-        assertThat(statisticsList.get(1).getTitle()).isEqualTo("INTJ");
-        assertThat(statisticsList.get(2).getTitle()).isEqualTo("INTP");
-        assertThat(statisticsList.get(3).getTitle()).isEqualTo("ENTP");
-        assertThat(statisticsList.get(4).getTitle()).isEqualTo("ENTJ");
+        assertThat(statisticsList.get(1).getTitle()).isEqualTo("ENTP");
     }
 
     @DisplayName("학교 별 Mbti top5 퍼센트")
     @Test
     void convertTop5Percent() {
-        List<SchoolMbti> schoolMbtis = schoolMbtiService.countTop4BySchoolId(searchSchool.getId());
-        Long totalCount = schoolMbtiService.totalCountBySchoolId(searchSchool.getId());
+        List<SchoolMbti> schoolMbtis = schoolMbtiService.countTop4BySchoolId(statisticsRequestDto);
+        Long totalCount = schoolMbtiService.totalCountBySchoolId(statisticsRequestDto);
         List<Long> longs = schoolMbtiService.convertTop5Percent(schoolMbtis, totalCount);
         for (Long aLong : longs) {
             System.out.println("aLong = " + aLong);

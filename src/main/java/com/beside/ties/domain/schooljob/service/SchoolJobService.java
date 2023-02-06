@@ -1,6 +1,7 @@
 package com.beside.ties.domain.schooljob.service;
 
 import com.beside.ties.domain.common.dto.StatisticsDto;
+import com.beside.ties.domain.common.dto.StatisticsRequestDto;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.jobcategory.repo.JobCategoryRepo;
 import com.beside.ties.domain.region.entity.Region;
@@ -24,23 +25,34 @@ public class SchoolJobService {
     private final SchoolJobRepo schoolJobRepo;
     private final JobCategoryRepo jobCategoryRepo;
 
-    public List<SchoolJob> countTop4BySchoolId(Long schoolId) {
-        return schoolJobRepo.findTop4BySchool_IdOrderByCountDesc(schoolId);
+    public List<SchoolJob> countTop4BySchoolId(StatisticsRequestDto statisticsRequestDto) {
+        return schoolJobRepo.findTop4BySchool_IdAndGraduationYearOrderByCountDesc(
+                statisticsRequestDto.getSchoolId(),
+                statisticsRequestDto.getGraduationYear());
     }
 
-    public Long totalCountBySchoolId(Long schoolId) {
-        return schoolJobRepo.totalCountBySchoolId(schoolId);
+    public Long totalCountBySchoolId(StatisticsRequestDto statisticsRequestDto) {
+        return schoolJobRepo.totalCountBySchoolId(
+                statisticsRequestDto.getSchoolId(),
+                statisticsRequestDto.getGraduationYear());
     }
 
-    public List<SchoolJob> findAllBySchoolId(Long schoolId) {
-        return schoolJobRepo.findAllBySchool_Id(schoolId);
+    public List<SchoolJob> findAllBySchoolId(StatisticsRequestDto statisticsRequestDto) {
+        return schoolJobRepo.findAllBySchool_Id(
+                statisticsRequestDto.getSchoolId(),
+                statisticsRequestDto.getGraduationYear());
     }
 
     public Long save(SchoolJob schoolJob) {
         JobCategory jobCategory = jobCategoryRepo.findById(schoolJob.getJobCategory().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Job doesn't exist"));
 
-        SchoolJob resultSchoolJob = SchoolJob.createSchoolJob(jobCategory.getParent(), schoolJob.getSchool(), schoolJob.getCount());
+        SchoolJob resultSchoolJob = SchoolJob.createSchoolJob(
+                jobCategory.getParent(),
+                schoolJob.getSchool(),
+                schoolJob.getCount(),
+                schoolJob.getGraduationYear());
+
         SchoolJob saveSchoolJob = schoolJobRepo.save(resultSchoolJob);
         return saveSchoolJob.getId();
     }

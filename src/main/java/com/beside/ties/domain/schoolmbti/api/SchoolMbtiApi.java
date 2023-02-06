@@ -1,6 +1,7 @@
 package com.beside.ties.domain.schoolmbti.api;
 
 import com.beside.ties.domain.common.dto.StatisticsDto;
+import com.beside.ties.domain.common.dto.StatisticsRequestDto;
 import com.beside.ties.domain.common.vo.ResponseVo;
 import com.beside.ties.domain.common.vo.StatisticsVo;
 import com.beside.ties.domain.schooljob.entity.SchoolJob;
@@ -26,12 +27,12 @@ public class SchoolMbtiApi {
     private final SchoolMbtiService schoolMbtiService;
 
     @Operation(summary = "학교 Mbti 통계")
-    @GetMapping("/{schoolId}")
-    public ResponseEntity<StatisticsVo> schoolMbtiStatistics(@PathVariable Long schoolId) {
+    @GetMapping("/statistics")
+    public ResponseEntity<StatisticsVo> schoolMbtiStatistics(StatisticsRequestDto statisticsRequestDto) {
 
-        Long totalCount = schoolMbtiService.totalCountBySchoolId(schoolId);
-        List<SchoolMbti> schoolMbtiTop4 = schoolMbtiService.countTop4BySchoolId(schoolId);
-        List<SchoolMbti> schoolMbtis = schoolMbtiService.findAllBySchoolId(schoolId);
+        Long totalCount = schoolMbtiService.totalCountBySchoolId(statisticsRequestDto);
+        List<SchoolMbti> schoolMbtiTop4 = schoolMbtiService.countTop4BySchoolId(statisticsRequestDto);
+        List<SchoolMbti> schoolMbtis = schoolMbtiService.findAllBySchoolId(statisticsRequestDto);
 
         List<Long> top5PercentList = schoolMbtiService.convertTop5Percent(schoolMbtiTop4, totalCount);
         List<StatisticsDto> statisticsList = schoolMbtiService.convertStatisticsDto(schoolMbtis, totalCount);
