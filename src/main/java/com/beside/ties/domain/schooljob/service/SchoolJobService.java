@@ -1,5 +1,6 @@
 package com.beside.ties.domain.schooljob.service;
 
+import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.common.dto.StatisticsDto;
 import com.beside.ties.domain.common.dto.StatisticsRequestDto;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
@@ -75,24 +76,26 @@ public class SchoolJobService {
                 .collect(Collectors.toList());
     }
 
-    public void countPlus(School school, JobCategory jobCategory) {
-        Optional<SchoolJob> optionalSchoolJob = schoolJobRepo.findBySchool_IdAndJobCategory_Id(school.getId(), jobCategory.getParent().getId());
+    public void countPlus(Account account, JobCategory jobCategory) {
+        Optional<SchoolJob> optionalSchoolJob
+                = schoolJobRepo.findBySchoolAndJobCategoryAndGraduationYear(account.getSchool(), jobCategory.getParent(), Long.valueOf(account.getGraduationYear()));
         if(optionalSchoolJob.isPresent()){
             optionalSchoolJob.get().plusOneCount();
         }else{
             if(jobCategory.getParent() != null) {
-                schoolJobRepo.save(new SchoolJob(jobCategory.getParent(), school));
+                schoolJobRepo.save(new SchoolJob(jobCategory.getParent(), account.getSchool(),1L, Long.valueOf(account.getGraduationYear())));
             }
         }
     }
 
-    public void countMinus(School school, JobCategory jobCategory) {
-        Optional<SchoolJob> optionalSchoolJob = schoolJobRepo.findBySchool_IdAndJobCategory_Id(school.getId(), jobCategory.getParent().getId());
+    public void countMinus(Account account, JobCategory jobCategory) {
+        Optional<SchoolJob> optionalSchoolJob
+                = schoolJobRepo.findBySchoolAndJobCategoryAndGraduationYear(account.getSchool(), jobCategory.getParent(),Long.valueOf(account.getGraduationYear()));
         if(optionalSchoolJob.isPresent()){
             optionalSchoolJob.get().minusOneCount();
         }else{
             if(jobCategory.getParent() != null) {
-                schoolJobRepo.save(new SchoolJob(jobCategory.getParent(), school,0L));
+                schoolJobRepo.save(new SchoolJob(jobCategory.getParent(), account.getSchool(),0L, Long.valueOf(account.getGraduationYear())));
             }
         }
     }

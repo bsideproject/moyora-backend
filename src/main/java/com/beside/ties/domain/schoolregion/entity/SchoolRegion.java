@@ -53,7 +53,9 @@ public class SchoolRegion {
         this.count = this.count + 1L;
     }
     public void minusOneCount() {
-        this.count = this.count - 1L;
+        if(this.count >0) {
+            this.count = this.count - 1L;
+        }
     }
 
     public static SchoolRegion createSchoolRegion(Region region, School school, Long count, Long graduationYear) {

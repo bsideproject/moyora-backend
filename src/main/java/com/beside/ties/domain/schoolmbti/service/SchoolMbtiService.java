@@ -67,7 +67,7 @@ public class SchoolMbtiService {
         if(optionalSchoolMbti.isPresent()){
             optionalSchoolMbti.get().plusOneCount();
         }else{
-                schoolMbtiRepo.save(new SchoolMbti(mbti, account.getSchool()));
+                schoolMbtiRepo.save(new SchoolMbti(mbti, account.getSchool(),1L, Long.valueOf(account.getGraduationYear())));
         }
     }
 
@@ -80,7 +80,7 @@ public class SchoolMbtiService {
         if(optionalSchoolMbti.isPresent()){
             optionalSchoolMbti.get().minusOneCount();
         }else{
-            schoolMbtiRepo.save(new SchoolMbti(mbti, account.getSchool(),0L));
+            schoolMbtiRepo.save(new SchoolMbti(mbti, account.getSchool(),0L,Long.valueOf(account.getGraduationYear())));
         }
     }
 

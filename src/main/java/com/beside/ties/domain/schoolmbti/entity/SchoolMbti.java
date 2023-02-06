@@ -55,7 +55,9 @@ public class SchoolMbti {
     }
 
     public void minusOneCount() {
-        this.count = this.count - 1L;
+        if(this.count > 0) {
+            this.count -= 1L;
+        }
     }
 
     public static SchoolMbti createSchoolMbti(Mbti mbti, School school, Long count) {

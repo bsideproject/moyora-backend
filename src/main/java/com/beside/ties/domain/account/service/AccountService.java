@@ -219,7 +219,7 @@ public class AccountService {
 
         // 직업 조회
         JobCategory jobCategory = jobCategoryService.findJobCategoryByName(request.getJob());
-        schoolJobService.countPlus(optionalSchool.get(), jobCategory);
+        schoolJobService.countPlus(account, jobCategory);
 
 
         // 지역 업데이트
@@ -290,13 +290,13 @@ public class AccountService {
         JobCategory jobCategory = jobCategoryRepo.findJobCategoryByName(request.getJob()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 직업입니다."));
 
         if(account.getMyJob() == null && request.getMbti() != null){
-            schoolJobService.countPlus(account.getSchool(), jobCategory);
+            schoolJobService.countPlus(account, jobCategory);
         }
         else if(account.getMyJob() != null && request.getJob() != null){
 
             if(!account.getMyJob().getParent().getName().equals(request.getJob())){
-                schoolJobService.countPlus(account.getSchool(), jobCategory);
-                schoolJobService.countMinus(account.getSchool(), account.getMyJob());
+                schoolJobService.countPlus(account, jobCategory);
+                schoolJobService.countMinus(account, account.getMyJob());
             }
 
         }

@@ -1,5 +1,7 @@
 package com.beside.ties.domain.schooljob.repo;
 
+import com.beside.ties.domain.jobcategory.entity.JobCategory;
+import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.domain.schooljob.entity.SchoolJob;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +15,8 @@ public interface SchoolJobRepo extends JpaRepository<SchoolJob, Long> {
     List<SchoolJob> findTop4BySchool_IdAndGraduationYearOrderByCountDesc(Long schoolId, Long graduationYear);
 
     Optional<SchoolJob> findBySchool_IdAndJobCategory_Id(Long schoolId, Long jobCategoryId);
+    Optional<SchoolJob> findBySchoolAndJobCategoryAndGraduationYear(School school, JobCategory jobCategory, Long graduationYear);
+
 
     @Query("select sj from SchoolJob sj " +
             "left join fetch sj.jobCategory sjj " +

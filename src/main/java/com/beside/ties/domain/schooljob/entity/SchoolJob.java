@@ -57,7 +57,9 @@ public class SchoolJob {
         this.count = this.count + 1L;
     }
     public void minusOneCount() {
-        this.count = this.count - 1L;
+        if(this.count >0) {
+            this.count -= 1L;
+        }
     }
 
     public static SchoolJob createSchoolJob(JobCategory jobCategory, School school, Long count, Long graduationYear) {
