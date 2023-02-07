@@ -22,7 +22,7 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
     List<Account> findAllBySchoolAndNameContainsAndGraduationYear(School school, String name, int graduationYear);
 
     @Override
-    @EntityGraph
+    @EntityGraph(attributePaths = {"myJob", "mbti", "region"})
     Optional<Account> findById(Long aLong);
 
     Long countAllBySchool(School school);
