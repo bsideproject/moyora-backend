@@ -45,6 +45,7 @@ public class SchoolGuestBookService {
                         account.graduationYear.eq(me.getGraduationYear()),
                         schoolGuestBook.school.eq(me.getSchool())
                 )
+                .orderBy(schoolGuestBook.createdDate.desc())
                 .fetch();
         //return schoolGuestBookRepo.findAllBySchoolAndGraduationYearOrderByCreatedDate(me.getSchool(), me.getGraduationYear());
     }
