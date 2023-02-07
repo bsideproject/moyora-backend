@@ -2,6 +2,7 @@ package com.beside.ties.domain.account.repo;
 
 import com.beside.ties.domain.account.entity.Account;
 import com.beside.ties.domain.school.entity.School;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -20,7 +21,9 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
     //findAllBySchool
     List<Account> findAllBySchoolAndNameContainsAndGraduationYear(School school, String name, int graduationYear);
 
-
+    @Override
+    @EntityGraph
+    Optional<Account> findById(Long aLong);
 
     Long countAllBySchool(School school);
     Long countAllBySchoolAndGraduationYear(School school, int graduationYear);

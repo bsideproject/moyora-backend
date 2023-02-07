@@ -6,6 +6,7 @@ import com.beside.ties.domain.account.dto.response.ClassmateDetailResponse;
 import com.beside.ties.domain.account.dto.response.ClassmateResponse;
 import com.beside.ties.domain.account.entity.MBTI;
 import com.beside.ties.domain.account.entity.QAccount;
+import com.beside.ties.domain.common.dto.StatisticsRequestDto;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.jobcategory.repo.JobCategoryRepo;
 import com.beside.ties.domain.jobcategory.service.JobCategoryService;
@@ -337,7 +338,15 @@ public class AccountService {
             throw new IllegalArgumentException("존재하지 않는 학교입니다.");
         }
 
+        schoolRegionService.countMinus(account, account.getRegion());
+        schoolJobService.countMinus(account, account.getMyJob());
+        schoolMbtiService.countMinus(account, account.getMbti().getName());
+
         account.updateSchool(request, optionalSchool.get());
+
+        schoolRegionService.countPlus(account, account.getRegion());
+        schoolJobService.countPlus(account, account.getMyJob());
+        schoolMbtiService.countPlus(account, account.getMbti().getName());
 
         return "학교 정보가 업데이트 되었습니다.";
     }
