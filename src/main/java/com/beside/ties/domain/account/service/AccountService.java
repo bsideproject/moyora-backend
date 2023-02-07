@@ -404,16 +404,17 @@ public class AccountService {
 
         var myGraduate = account.getGraduationYear();
         if(account.getGraduationYear() == 0){
-            myGraduate = Year.now().getValue();
+            return "";
         }else{
             myGraduate = account.getGraduationYear();
         }
         var establishmentDate = Integer.parseInt(account.school.getEstablishmentDate().substring(0,4));
 
-        int graduateYear = establishmentDate - myGraduate;
+        int graduateYear = myGraduate - establishmentDate;
         String graduate = "(" + graduateYear + "회 졸업)";
         return graduate;
     }
+    //설립일 - 나의 졸업일
 
     public int getActivatedSchool(){
         JPAQueryFactory query = new JPAQueryFactory(em);
