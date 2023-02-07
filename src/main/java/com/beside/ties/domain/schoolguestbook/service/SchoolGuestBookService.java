@@ -41,7 +41,10 @@ public class SchoolGuestBookService {
         return query
                 .selectFrom(schoolGuestBook)
                 .leftJoin(schoolGuestBook.account, account)
-                .where(account.graduationYear.eq(me.getGraduationYear()))
+                .where(
+                        account.graduationYear.eq(me.getGraduationYear()),
+                        schoolGuestBook.school.eq(me.getSchool())
+                )
                 .fetch();
         //return schoolGuestBookRepo.findAllBySchoolAndGraduationYearOrderByCreatedDate(me.getSchool(), me.getGraduationYear());
     }
@@ -75,7 +78,10 @@ public class SchoolGuestBookService {
         return query
                 .selectFrom(schoolGuestBook)
                 .leftJoin(schoolGuestBook.account, account)
-                .where(account.graduationYear.eq(me.getGraduationYear()))
+                .where(
+                        account.graduationYear.eq(me.getGraduationYear()),
+                        schoolGuestBook.school.eq(me.getSchool())
+                )
                 .fetch().size();
         //return schoolGuestBookRepo.countAllBySchoolAndGraduationYear(me.getSchool(), me.getGraduationYear());
     }
