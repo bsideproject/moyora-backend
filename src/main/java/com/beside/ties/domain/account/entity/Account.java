@@ -4,6 +4,7 @@ import com.beside.ties.domain.account.dto.request.AccountUpdateNameRequest;
 import com.beside.ties.domain.account.dto.request.AccountSecondarySignUpRequest;
 import com.beside.ties.domain.account.dto.request.AccountUpdateRequest;
 import com.beside.ties.domain.account.dto.request.AccountUpdateSchoolRequest;
+import com.beside.ties.domain.mbti.entity.Mbti;
 import com.beside.ties.domain.region.entity.Region;
 import com.beside.ties.domain.school.entity.School;
 import com.beside.ties.global.auth.kakao.KakaoAccount;
@@ -68,6 +69,7 @@ public class Account extends BaseTimeEntity implements UserDetails {
     int graduationYear;
 
     @Column(length = 75)
+
     private String pw;
 
     @Column(length = 50)
@@ -88,9 +90,9 @@ public class Account extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false)
     public String profile;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 10)
-    public MBTI mbti = null;
+    @OneToOne
+    @JoinColumn(name = "mbti_id")
+    public Mbti mbti;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id")
@@ -162,12 +164,9 @@ public class Account extends BaseTimeEntity implements UserDetails {
         this.region = region;
     }
 
-    public void updateProfile(AccountUpdateRequest request, JobCategory job, Region region){
-        if(request.getMbti() != null) {
-            this.mbti = MBTI.valueOf(request.getMbti());
-        }
-        else
-            this.mbti = null;
+    public void updateProfile(AccountUpdateRequest request, JobCategory job, Region region, Mbti mbti){
+
+        this.mbti = mbti;
         this.instagram = request.getInstagram();
         this.youtube = request.getYoutube();
         this.facebook = request.getFacebook();
