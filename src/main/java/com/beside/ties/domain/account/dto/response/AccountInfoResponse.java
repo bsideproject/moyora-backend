@@ -150,7 +150,7 @@ public class AccountInfoResponse {
                     .id(account.getId())
                     .youtube(account.getYoutube())
                     .jobCategory(getParentJob(account))
-                    .mbti(account.getMbti())
+                    .mbti(getMbti(account))
                     .schoolId(getSchoolId(account))
                     .nickname(account.getNickname())
                     .job(getJob(account))
@@ -159,6 +159,11 @@ public class AccountInfoResponse {
                     .isPublic(account.getIsPublic())
                     .profile(account.getProfile())
                     .build();
+    }
+
+    public static MBTI getMbti(Account account){
+        if(account.getMbti() == null) return null;
+        return MBTI.valueOf(account.getMbti().getName());
     }
 
 
