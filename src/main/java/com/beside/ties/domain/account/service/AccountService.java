@@ -4,10 +4,13 @@ import com.beside.ties.domain.account.dto.request.*;
 import com.beside.ties.domain.account.dto.response.AccountInfoResponse;
 import com.beside.ties.domain.account.dto.response.ClassmateDetailResponse;
 import com.beside.ties.domain.account.dto.response.ClassmateResponse;
+import com.beside.ties.domain.account.entity.MBTI;
 import com.beside.ties.domain.account.entity.QAccount;
 import com.beside.ties.domain.jobcategory.entity.JobCategory;
 import com.beside.ties.domain.jobcategory.repo.JobCategoryRepo;
 import com.beside.ties.domain.jobcategory.service.JobCategoryService;
+import com.beside.ties.domain.mbti.entity.Mbti;
+import com.beside.ties.domain.mbti.repo.MbtiRepo;
 import com.beside.ties.domain.region.entity.Region;
 import com.beside.ties.domain.region.repo.RegionRepo;
 import com.beside.ties.domain.school.entity.School;
@@ -53,6 +56,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.beside.ties.domain.account.dto.response.AccountInfoResponse.getMbti;
 import static com.beside.ties.global.auth.kakao.KakaoOAuthConstants.USER_INFO_URI;
 import static com.beside.ties.global.common.RequestUtil.parseRegion;
 
@@ -77,6 +81,7 @@ public class AccountService {
     private final SchoolRegionService schoolRegionService;
     private final SchoolJobService schoolJobService;
     private final SchoolMbtiService schoolMbtiService;
+    private final MbtiRepo mbtiRepo;
 
 
     public String uploadImage(MultipartFile multipartFile, Account account) throws IOException {
@@ -254,7 +259,12 @@ public class AccountService {
         Optional<JobCategory> optionalJobCategory = jobCategoryRepo.findJobCategoryByName(request.getJob());
         if(optionalJobCategory.isEmpty()) throw new IllegalArgumentException("존재하지 않는 직업입니다.");
 
-        account.updateProfile(request,optionalJobCategory.get(), regionOptional.get());
+        Mbti mbti = null;
+        if(request.getMbti() != null) {
+            mbti = mbtiRepo.findByName(request.getMbti()).orElseThrow();
+        }
+
+        account.updateProfile(request,optionalJobCategory.get(), regionOptional.get(), mbti);
 
         return "유저 프로필 정보가 업데이트 되었습니다.";
     }
@@ -267,7 +277,7 @@ public class AccountService {
 
             if(!account.mbti.equals(request.getMbti())){
                 schoolMbtiService.countPlus(account, request.getMbti());
-                schoolMbtiService.countMinus(account, account.getMbti().name());
+                schoolMbtiService.countMinus(account, account.getMbti().getName());
             }
 
         }
@@ -359,7 +369,7 @@ public class AccountService {
                 .instagram(account.getInstagram())
                 .id(account.getId())
                 .youtube(account.getYoutube())
-                .mbti(account.getMbti())
+                .mbti(getMbti(account))
                 .profile(account.getProfile())
                 .nickname(account.getNickname())
                 .username(account.getName())
