@@ -193,7 +193,7 @@ public class AccountService {
 
     public String secondarySignUp(AccountSecondarySignUpRequest request, Long accountId) {
 
-        Account account = accountRepo.findById(accountId).get();
+        Account account = accountRepo.findById(accountId).orElseThrow();
 
         if(account.school != null){
             throw new IllegalArgumentException("이미 회원가입한 유저입니다.");
