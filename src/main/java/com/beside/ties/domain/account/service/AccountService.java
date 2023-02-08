@@ -199,15 +199,12 @@ public class AccountService {
             throw new IllegalArgumentException("이미 회원가입한 유저입니다.");
         }
 
-        // 학교 존재 여부 확인
-        Optional<School> optionalSchool = schoolService.checkSchoolCode(request.getSchoolCode());
-        // 없으면 학교 등록
-        if(optionalSchool.isEmpty()){
-            throw new IllegalArgumentException("학교 정보가 잘못되었습니다. 학교를 다시 입력하여 주세요 ");
-        }
+        School school = schoolRepo.findSchoolBySchoolCode(request.getSchoolCode())
+                .orElseThrow(() -> new IllegalArgumentException("학교 정보를 다시 선택해주세요!!"));
+
 
         if(!request.getSchoolComment().isEmpty() && !request.getSchoolComment().isBlank()) {
-            SchoolGuestBook schoolGuestBook = new SchoolGuestBook(optionalSchool.get(), account, request.getSchoolComment());
+            SchoolGuestBook schoolGuestBook = new SchoolGuestBook(school, account, request.getSchoolComment());
             schoolGuestBook.settingRandomSticker();
             SchoolGuestBook savedSchoolGuestBook = schoolGuestBookRepo.save(schoolGuestBook);
             logger.info("school guest book Id : " + savedSchoolGuestBook.getId());
@@ -216,29 +213,22 @@ public class AccountService {
 
 
         Optional<NoteBox> optionalNoteBox = noteBoxRepo.findByAccount(account);
-        if(optionalNoteBox.isPresent()){
-            throw new IllegalArgumentException("이미 쪽지함이 생성되어 있습니다.");
+        if(optionalNoteBox.isEmpty()){
+            NoteBox noteBox1 = noteBoxRepo.save(new NoteBox(account));
+            logger.info("유저 쪽지함이 생성이 ID"+ noteBox1.getId()+" 로 생성되었습니다.");
         }
-        // 유저 방명록 생성
-        NoteBox noteBox1 = noteBoxRepo.save(new NoteBox(account));
-        logger.info("유저 쪽지함이 생성이 ID"+ noteBox1.getId()+" 로 생성되었습니다.");
 
-        // 직업 조회
+
         JobCategory jobCategory = jobCategoryService.findJobCategoryByName(request.getJob());
-        schoolJobService.countPlus(account, jobCategory, optionalSchool.get(), Long.valueOf(request.getGraduationYear()));
+        schoolJobService.countPlus(account, jobCategory, school, Long.valueOf(request.getGraduationYear()));
 
 
-        // 지역 업데이트
         Optional<Region> regionOptional = regionRepo.findById(request.getRegionId());
         if(regionOptional.isEmpty()) throw new IllegalArgumentException("존재하지 않는 지역입니다.");
-        schoolRegionService.countPlus(account, regionOptional.get(), optionalSchool.get(), Long.valueOf(request.getGraduationYear()));
+        schoolRegionService.countPlus(account, regionOptional.get(), school, Long.valueOf(request.getGraduationYear()));
 
 
-        // 회원 정보 업데이트
-        account.secondaryInput(request, optionalSchool.get(), jobCategory,regionOptional.get());
-
-
-
+        account.secondaryInput(request, school, jobCategory,regionOptional.get());
 
 
         return "회원가입이 완료되었습니다.";
