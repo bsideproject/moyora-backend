@@ -18,12 +18,6 @@ public class SchoolService {
 
     private final SchoolRepo schoolRepo;
 
-    public Optional<School> checkSchoolCode(String schoolCode) {
-        Optional<School> schoolOptional = schoolRepo.findSchoolBySchoolCode(schoolCode);
-        return schoolOptional;
-
-    }
-
     public Long save(School school){
         School save = schoolRepo.save(school);
         return save.getId();

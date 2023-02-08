@@ -156,6 +156,12 @@ public class Account extends BaseTimeEntity implements UserDetails {
     }
 
     public void secondaryInput(AccountSecondarySignUpRequest request, School school, JobCategory job, Region region){
+        if(school == null){
+            throw new IllegalArgumentException("학교 정보를 다시 입력해주세요");
+        }
+        if(request.getGraduationYear() == 0){
+            throw new IllegalArgumentException("졸업 년도를 다시 입력해주세요");
+        }
         this.myJob = job;
         this.school = school;
         this.name = request.getName();
