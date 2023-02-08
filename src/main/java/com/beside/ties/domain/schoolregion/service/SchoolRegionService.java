@@ -62,6 +62,15 @@ public class SchoolRegionService {
         }
     }
 
+    public void countPlus(Account account, Region region, School school, Long graduationYear) {
+        Optional<SchoolRegion> optionalSchoolRegion = schoolRegionRepo.findBySchoolAndRegionAndGraduationYear(school, region, graduationYear);
+        if(optionalSchoolRegion.isPresent()){
+            optionalSchoolRegion.get().plusOneCount();
+        }else{
+            schoolRegionRepo.save(new SchoolRegion(region, school, 1L, graduationYear));
+        }
+    }
+
     public void countMinus(Account account, Region region) {
         Optional<SchoolRegion> optionalSchoolRegion = schoolRegionRepo.findBySchoolAndRegionAndGraduationYear(account.getSchool(), region, Long.valueOf(account.getGraduationYear()));
         if(optionalSchoolRegion.isPresent()){
