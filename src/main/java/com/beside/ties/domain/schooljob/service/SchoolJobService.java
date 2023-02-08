@@ -88,6 +88,18 @@ public class SchoolJobService {
         }
     }
 
+    public void countPlus(Account account, JobCategory jobCategory, School school, Long graduationYear) {
+        Optional<SchoolJob> optionalSchoolJob
+                = schoolJobRepo.findBySchoolAndJobCategoryAndGraduationYear(school, jobCategory.getParent(), graduationYear);
+        if(optionalSchoolJob.isPresent()){
+            optionalSchoolJob.get().plusOneCount();
+        }else{
+            if(jobCategory.getParent() != null) {
+                schoolJobRepo.save(new SchoolJob(jobCategory.getParent(), school,1L, graduationYear));
+            }
+        }
+    }
+
     public void countMinus(Account account, JobCategory jobCategory) {
         Optional<SchoolJob> optionalSchoolJob
                 = schoolJobRepo.findBySchoolAndJobCategoryAndGraduationYear(account.getSchool(), jobCategory.getParent(),Long.valueOf(account.getGraduationYear()));
@@ -99,6 +111,7 @@ public class SchoolJobService {
             }
         }
     }
+
 
     public List<Long> convertTop5Percent(List<SchoolJob> schoolRegions, Long totalCount) {
         List<Long> top5Percent = schoolRegions.stream()
