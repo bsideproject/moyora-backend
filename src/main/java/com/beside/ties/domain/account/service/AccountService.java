@@ -225,13 +225,13 @@ public class AccountService {
 
         // 직업 조회
         JobCategory jobCategory = jobCategoryService.findJobCategoryByName(request.getJob());
-        schoolJobService.countPlus(account, jobCategory);
+        schoolJobService.countPlus(account, jobCategory, optionalSchool.get(), Long.valueOf(request.getGraduationYear()));
 
 
         // 지역 업데이트
         Optional<Region> regionOptional = regionRepo.findById(request.getRegionId());
         if(regionOptional.isEmpty()) throw new IllegalArgumentException("존재하지 않는 지역입니다.");
-        schoolRegionService.countPlus(account, regionOptional.get());
+        schoolRegionService.countPlus(account, regionOptional.get(), optionalSchool.get(), Long.valueOf(request.getGraduationYear()));
 
 
         // 회원 정보 업데이트
