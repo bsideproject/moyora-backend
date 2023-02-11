@@ -22,6 +22,8 @@ class StatisticsServiceTest {
     void convertTop5() {
         List<StatisticsDto> statisticsDtos = statisticsService.regionStatistics(2L, 2002);
 
+        statisticsService.convertAllPercent(statisticsDtos);
+
         for (StatisticsDto statisticsDto : statisticsDtos) {
             System.out.println("title = " + statisticsDto.getTitle());
             System.out.println("value = " + statisticsDto.getValue());
