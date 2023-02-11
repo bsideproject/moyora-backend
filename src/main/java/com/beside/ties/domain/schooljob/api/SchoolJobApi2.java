@@ -33,6 +33,7 @@ public class SchoolJobApi2 {
                                                     statisticsRequestDto.getGraduationYear().intValue());
 
         List<Long> top5PercentList = statisticsService.convertTop5Percent(statisticsList);
+        statisticsService.convertAllPercent(statisticsList);
 
 
         return ResponseEntity.ok().body(new StatisticsVo(top5PercentList, statisticsList));
