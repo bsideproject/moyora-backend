@@ -20,7 +20,7 @@ import java.util.List;
 
 @Api(tags = "학교 Mbti 통계 API")
 @RequiredArgsConstructor
-@RequestMapping("/api/v2/schoolMbti")
+@RequestMapping("/api/v1/schoolMbti")
 @RestController
 public class SchoolMbtiApi {
 
