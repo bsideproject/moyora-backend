@@ -10,4 +10,8 @@ import lombok.NoArgsConstructor;
 public class StatisticsDto {
     private String title;
     private Long value;
+
+    public void convertPercent(Long totalCount) {
+        this.value = (long)Math.floor((double) this.value / (double) totalCount * 100.0);
+    }
 }

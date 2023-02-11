@@ -19,7 +19,7 @@ import java.util.List;
 
 @Api(tags = "학교 지역 통계 API")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/schoolRegion")
+@RequestMapping("/api/v2/schoolRegion")
 @RestController
 public class SchoolRegionApi {
 

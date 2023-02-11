@@ -41,6 +41,12 @@ public class StatisticsService {
         return top5Percent;
     }
 
+    public void convertAllPercent(List<StatisticsDto> statisticsList) {
+        long totalCount = statisticsList.stream().mapToLong(item -> item.getValue()).sum();
+
+        statisticsList.stream().forEach(item -> item.convertPercent(totalCount));
+    }
+
     private Long percentCalculate(Long count, Long totalCount) {
         return (long)Math.floor((double) count / (double) totalCount * 100.0);
     }
