@@ -22,7 +22,7 @@ import java.util.List;
 
 @Api(tags = "학교 직업 통계 API")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/schoolJob")
+@RequestMapping("/api/v2/schoolJob")
 @RestController
 public class SchoolJobApi {
 
